@@ -1,7 +1,7 @@
 defmodule Surface.Catalogue.Components.PropInput do
   use Surface.Component
 
-  alias Surface.Components.Form.{TextInput, Checkbox, Select}
+  alias Surface.Components.Form.{TextInput, Checkbox, Select, NumberInput}
 
   prop prop, :any
 
@@ -25,8 +25,8 @@ defmodule Surface.Catalogue.Components.PropInput do
   end
 
   defp label(prop) do
-    required_str = if prop.opts[:required], do: " *", else: ""
-    "#{prop.name} #{required_str}"
+    required_str = if prop.opts[:required], do: "*", else: ""
+    "#{prop.name}#{required_str}"
   end
 
   defp input(assigns) do
@@ -37,7 +37,7 @@ defmodule Surface.Catalogue.Components.PropInput do
     case {prop.type, choices} do
       {:boolean, _} ->
         ~H"""
-        <Checkbox field={{ prop.name }} opts={{ checked: value, style: "height: 26px;" }}/>
+        <Checkbox field={{ prop.name }} value={{ value }} opts={{ style: "height: 26px;" }}/>
         """
 
       {:string, []} ->
@@ -45,15 +45,27 @@ defmodule Surface.Catalogue.Components.PropInput do
         <TextInput field={{ prop.name }} value={{ value }} class="input is-small" />
         """
 
+      {:string, choices} ->
+        ~H"""
+        <div class="select is-small">
+          <Select field={{ prop.name }} options={{ ["" | choices] }} selected={{ value }}/>
+        </div>
+        """
+
       {:list, []} ->
         ~H"""
         <TextInput field={{ prop.name }} value={{ inspect(value) }} class="input is-small" />
         """
 
-      {:string, choices} ->
+      {:integer, []} ->
+        ~H"""
+        <NumberInput field={{ prop.name }} value={{ value }} class="input is-small" />
+        """
+
+      {:integer, choices} ->
         ~H"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ ["" | choices] }} opts={{ selected: value }}/>
+          <Select field={{ prop.name }} options={{ ["" | choices] }} selected={{ value }}/>
         </div>
         """
 

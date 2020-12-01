@@ -104,7 +104,7 @@ defmodule Surface.Catalogue.PageLive do
                   src="/catalogue/{{@component_name}}/{{@action}}/view?__window_id__={{@__window_id__}}"
                   style="width: 100%; visibility: hidden; overflow-y: scroll;"
                   frameborder="0"
-                  onload="onExampleLoaded(this)">
+                  onload="onIframeLoaded(this)">
                 </iframe>
                 <div id="playground_tools_container" style="display: none; padding-top: 1.5rem;">
                   <PlaygroundTools

@@ -12,7 +12,7 @@ defmodule Surface.Catalogue.LayoutView do
         {{ Phoenix.HTML.Tag.csrf_meta_tag() }}
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
         <title>Component Catalogue</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" />
@@ -92,21 +92,44 @@ defmodule Surface.Catalogue.LayoutView do
 
         <script>
           function togggleNode(a) {
-            a.parentNode.querySelector('.menu-list').classList.toggle('is-hidden')
-            i = a.querySelector('span.icon > i')
-            i.classList.toggle('fa-folder-open')
-            i.classList.toggle('fa-folder')
+            a.parentNode.querySelector('.menu-list').classList.toggle('is-hidden');
+            i = a.querySelector('span.icon > i');
+            i.classList.toggle('fa-folder-open');
+            i.classList.toggle('fa-folder');
           }
 
-          function onExampleLoaded(iframe) {
+          function onIframeLoaded(iframe) {
+            // Ajust iframe's height
+
             iframe.style.height = "0px";
-            iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px'
-            iframe.style.visibility = "visible"
-            document.getElementById("loading").style.display = "none"
-            playground_tools_container = document.getElementById("playground_tools_container")
+            let height = iframe.contentWindow.document.documentElement.scrollHeight + 'px';
+            let body = iframe.contentWindow.document.documentElement.querySelector("body");
+            let loading = document.getElementById("loading");
+
+            iframe.style.height = height;
+            body.style.height = height;
+            iframe.style.visibility = "visible";
+            loading.style.display = "none";
+
+            playground_tools_container = document.getElementById("playground_tools_container");
             if (playground_tools_container) {
-              playground_tools_container.style.display = "block"
+              playground_tools_container.style.display = "block";
             }
+
+            // Evevt log (auto-scroll)
+
+            const targetNode = document.getElementById("event-log")
+
+            var callback = function(mutationsList, observer) {
+              for(var mutation of mutationsList) {
+                if (mutation.type == 'childList') {
+                  targetNode.scrollTop = targetNode.scrollHeight
+                }
+              }
+            };
+
+            var observer = new MutationObserver(callback);
+            observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
           }
         </script>
 

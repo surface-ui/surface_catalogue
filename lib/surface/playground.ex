@@ -14,7 +14,6 @@ defmodule Surface.Playground do
     head = Keyword.get(opts, :head, @default_head)
     style = Keyword.get(opts, :style)
     class = Keyword.get(opts, :class)
-    props = Keyword.get(opts, :props, %{})
 
     quote do
       use Surface.LiveView
@@ -56,9 +55,15 @@ defmodule Surface.Playground do
 
         @impl true
         def handle_event(event, value, socket) do
-          unquote(__MODULE__).__handle_event__(event, value, socket)
+          result = super(event, value, socket)
+          socket =
+            case result do
+              {:noreply, socket} -> socket
+              {:reply, _map, socket} -> socket
+            end
 
-          super(event, value, socket)
+          unquote(__MODULE__).__handle_event__(event, value, socket)
+          result
         end
       end
     else
@@ -99,7 +104,7 @@ defmodule Surface.Playground do
     Phoenix.PubSub.broadcast(
       Surface.Catalogue.PubSub,
       "Surface.Catalogue:#{window_id}",
-      {:playground_event_received, event, value}
+      {:playground_event_received, event, value, socket.assigns.props}
     )
 
     {:noreply, socket}

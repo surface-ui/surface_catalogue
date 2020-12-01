@@ -23,7 +23,7 @@ defmodule Surface.Catalogue.MixProject do
     [
       {:jason, "~> 1.0"},
       {:html_entities, "~> 0.4"},
-      {:surface, git: "https://github.com/msaraiva/surface.git", tag: "v0.1.0-rc.2"}
+      {:surface, "~> 0.1.1"}
     ]
   end
 end

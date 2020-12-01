@@ -37,14 +37,9 @@ defmodule Surface.Catalogue.PlaygroundLive do
         {{ Phoenix.HTML.Tag.csrf_meta_tag() }}
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
         {{ raw(@head) }}
         <script defer type="module" src="/js/app.js"></script>
-        <style>
-          html {
-            max-height: 300px; overflow-y: scroll;
-          }
-        </style>
       </head>
       <body style={{ @style }} class={{ @class }}>
         {{ live_render(@socket, @playground, id: "playground", session: %{"__window_id__" => @__window_id__}) }}

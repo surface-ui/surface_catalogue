@@ -49,7 +49,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         </TabItem>
         <TabItem label="Event Log" visible={{ @events != [] }}>
           <span style="margin-left: 1.0rem;">
-            Exposed events: <span class="has-text-weight-semibold">{{ available_events(@events) }}</span>
+            <span class="has-text-weight-semibold">Events: </span>
+            <span>{{ available_events(@events) }}</span>
             <span style="float: right; padding-right: 1.0rem;">
               <a :on-click="clear_event_log">Clear</a>
             </span>
@@ -58,7 +59,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           <div id="event-log" style="height: 400px; overflow: scroll; font-family: monospace" class="is-size-7">
             <div id="event-log-content-{{ @event_log_counter }}" phx-update="append">
               <p :for={{ {id, message} <- @event_log_entries }} id={{ id }}>
-                <span> {{ message }} </span>
+                <span> {{ raw(message) }} </span>
               </p>
             </div>
           </div>
@@ -91,13 +92,12 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
      assign(socket, playground_pid: playground_pid, props_values: props_values_with_events)}
   end
 
-  def handle_info({:playground_event_received, event, value}, socket) do
+  def handle_info({:playground_event_received, event, value, props_values}, socket) do
     time = NaiveDateTime.local_now()
-    message = "#{time} - Event \"#{event}\", #{inspect(value)}"
+    message = "#{time} - Event <span class=\"has-text-weight-semibold\">\"#{event}\"</span>, #{inspect(value)}"
     id = :erlang.unique_integer([:positive]) |> to_string()
-    Tabs.set_active_tab("tools-tabs", 1)
 
-    {:noreply, assign(socket, :event_log_entries, [{id, message}])}
+    {:noreply, assign(socket, event_log_entries: [{id, message}], props_values: props_values)}
   end
 
   def handle_event("change", %{"props_values" => props_values}, socket) do
@@ -141,6 +141,10 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     end
   end
 
+  defp convert_prop_value(:integer, value) do
+    String.to_integer(value)
+  end
+
   defp convert_prop_value(:list, value) do
     try do
       case Code.eval_string(value) do
@@ -159,6 +163,6 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   defp available_events(events) do
-    Enum.map_join(events, ", ", & &1.name)
+    Enum.map_join(events, " | ", & &1.name)
   end
 end
