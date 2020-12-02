@@ -33,7 +33,7 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0", only: :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:surface, "~> 0.1.1"}
+      {:surface, path: "../surface", override: true}
     ]
   end
 end

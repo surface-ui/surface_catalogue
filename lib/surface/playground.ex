@@ -19,6 +19,7 @@ defmodule Surface.Playground do
       use Surface.LiveView
 
       alias unquote(subject)
+      require Surface.Catalogue.Data, as: Data
 
       @moduledoc catalogue: [
                    head: unquote(head),
