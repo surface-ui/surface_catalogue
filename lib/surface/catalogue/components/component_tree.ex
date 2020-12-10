@@ -32,7 +32,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
                     {has_child_selected?} = {has_child_selected?(mod_path, selected_component)} }}>
         <li :if={{ component_type != :none }}>
           <LivePatch
-            to="/catalogue/{{inspect(module)}}"
+            to={{ @socket.router.__helpers__().live_path(@socket, Surface.Catalogue.PageLive, inspect(module)) }}
             class={{ "has-text-weight-bold": selected_component?(mod_path, selected_component) }}>
             <span class="icon">
               <i class={{ component_icon(component_type) }}></i>

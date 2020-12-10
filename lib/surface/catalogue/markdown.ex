@@ -23,7 +23,20 @@ defmodule Surface.Catalogue.Markdown do
           html
 
         {:error, html, messages} ->
-          Enum.each(messages, fn msg -> IO.warn(msg) end)
+          Enum.each(messages, fn
+            {:warning, _line, msg} ->
+              message = """
+              #{msg}
+
+              Original code:
+
+              #{text}
+              """
+              IO.warn(message)
+
+            msg ->
+              IO.warn(msg)
+          end)
           html
       end
 

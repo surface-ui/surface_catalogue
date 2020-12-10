@@ -66,21 +66,21 @@ defmodule Surface.Catalogue.PageLive do
                 <ul>
                   <li class={{ "is-active": @action == "docs"}}>
                     <LivePatch
-                      to="/catalogue/{{@component_name}}/docs">
+                      to={{ @socket.router.__helpers__().live_path(@socket, __MODULE__, @component_name, :docs) }}>
                       <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
                       <span>Docs &amp; API</span>
                     </LivePatch>
                   </li>
                   <li :if={{ @has_example? }} class={{ "is-active": @action == "example"}}>
                     <LivePatch
-                      to="/catalogue/{{@component_name}}/example">
+                      to={{ @socket.router.__helpers__().live_path(@socket, __MODULE__, @component_name, :example)}}>
                       <span class="icon is-small"><i class="fas fa-image" aria-hidden="true"></i></span>
                       <span>Example</span>
                     </LivePatch>
                   </li>
                   <li :if={{ @has_playground? }} class={{ "is-active": @action == "playground"}}>
                     <LivePatch
-                      to="/catalogue/{{@component_name}}/playground">
+                      to={{ @socket.router.__helpers__().live_path(@socket, __MODULE__, @component_name, :playground)}}>
                       <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true"></i></span>
                       <span>Playground</span>
                     </LivePatch>
@@ -101,7 +101,7 @@ defmodule Surface.Catalogue.PageLive do
                 </div>
                 <iframe
                   :if={{ @action in ["example", "playground"] }}
-                  src="/catalogue/{{@component_name}}/{{@action}}/view?__window_id__={{@__window_id__}}"
+                  src={{ iframe_src(@socket, @component_name, @action, __window_id__: @__window_id__) }}
                   style="width: 100%; visibility: hidden; overflow-y: scroll;"
                   frameborder="0"
                   onload="onIframeLoaded(this)">
@@ -128,5 +128,15 @@ defmodule Surface.Catalogue.PageLive do
 
   defp get_component_by_name(name) do
     name && Module.safe_concat([name])
+  end
+
+  defp iframe_src(socket, component_name, action, params) do
+    lv =
+      case action do
+        "example" -> Surface.Catalogue.ExampleLive
+        "playground" -> Surface.Catalogue.PlaygroundLive
+      end
+
+    socket.router.__helpers__().live_path(socket, lv, component_name, params)
   end
 end
