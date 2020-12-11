@@ -57,26 +57,19 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     """
   end
 
-  def handle_info({:playground_init, playground_pid, subject, props_values}, socket) do
-    {events, props} =
-      subject.__props__()
-      |> Enum.split_with(fn prop -> prop.type == :event end)
+  def handle_info({:playground_init, playground_pid, subject, props, events, props_values}, socket) do
+    Tabs.set_active_tab("tools-tabs", 0)
 
     socket =
       socket
+      |> assign(playground_pid: playground_pid)
       |> assign(:component_module, subject)
       |> assign(:props, props)
       |> assign(:events, events)
+      |> assign(:props_values, props_values)
       |> clear_event_log()
 
-    events_props_values = generate_events_props(socket.assigns.events)
-    props_values_with_events = Map.merge(props_values, events_props_values)
-    send(playground_pid, {:update_props, props_values_with_events})
-
-    Tabs.set_active_tab("tools-tabs", 0)
-
-    {:noreply,
-     assign(socket, playground_pid: playground_pid, props_values: props_values_with_events)}
+    {:noreply, socket}
   end
 
   def handle_info({:playground_event_received, event, value, props_values}, socket) do
@@ -109,12 +102,6 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def clear_event_log(socket) do
     update(socket, :event_log_counter, &(&1 + 1))
-  end
-
-  defp generate_events_props(events) do
-    for %{name: name} <- events, into: %{} do
-      {name, %{name: name, target: :live_view}}
-    end
   end
 
   defp convert_props_values(props_values, component) do

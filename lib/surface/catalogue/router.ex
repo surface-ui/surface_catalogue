@@ -1,8 +1,6 @@
 defmodule Surface.Catalogue.Router do
   defmacro surface_catalogue(path, opts \\ []) do
     quote bind_quoted: binding() do
-      example_layout = Keyword.get(opts, :example_layout, Surface.Catalogue.LayoutExampleView)
-
       scope path, alias: false, as: false do
         import Phoenix.LiveView.Router, only: [live: 3]
 

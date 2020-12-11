@@ -82,19 +82,27 @@ defmodule Surface.Playground do
     socket = assign(socket, :__window_id__, window_id)
 
     if connected?(socket) do
+      {events, props} =
+        subject.__props__()
+        |> Enum.split_with(fn prop -> prop.type == :event end)
+
+      events_props_values = generate_events_props(events)
+      props_values_with_events = Map.merge(socket.assigns.props, events_props_values)
+
       Phoenix.PubSub.broadcast(
         Surface.Catalogue.PubSub,
         "Surface.Catalogue:#{window_id}",
-        {:playground_init, self(), subject, socket.assigns.props}
+        {:playground_init, self(), subject, props, events, props_values_with_events}
       )
+      {:ok, assign(socket, :props, props_values_with_events)}
+    else
+      {:ok, socket}
     end
-
-    {:ok, socket}
   end
 
   @doc false
-  def __handle_info__({:update_props, props}, socket) do
-    {:noreply, assign(socket, :props, props)}
+  def __handle_info__({:update_props, values}, socket) do
+    {:noreply, assign(socket, :props, values)}
   end
 
   @doc false
@@ -116,5 +124,11 @@ defmodule Surface.Playground do
 
   defp get_value_by_key(_map, _key) do
     nil
+  end
+
+  defp generate_events_props(events) do
+    for %{name: name} <- events, into: %{} do
+      {name, %{name: name, target: :live_view}}
+    end
   end
 end
