@@ -57,26 +57,12 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           </span>
           <hr style="margin: 0.8rem 0;">
           <div id="event-log" style="height: 400px; overflow: scroll; font-family: monospace" class="is-size-7">
-            <div id="event-log-content-{{ @event_log_counter }}" phx-update="append">
+            <div id="event-log-content-{{ @event_log_counter }}" phx-update="append" phx-hook="EventLog">
               <p :for={{ {id, message} <- @event_log_entries }} id={{ id }}>
                 <span> {{ raw(message) }} </span>
               </p>
             </div>
           </div>
-          <script>
-            const targetNode = document.getElementById("event-log")
-
-            var callback = function(mutationsList, observer) {
-              for(var mutation of mutationsList) {
-                if (mutation.type == 'childList') {
-                  targetNode.scrollTop = targetNode.scrollHeight
-                }
-              }
-            };
-
-            var observer = new MutationObserver(callback);
-            observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
-        </script>
         </TabItem>
       </Tabs>
     </div>

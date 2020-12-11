@@ -1,3 +1,74 @@
 /* This file is for your main application css. */
 // @import "./phoenix.css";
 // @import "../node_modules/nprogress/nprogress.css";
+
+.menu-list li ul {
+  margin-top: .2em;
+  margin-bottom: .3em;
+}
+
+.menu-list li a {
+  padding: .4em .75em;
+}
+
+.animated.faster {
+  animation-duration: 0.3s;
+}
+
+.section {
+  padding-top: 1.5rem;
+}
+
+.sidebar-bg {
+  position: absolute;
+  bottom: 0;
+  right: 50%;
+  left: 0;
+  top: 0;
+  background: #f5f5f5;
+  z-index: -1;
+}
+
+.main-content {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.component.tabs {
+  margin-bottom: 0.5rem;
+}
+
+.component.tabs li.is-active a {
+  border-bottom-width: 2px;
+}
+
+#playground_tools .tabs {
+  margin-bottom: 0.8rem;
+}
+
+@media screen and (min-width: 769px) {
+  .main-content > div.container {
+    min-width: 500px;
+  }
+}
+
+.markdown {
+  margin-top: 2em;
+}
+
+/* Components.ComponentInfo */
+
+.ComponentInfo .subtitle {
+  color: #7a7a7a;
+}
+
+/* Components.ComponentAPI */
+
+.ComponentAPI table{
+  font-size: .9rem;
+}
+
+.ComponentAPI .table td, .table th {
+  line-height: 1.5;
+}
