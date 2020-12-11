@@ -6,7 +6,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   alias Surface.Catalogue.Components.PropInput
   alias Surface.Components.Form
 
-  data playground_pid, :any
+  data playground_pid, :any, default: nil
   data props_values, :map, default: %{}
   data event_log_counter, :integer, default: 1
   data event_log_entries, :list, default: []
@@ -19,24 +19,12 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       Phoenix.PubSub.subscribe(Surface.Catalogue.PubSub, "Surface.Catalogue:#{window_id}")
     end
 
-    component_module = Module.safe_concat([session["component"]])
-
-    {events, props} =
-      component_module.__props__()
-      |> Enum.split_with(fn prop -> prop.type == :event end)
-
-    socket =
-      socket
-      |> assign(:component_module, component_module)
-      |> assign(:props, props)
-      |> assign(:events, events)
-
     {:ok, socket, temporary_assigns: [event_log_entries: []]}
   end
 
   def render(assigns) do
     ~H"""
-    <div>
+    <div :show={{ @playground_pid != nil }}>
       <Tabs id="tools-tabs" animated=false>
         <TabItem label="Properties">
           <div style="margin-top: 0.7rem;">
@@ -69,10 +57,23 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     """
   end
 
-  def handle_info({:playground_init, playground_pid, props_values}, socket) do
+  def handle_info({:playground_init, playground_pid, subject, props_values}, socket) do
+    {events, props} =
+      subject.__props__()
+      |> Enum.split_with(fn prop -> prop.type == :event end)
+
+    socket =
+      socket
+      |> assign(:component_module, subject)
+      |> assign(:props, props)
+      |> assign(:events, events)
+      |> clear_event_log()
+
     events_props_values = generate_events_props(socket.assigns.events)
     props_values_with_events = Map.merge(props_values, events_props_values)
     send(playground_pid, {:update_props, props_values_with_events})
+
+    Tabs.set_active_tab("tools-tabs", 0)
 
     {:noreply,
      assign(socket, playground_pid: playground_pid, props_values: props_values_with_events)}
@@ -98,12 +99,16 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   def handle_event("clear_event_log", _, socket) do
-    {:noreply, update(socket, :event_log_counter, &(&1 + 1))}
+    {:noreply, clear_event_log(socket)}
   end
 
   def handle_event(event, value, socket) do
     IO.inspect("Event #{event} received. Value: #{inspect(value)}")
     {:noreply, socket}
+  end
+
+  def clear_event_log(socket) do
+    update(socket, :event_log_counter, &(&1 + 1))
   end
 
   defp generate_events_props(events) do

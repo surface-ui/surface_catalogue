@@ -73,22 +73,19 @@ defmodule Surface.Catalogue.PageLive do
               <div class="component tabs is-medium">
                 <ul>
                   <li class={{ "is-active": @action == "docs"}}>
-                    <LivePatch
-                      to={{ path_to(@socket, __MODULE__, @component_name, :docs) }}>
+                    <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :docs) }}>
                       <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
                       <span>Docs &amp; API</span>
                     </LivePatch>
                   </li>
                   <li :if={{ @has_example? }} class={{ "is-active": @action == "example"}}>
-                    <LivePatch
-                      to={{ path_to(@socket, __MODULE__, @component_name, :example)}}>
+                    <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :example)}}>
                       <span class="icon is-small"><i class="fas fa-image" aria-hidden="true"></i></span>
                       <span>Example</span>
                     </LivePatch>
                   </li>
                   <li :if={{ @has_playground? }} class={{ "is-active": @action == "playground"}}>
-                    <LivePatch
-                      to={{ @socket.router.__helpers__().live_path(@socket, __MODULE__, @component_name, :playground)}}>
+                    <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :playground)}}>
                       <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true"></i></span>
                       <span>Playground</span>
                     </LivePatch>
@@ -101,33 +98,25 @@ defmodule Surface.Catalogue.PageLive do
                 </div>
                 <If condition={{ connected?(@socket) }}>
                   <iframe
+                    id="iframe_example"
                     :if={{ @has_example? }}
                     :show={{ @action == "example" }}
                     src={{ path_to(@socket, ExampleLive, @component_name, __window_id__: @__window_id__) }}
                     style="width: 100%; overflow-y: scroll;"
                     frameborder="0"
-                    id="iframe_example"
                     phx-hook="IframeBody"
-                    >
-                  </iframe>
+                  />
                   <iframe
+                    id="iframe_playground"
                     :if={{ @has_playground? }}
                     :show={{ @action == "playground" }}
                     src={{ path_to(@socket, PlaygroundLive, @component_name, __window_id__: @__window_id__) }}
                     style="width: 100%; overflow-y: scroll;"
                     frameborder="0"
-                    id="iframe_playground"
                     phx-hook="IframeBody"
-                    >
-                  </iframe>
-                  <div
-                    :show={{ @action == "playground" }}
-                    id="playground_tools_container"
-                    style="display: none; padding-top: 1.5rem;">
-                    <PlaygroundTools
-                      id="playground_tools"
-                      session={{ %{"component" => @component_name, "__window_id__" => @__window_id__} }}
-                    />
+                  />
+                  <div :show={{ @action == "playground" }} style="display: none; padding-top: 1.5rem;">
+                    <PlaygroundTools id="playground_tools" session={{ %{"__window_id__" => @__window_id__} }} />
                   </div>
                 </If>
               </div>

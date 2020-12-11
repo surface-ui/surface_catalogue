@@ -30,7 +30,7 @@ defmodule Surface.Playground do
 
       @impl true
       def mount(params, session, socket) do
-        unquote(__MODULE__).__mount__(params, session, socket)
+        unquote(__MODULE__).__mount__(params, session, socket, unquote(subject))
       end
 
       @impl true
@@ -77,7 +77,7 @@ defmodule Surface.Playground do
   end
 
   @doc false
-  def __mount__(params, session, socket) do
+  def __mount__(params, session, socket, subject) do
     window_id = get_window_id(session, params)
     socket = assign(socket, :__window_id__, window_id)
 
@@ -85,7 +85,7 @@ defmodule Surface.Playground do
       Phoenix.PubSub.broadcast(
         Surface.Catalogue.PubSub,
         "Surface.Catalogue:#{window_id}",
-        {:playground_init, self(), socket.assigns.props}
+        {:playground_init, self(), subject, socket.assigns.props}
       )
     end
 
