@@ -115,7 +115,7 @@ defmodule Surface.Catalogue.PageLive do
                     frameborder="0"
                     phx-hook="IframeBody"
                   />
-                  <div :show={{ @action == "playground" }} style="display: none; padding-top: 1.5rem;">
+                  <div :show={{ @action == "playground" }} style="padding-top: 1.5rem;">
                     <PlaygroundTools id="playground_tools" session={{ %{"__window_id__" => @__window_id__} }} />
                   </div>
                 </If>

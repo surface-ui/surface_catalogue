@@ -44,7 +44,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </span>
           </span>
           <hr style="margin: 0.8rem 0;">
-          <div id="event-log" style="height: 400px; overflow: scroll; font-family: monospace" class="is-size-7">
+          <div id="event-log" style="height: 250px; overflow: scroll; font-family: monospace" class="is-size-7">
             <div id="event-log-content-{{ @event_log_counter }}" phx-update="append" phx-hook="EventLog">
               <p :for={{ {id, message} <- @event_log_entries }} id={{ id }}>
                 <span> {{ raw(message) }} </span>
