@@ -15,8 +15,12 @@ import {LiveSocket} from "phoenix_live_view"
 
 function resizeIframe(iframe) {
   iframe.style.height = "0px"
-  let height = iframe.contentWindow.document.documentElement.scrollHeight + 'px'
-  iframe.style.height = height
+  let height = iframe.contentWindow.document.documentElement.scrollHeight
+  if (height != 0) {
+    iframe.style.height = height + 'px'
+    iframe.contentWindow.document.body.style.height = height + 'px'
+    console.log(iframe.contentWindow.document.body.style.height, "HEIGHT")
+  }
 }
 
 window.togggleNode = (a) => {

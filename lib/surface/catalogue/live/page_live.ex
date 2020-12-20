@@ -72,19 +72,19 @@ defmodule Surface.Catalogue.PageLive do
             <If condition={{ @component_module }}>
               <div class="component tabs is-medium">
                 <ul>
-                  <li class={{ "is-active": @action == "docs"}}>
+                  <li class={{ "is-active": @action == "docs" }}>
                     <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :docs) }}>
                       <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
                       <span>Docs &amp; API</span>
                     </LivePatch>
                   </li>
-                  <li :if={{ @has_example? }} class={{ "is-active": @action == "example"}}>
+                  <li :if={{ @has_example? }} class={{ "is-active": @action == "example" }}>
                     <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :example)}}>
                       <span class="icon is-small"><i class="fas fa-image" aria-hidden="true"></i></span>
                       <span>Example</span>
                     </LivePatch>
                   </li>
-                  <li :if={{ @has_playground? }} class={{ "is-active": @action == "playground"}}>
+                  <li :if={{ @has_playground? }} class={{ "is-active": @action == "playground" }}>
                     <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :playground)}}>
                       <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true"></i></span>
                       <span>Playground</span>
