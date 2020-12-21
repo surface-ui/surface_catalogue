@@ -12,6 +12,7 @@ defmodule Surface.Catalogue.PageLive do
   data has_playground?, :boolean
   data components, :map
   data action, :string
+  data code, :string
   data __window_id__, :string, default: nil
 
   def mount(params, session, socket) do
@@ -40,6 +41,12 @@ defmodule Surface.Catalogue.PageLive do
         # TODO: validate modules
         example_view = Module.concat([component_name, "Example"])
         playground_view = Module.concat([component_name, "Playground"])
+        example_meta = Surface.Catalogue.get_metadata(example_view) || %{}
+
+        code =
+          example_meta
+          |> Map.get(:code, "")
+          |> String.trim_trailing()
 
         socket
         |> assign(:component_name, component_name)
@@ -47,6 +54,7 @@ defmodule Surface.Catalogue.PageLive do
         |> assign(:has_example?, module_loaded?(example_view))
         |> assign(:has_playground?, module_loaded?(playground_view))
         |> assign(:action, params["action"] || "docs")
+        |> assign(:code, code)
       else
         socket
       end
@@ -97,17 +105,26 @@ defmodule Surface.Catalogue.PageLive do
                   <ComponentInfo module={{ @component_module }} />
                 </div>
                 <If condition={{ connected?(@socket) }}>
+                  <div :show={{ @action == "example" }} class="Example vertical">
+                    <div class="demo">
+                      <iframe
+                        id="iframe-example"
+                        :if={{ @has_example? }}
+                        src={{ path_to(@socket, ExampleLive, @component_name, __window_id__: @__window_id__) }}
+                        style="width: 100%; overflow-y: scroll;"
+                        frameborder="0"
+                        phx-hook="IframeBody"
+                      />
+                    </div>
+                    <div class="code">
+                      <pre class="language-jsx">
+                        <code class="content language-jsx" phx-hook="Highlight" id="example-code">
+    {{ @code }}</code>
+                      </pre>
+                    </div>
+                  </div>
                   <iframe
-                    id="iframe_example"
-                    :if={{ @has_example? }}
-                    :show={{ @action == "example" }}
-                    src={{ path_to(@socket, ExampleLive, @component_name, __window_id__: @__window_id__) }}
-                    style="width: 100%; overflow-y: scroll;"
-                    frameborder="0"
-                    phx-hook="IframeBody"
-                  />
-                  <iframe
-                    id="iframe_playground"
+                    id="iframe-playground"
                     :if={{ @has_playground? }}
                     :show={{ @action == "playground" }}
                     src={{ path_to(@socket, PlaygroundLive, @component_name, __window_id__: @__window_id__) }}

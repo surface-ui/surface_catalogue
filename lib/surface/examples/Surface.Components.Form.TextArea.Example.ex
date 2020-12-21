@@ -1,15 +1,10 @@
 defmodule Surface.Components.Form.TextArea.Example do
-  use Surface.LiveView
-
-  @moduledoc catalogue: [
-               title: "Example #1",
-               head: """
-               <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-               """,
-               code: File.read!(__ENV__.file)
-             ]
-
-  alias Surface.Components.Form.TextArea
+  use Surface.Example,
+    subject: Surface.Components.Form.TextArea,
+    # TODO: Remove this after moving css files to assets/
+    head: """
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
+    """
 
   def render(assigns) do
     ~H"""

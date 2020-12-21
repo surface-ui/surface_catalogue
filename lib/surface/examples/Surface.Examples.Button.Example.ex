@@ -1,14 +1,10 @@
 defmodule Surface.Examples.Button.Example do
-  use Surface.LiveView
-
-  @moduledoc catalogue: [
+  use Surface.Example,
+    subject: Surface.Examples.Button,
+    # TODO: Remove this after moving css files to assets/
     head: """
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-    """,
-    code: File.read!(__ENV__.file)
-  ]
-
-  alias Surface.Examples.Button
+    """
 
   def render(assigns) do
     ~H"""

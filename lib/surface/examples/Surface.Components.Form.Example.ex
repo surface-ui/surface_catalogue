@@ -1,15 +1,11 @@
 defmodule Surface.Components.Form.Example do
-  use Surface.LiveView
+  use Surface.Example,
+    subject: Surface.Components.Form,
+    # TODO: Remove this after moving css files to assets/
+    head: """
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
+    """
 
-  @moduledoc catalogue: [
-               title: "Example #1",
-               head: """
-               <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-               """,
-               code: File.read!(__ENV__.file)
-             ]
-
-  alias Surface.Components.Form
   alias Surface.Components.Form.{TextInput, Label, Field}
 
   data user, :map, default: %{"name" => "", "email" => ""}

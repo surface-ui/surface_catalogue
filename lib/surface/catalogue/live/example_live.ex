@@ -18,7 +18,6 @@ defmodule Surface.Catalogue.ExampleLive do
       |> assign(:head, meta[:head] || "")
       |> assign(:style, meta[:style] || "")
       |> assign(:class, meta[:class])
-      |> assign(:code, meta[:code])
 
     {:noreply, socket}
   end

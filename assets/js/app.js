@@ -12,6 +12,7 @@ import "../css/app.scss"
 import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
+import Prism from './prism.js';
 
 function resizeIframe(iframe) {
   iframe.style.height = "0px"
@@ -19,7 +20,6 @@ function resizeIframe(iframe) {
   if (height != 0) {
     iframe.style.height = height + 'px'
     iframe.contentWindow.document.body.style.height = height + 'px'
-    console.log(iframe.contentWindow.document.body.style.height, "HEIGHT")
   }
 }
 
@@ -51,6 +51,15 @@ Hooks.IframeBody = {
     resizeIframe(iframe)
   }
 };
+
+Hooks.Highlight = {
+  mounted() {
+    Prism.highlightElement(document.getElementById(this.el.id))
+  },
+  updated() {
+    Prism.highlightElement(document.getElementById(this.el.id))
+  }
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})
