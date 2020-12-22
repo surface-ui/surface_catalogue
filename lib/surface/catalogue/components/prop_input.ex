@@ -1,4 +1,6 @@
 defmodule Surface.Catalogue.Components.PropInput do
+  @moduledoc false
+
   use Surface.Component
 
   alias Surface.Components.Form.{TextInput, Checkbox, Select, NumberInput}

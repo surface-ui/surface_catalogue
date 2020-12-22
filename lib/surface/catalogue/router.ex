@@ -12,10 +12,10 @@ defmodule Surface.Catalogue.Router do
         }
 
         live "/", PageLive, layout: {LayoutView, :root}
+        live "/examples/:example", ExampleLive, layout: false
+        live "/:component/playground/view", PlaygroundLive, layout: false
         live "/:component/", PageLive, layout: {LayoutView, :root}
         live "/:component/:action", PageLive, layout: {LayoutView, :root}
-        live "/:component/example/view", ExampleLive, layout: false
-        live "/:component/playground/view", PlaygroundLive, layout: false
       end
     end
   end

@@ -8,8 +8,7 @@ defmodule Surface.Catalogue.ExampleLive do
   data code, :string
 
   def handle_params(params, _uri, socket) do
-    # TODO: validate example view
-    example_view = Module.safe_concat([params["component"], "Example"])
+    example_view = Module.safe_concat([params["example"]])
     meta = Surface.Catalogue.get_metadata(example_view)
 
     socket =

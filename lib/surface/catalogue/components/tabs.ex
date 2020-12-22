@@ -1,7 +1,5 @@
 defmodule Surface.Catalogue.Components.Tabs do
-  @moduledoc """
-  A simple horizontal navigation **tabs** component
-  """
+  @moduledoc false
 
   use Surface.LiveComponent
 

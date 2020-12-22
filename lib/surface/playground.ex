@@ -22,6 +22,7 @@ defmodule Surface.Playground do
       require Surface.Catalogue.Data, as: Data
 
       @moduledoc catalogue: [
+                   subject: unquote(subject),
                    head: unquote(head),
                    style: unquote(style),
                    class: unquote(class)

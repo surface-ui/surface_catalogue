@@ -1,10 +1,5 @@
 defmodule Surface.Catalogue.Components.Table do
-  @moduledoc """
-  The inevitable HTML table.
-
-  You can create a table by setting a souce `data` to it and defining
-  columns using the `Table.Column` component.
-  """
+  @moduledoc false
 
   use Surface.Component
 

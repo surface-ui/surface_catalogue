@@ -1,10 +1,5 @@
 defmodule Surface.Catalogue.Components.Tabs.TabItem do
-  @moduledoc """
-  Defines a tab item for the parent tabs component.
-
-  The tab item instance is automatically added to the
-  parent's `tabs` slot.
-  """
+  @moduledoc false
 
   use Surface.Component, slot: "tabs"
 

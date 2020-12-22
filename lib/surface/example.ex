@@ -37,13 +37,21 @@ defmodule Surface.Example do
     head = Keyword.get(opts, :head, @default_head)
     style = Keyword.get(opts, :style)
     class = Keyword.get(opts, :class)
+    title = Keyword.get(opts, :title)
+    direction = Keyword.get(opts, :direction)
+    code_perc = Keyword.get(opts, :code_perc)
+    subject = Keyword.get(opts, :subject)
 
     quote do
       @moduledoc catalogue: [
+        subject: unquote(subject),
         head: unquote(head),
         style: unquote(style),
         class: unquote(class),
-        code: unquote(code)
+        title: unquote(title),
+        code: unquote(code),
+        direction: unquote(direction),
+        code_perc: unquote(code_perc)
       ]
     end
   end

@@ -1,6 +1,8 @@
-defmodule Surface.Examples.Button.Example do
+defmodule Surface.Examples.Button.Example_02 do
   use Surface.Example,
     subject: Surface.Examples.Button,
+    title: "Colors & Sizes",
+    direction: "vertical",
     # TODO: Remove this after moving css files to assets/
     head: """
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />

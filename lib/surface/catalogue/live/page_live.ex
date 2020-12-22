@@ -1,6 +1,7 @@
 defmodule Surface.Catalogue.PageLive do
   use Surface.LiveView
 
+  alias Surface.Catalogue
   alias Surface.Catalogue.Components.{ComponentInfo, ComponentTree, PlaygroundTools}
   alias Surface.Components.LivePatch
   alias Surface.Catalogue.ExampleLive
@@ -12,52 +13,26 @@ defmodule Surface.Catalogue.PageLive do
   data has_playground?, :boolean
   data components, :map
   data action, :string
-  data code, :string
+  data examples, :list
   data __window_id__, :string, default: nil
 
   def mount(params, session, socket) do
+    {components, examples_and_playgrounds} = Catalogue.get_components_info()
+
     socket =
-      if connected?(socket) do
-        window_id = Surface.Catalogue.get_window_id(session, params)
-        assign(socket, :__window_id__, window_id)
-      else
-        socket
-      end
+      socket
+      |> maybe_assign_window_id(params, session)
+      |> assign(:components, components)
+      |> assign(:examples_and_playgrounds, examples_and_playgrounds)
 
     {:ok, socket}
   end
 
   def handle_params(params, _uri, socket) do
-    component_name = params["component"]
-    component_module = get_component_by_name(component_name)
-
     socket =
       socket
-      |> assign(:component_name, component_name)
-      |> assign(:component_module, component_module)
-
-    socket =
-      if component_module do
-        # TODO: validate modules
-        example_view = Module.concat([component_name, "Example"])
-        playground_view = Module.concat([component_name, "Playground"])
-        example_meta = Surface.Catalogue.get_metadata(example_view) || %{}
-
-        code =
-          example_meta
-          |> Map.get(:code, "")
-          |> String.trim_trailing()
-
-        socket
-        |> assign(:component_name, component_name)
-        |> assign(:component_module, component_module)
-        |> assign(:has_example?, module_loaded?(example_view))
-        |> assign(:has_playground?, module_loaded?(playground_view))
-        |> assign(:action, params["action"] || "docs")
-        |> assign(:code, code)
-      else
-        socket
-      end
+      |> assign(:action, params["action"] || "docs")
+      |> assign_component_info(params["component"])
 
     {:noreply, socket}
   end
@@ -69,7 +44,8 @@ defmodule Surface.Catalogue.PageLive do
       <div class="container is-fullhd">
         <section class="main-content columns">
           <ComponentTree
-            id="component_tree"
+            id="component-tree"
+            components={{ @components }}
             selected_component={{ @component_name }}/>
           <div class="container column" style="background-color: #fff; min-height: 500px;">
             <div :if={{ !@component_module }} class="columns is-centered is-vcentered is-mobile" style="height: 300px">
@@ -89,7 +65,7 @@ defmodule Surface.Catalogue.PageLive do
                   <li :if={{ @has_example? }} class={{ "is-active": @action == "example" }}>
                     <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :example)}}>
                       <span class="icon is-small"><i class="fas fa-image" aria-hidden="true"></i></span>
-                      <span>Example</span>
+                      <span>Examples</span>
                     </LivePatch>
                   </li>
                   <li :if={{ @has_playground? }} class={{ "is-active": @action == "playground" }}>
@@ -105,26 +81,31 @@ defmodule Surface.Catalogue.PageLive do
                   <ComponentInfo module={{ @component_module }} />
                 </div>
                 <If condition={{ connected?(@socket) }}>
-                  <div :show={{ @action == "example" }} class="Example vertical">
-                    <div class="demo">
-                      <iframe
-                        id="iframe-example"
-                        :if={{ @has_example? }}
-                        src={{ path_to(@socket, ExampleLive, @component_name, __window_id__: @__window_id__) }}
-                        style="width: 100%; overflow-y: scroll;"
-                        frameborder="0"
-                        phx-hook="IframeBody"
-                      />
+                  <For each={{ {{example, title, code, direction, demo_perc, code_perc}, index} <- Enum.with_index(@examples, 1) }}>
+                    <h3 :show={{ @action == "example" && title }} id="example-{{index}}" class="example-title title is-4 is-spaced">
+                      <a href="#example-{{index}}">#</a> {{ title }}
+                    </h3>
+                    <div :show={{ @action == "example" }} class="Example {{direction}}"
+                    >
+                      <div class="demo" style="width: {{demo_perc}}%">
+                        <iframe
+                          id="example-iframe-{{index}}"
+                          src={{ path_to(@socket, ExampleLive, example, __window_id__: @__window_id__) }}
+                          style="width: 100%; overflow-y: scroll;"
+                          frameborder="0"
+                          phx-hook="IframeBody"
+                        />
+                      </div>
+                      <div class="code" style="width: {{code_perc}}%">
+                        <pre class="language-jsx">
+                          <code class="content language-jsx" phx-hook="Highlight" id="example-code-{{index}}">
+    {{ code }}</code>
+                        </pre>
+                      </div>
                     </div>
-                    <div class="code">
-                      <pre class="language-jsx">
-                        <code class="content language-jsx" phx-hook="Highlight" id="example-code">
-    {{ @code }}</code>
-                      </pre>
-                    </div>
-                  </div>
+                  </For>
                   <iframe
-                    id="iframe-playground"
+                    id="playground-iframe"
                     :if={{ @has_playground? }}
                     :show={{ @action == "playground" }}
                     src={{ path_to(@socket, PlaygroundLive, @component_name, __window_id__: @__window_id__) }}
@@ -145,8 +126,28 @@ defmodule Surface.Catalogue.PageLive do
     """
   end
 
-  defp module_loaded?(module) do
-    match?({:module, _mod}, Code.ensure_compiled(module))
+  defp assign_component_info(socket, component_name) do
+    component_module = get_component_by_name(component_name)
+    examples_and_playgrounds = socket.assigns.examples_and_playgrounds
+
+    examples = Catalogue.get_examples(component_module, examples_and_playgrounds)
+    playgrounds = Catalogue.get_playgrounds(component_module, examples_and_playgrounds)
+
+    socket
+    |> assign(:component_name, component_name)
+    |> assign(:component_module, component_module)
+    |> assign(:has_example?, examples != [])
+    |> assign(:has_playground?, playgrounds != [])
+    |> assign(:examples, examples)
+  end
+
+  defp maybe_assign_window_id(socket, params, session) do
+    if connected?(socket) do
+      window_id = Catalogue.get_window_id(session, params)
+      assign(socket, :__window_id__, window_id)
+    else
+      socket
+    end
   end
 
   defp get_component_by_name(name) do

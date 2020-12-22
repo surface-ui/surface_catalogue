@@ -1,4 +1,6 @@
 defmodule Surface.Catalogue.Components.ComponentInfo do
+  @moduledoc false
+
   use Surface.Component
 
   alias Surface.Catalogue.Components.ComponentAPI

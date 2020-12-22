@@ -1,15 +1,13 @@
 defmodule Surface.Catalogue.Components.ComponentTree do
+  @moduledoc false
+
   use Surface.LiveComponent
 
   alias Surface.Components.LivePatch
 
   prop selected_component, :string
 
-  data components, :map
-
-  def mount(socket) do
-    {:ok, assign(socket, components: get_components())}
-  end
+  prop components, :map
 
   def render(assigns) do
     ~H"""
@@ -62,42 +60,6 @@ defmodule Surface.Catalogue.Components.ComponentTree do
     end
   end
 
-  def get_components do
-    for [app] <- loaded_applications(),
-        {:ok, modules} = :application.get_key(app, :modules),
-        module <- modules,
-        module_str = to_string(module),
-        String.starts_with?(module_str, "Elixir."),
-        !String.starts_with?(module_str, "Elixir.Surface.Catalogue"),
-        module_loaded?(module),
-        function_exported?(module, :component_type, 0),
-        component_type = module.component_type(),
-        component_type != Surface.LiveView,
-        reduce: %{} do
-      acc ->
-        module_parts = Module.split(module)
-        add_node(module_parts, acc)
-    end
-  end
-
-  defp add_node([first | rest], parent) do
-    node = Map.get(parent, first, %{})
-    Map.put(parent, first, add_node(rest, node))
-  end
-
-  defp add_node([], parent) do
-    parent
-  end
-
-  defp loaded_applications do
-    # If we invoke :application.loaded_applications/0,
-    # it can error if we don't call safe_fixtable before.
-    # Since in both cases we are reaching over the
-    # application controller internals, we choose to match
-    # for performance.
-    :ets.match(:ac_tab, {{:loaded, :"$1"}, :_})
-  end
-
   defp component_type(module) do
     with true <- function_exported?(module, :component_type, 0),
          component_type = module.component_type(),
@@ -107,10 +69,6 @@ defmodule Surface.Catalogue.Components.ComponentTree do
       _ ->
         :none
     end
-  end
-
-  def module_loaded?(module) do
-    match?({:module, _mod}, Code.ensure_compiled(module))
   end
 
   defp selected_component?(mod_path, component) do
