@@ -5,20 +5,24 @@ defmodule Surface.Playground do
 
   import Phoenix.LiveView
 
-  @default_head """
-  <link phx-track-static rel="stylesheet" href="/css/app.css"/>
-  """
+  @default_config [
+    head: """
+    <link phx-track-static rel="stylesheet" href="/css/app.css"/>
+    <script defer type="module" src="/js/app.js"></script>
+    """
+  ]
 
   defmacro __using__(opts) do
-    subject = Keyword.fetch!(opts, :subject)
+    {opts, config} = Keyword.split(opts, [:namespace, :container, :layout])
+    subject = Keyword.fetch!(config, :subject)
 
     quote do
-      use Surface.LiveView
+      use Surface.LiveView, unquote(opts)
 
       alias unquote(subject)
       require Surface.Catalogue.Data, as: Data
 
-      @opts unquote(opts)
+      @config unquote(config)
       @before_compile unquote(__MODULE__)
 
       @impl true
@@ -42,25 +46,25 @@ defmodule Surface.Playground do
   end
 
   defmacro __before_compile__(env) do
-    opts = Module.get_attribute(env.module, :opts)
+    user_config = Module.get_attribute(env.module, :config)
 
-    config =
-      opts
+    catalogue_config =
+      user_config
       |> Keyword.get(:catalogue)
       |> Surface.Catalogue.Util.get_catalogue_config()
 
-    subject = Keyword.fetch!(opts, :subject)
-    head = Keyword.get(opts, :head) || Keyword.get(config, :head) || @default_head
-    style = Keyword.get(opts, :style)
-    class = Keyword.get(opts, :class)
+    config =
+      @default_config
+      |> Keyword.merge(catalogue_config)
+      |> Keyword.merge(user_config)
+
+    subject = Keyword.fetch!(user_config, :subject)
 
     module_doc =
       quote do
         @moduledoc catalogue: [
           subject: unquote(subject),
-          head: unquote(head),
-          style: unquote(style),
-          class: unquote(class)
+          config: unquote(config)
         ]
       end
 

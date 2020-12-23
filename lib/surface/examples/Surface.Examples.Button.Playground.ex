@@ -2,7 +2,7 @@ defmodule Surface.Examples.Button.Playground do
   use Surface.Playground,
     catalogue: Surface.Examples.Catalogue,
     subject: Surface.Examples.Button,
-    style: "height: 60px;"
+    container: {:div, style: "height: 60px;"}
 
   data props, :map, default: %{
     label: "My Button",

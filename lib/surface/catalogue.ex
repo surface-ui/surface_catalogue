@@ -1,5 +1,11 @@
 defmodule Surface.Catalogue do
-  @type option :: {:head, String.t()}
+  @callback config :: keyword()
 
-  @callback config :: [option]
+  # TODO: Add callback `paths/1` to configure where examples/playgrounds are located.
+  # This way we can compile/load them only in dev.
+  #
+  # @callback paths :: [binary()]
+  # ...
+  # def paths(:dev), do: ["examples"]
+  # def paths(_), do: []
 end

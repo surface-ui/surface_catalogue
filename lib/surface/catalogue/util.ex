@@ -49,11 +49,14 @@ defmodule Surface.Catalogue.Util do
   def get_examples(component, examples_and_playgrounds) do
     for example <- examples_and_playgrounds[component][:examples] || [] do
       meta = get_metadata(example)
-      title = Map.get(meta, :title)
+      config = meta[:config]
       code = meta |> Map.get(:code, "") |> String.trim_trailing()
-      direction = Map.get(meta, :direction) || "horizontal"
+
+      title = Keyword.get(config, :title)
+      direction = Keyword.get(config, :direction) || "horizontal"
+
       {demo_perc, code_perc} =
-        case {direction, Map.get(meta, :code_perc)} do
+        case {direction, Keyword.get(config, :code_perc)} do
           {"vertical", _} ->
             {100, 100}
 

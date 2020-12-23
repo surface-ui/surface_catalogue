@@ -5,8 +5,6 @@ defmodule Surface.Catalogue.PlaygroundLive do
 
   data playground, :module
   data head, :string
-  data style, :string
-  data class, :string
   data __window_id__, :string
 
   def mount(params, session, socket) do
@@ -25,9 +23,7 @@ defmodule Surface.Catalogue.PlaygroundLive do
       socket
       |> assign(:component, component)
       |> assign(:playground, playground)
-      |> assign(:head, meta[:head] || "")
-      |> assign(:style, meta[:style] || "")
-      |> assign(:class, meta[:class])
+      |> assign(:head, meta[:config][:head] || "")
 
     {:noreply, socket}
   end
@@ -41,9 +37,8 @@ defmodule Surface.Catalogue.PlaygroundLive do
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
         {{ raw(@head) }}
-        <script defer type="module" src="/js/app.js"></script>
       </head>
-      <body style={{ @style }} class={{ @class }}>
+      <body>
         {{ live_render(@socket, @playground, id: "playground", session: %{"__window_id__" => @__window_id__}) }}
       </body>
     </html>

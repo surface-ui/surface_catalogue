@@ -6,6 +6,7 @@ defmodule Surface.Examples.Catalogue do
     [
       head: """
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
+      <script defer type="module" src="/js/app.js"></script>
       """
     ]
   end
