@@ -11,9 +11,6 @@ defmodule Surface.Playground do
 
   defmacro __using__(opts) do
     subject = Keyword.fetch!(opts, :subject)
-    head = Keyword.get(opts, :head, @default_head)
-    style = Keyword.get(opts, :style)
-    class = Keyword.get(opts, :class)
 
     quote do
       use Surface.LiveView
@@ -21,13 +18,7 @@ defmodule Surface.Playground do
       alias unquote(subject)
       require Surface.Catalogue.Data, as: Data
 
-      @moduledoc catalogue: [
-                   subject: unquote(subject),
-                   head: unquote(head),
-                   style: unquote(style),
-                   class: unquote(class)
-                 ]
-
+      @opts unquote(opts)
       @before_compile unquote(__MODULE__)
 
       @impl true
@@ -51,8 +42,32 @@ defmodule Surface.Playground do
   end
 
   defmacro __before_compile__(env) do
+    opts = Module.get_attribute(env.module, :opts)
+
+    config =
+      opts
+      |> Keyword.get(:catalogue)
+      |> Surface.Catalogue.Util.get_catalogue_config()
+
+    subject = Keyword.fetch!(opts, :subject)
+    head = Keyword.get(opts, :head) || Keyword.get(config, :head) || @default_head
+    style = Keyword.get(opts, :style)
+    class = Keyword.get(opts, :class)
+
+    module_doc =
+      quote do
+        @moduledoc catalogue: [
+          subject: unquote(subject),
+          head: unquote(head),
+          style: unquote(style),
+          class: unquote(class)
+        ]
+      end
+
     if Module.defines?(env.module, {:handle_event, 3}) do
       quote do
+        unquote(module_doc)
+
         defoverridable handle_event: 3
 
         @impl true
@@ -70,6 +85,8 @@ defmodule Surface.Playground do
       end
     else
       quote do
+        unquote(module_doc)
+
         @impl true
         def handle_event(event, value, socket) do
           unquote(__MODULE__).__handle_event__(event, value, socket)

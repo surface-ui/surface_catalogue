@@ -1,6 +1,8 @@
 defmodule Surface.Catalogue.PlaygroundLive do
   use Surface.LiveView
 
+  alias Surface.Catalogue.Util
+
   data playground, :module
   data head, :string
   data style, :string
@@ -8,7 +10,7 @@ defmodule Surface.Catalogue.PlaygroundLive do
   data __window_id__, :string
 
   def mount(params, session, socket) do
-    window_id = Surface.Catalogue.get_window_id(session, params)
+    window_id = Util.get_window_id(session, params)
     socket = assign(socket, :__window_id__, window_id)
     {:ok, socket, temporary_assigns: [event_log_entries: []]}
   end
@@ -17,7 +19,7 @@ defmodule Surface.Catalogue.PlaygroundLive do
     # TODO: validate component and playground view
     component = Module.safe_concat([params["component"]])
     playground = Module.safe_concat([params["component"], "Playground"])
-    meta = Surface.Catalogue.get_metadata(playground)
+    meta = Util.get_metadata(playground)
 
     socket =
       socket

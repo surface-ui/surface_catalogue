@@ -1,11 +1,8 @@
 defmodule Surface.Components.Form.Example do
   use Surface.Example,
+    catalogue: Surface.Components.Catalogue,
     subject: Surface.Components.Form,
-    direction: "vertical",
-    # TODO: Remove this after moving css files to assets/
-    head: """
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-    """
+    direction: "vertical"
 
   alias Surface.Components.Form.{TextInput, Label, Field}
 

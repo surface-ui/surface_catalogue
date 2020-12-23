@@ -1,6 +1,8 @@
 defmodule Surface.Catalogue.ExampleLive do
   use Surface.LiveView
 
+  alias Surface.Catalogue.Util
+
   data example_view, :module
   data head, :string
   data style, :string
@@ -9,7 +11,7 @@ defmodule Surface.Catalogue.ExampleLive do
 
   def handle_params(params, _uri, socket) do
     example_view = Module.safe_concat([params["example"]])
-    meta = Surface.Catalogue.get_metadata(example_view)
+    meta = Util.get_metadata(example_view)
 
     socket =
       socket
@@ -32,7 +34,7 @@ defmodule Surface.Catalogue.ExampleLive do
         {{ raw(@head) }}
         <script defer type="module" src="/js/app.js"></script>
       </head>
-      <body style={{ @style }} class={{ @class }}>
+      <body>
         {{ live_render(@socket, @example_view, id: "example") }}
       </body>
     </html>

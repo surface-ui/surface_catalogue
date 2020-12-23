@@ -15,7 +15,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def mount(params, session, socket) do
     if connected?(socket) do
-      window_id = Surface.Catalogue.get_window_id(session, params)
+      window_id = Surface.Catalogue.Util.get_window_id(session, params)
       Phoenix.PubSub.subscribe(Surface.Catalogue.PubSub, "Surface.Catalogue:#{window_id}")
     end
 

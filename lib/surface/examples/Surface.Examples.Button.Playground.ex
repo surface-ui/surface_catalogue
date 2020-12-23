@@ -1,11 +1,8 @@
 defmodule Surface.Examples.Button.Playground do
   use Surface.Playground,
+    catalogue: Surface.Examples.Catalogue,
     subject: Surface.Examples.Button,
-    style: "height: 60px;",
-    # TODO: Remove this after moving css files to assets/
-    head: """
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-    """
+    style: "height: 60px;"
 
   data props, :map, default: %{
     label: "My Button",

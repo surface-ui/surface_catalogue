@@ -1,7 +1,7 @@
 defmodule Surface.Catalogue.PageLive do
   use Surface.LiveView
 
-  alias Surface.Catalogue
+  alias Surface.Catalogue.Util
   alias Surface.Catalogue.Components.{ComponentInfo, ComponentTree, PlaygroundTools}
   alias Surface.Components.LivePatch
   alias Surface.Catalogue.ExampleLive
@@ -17,7 +17,7 @@ defmodule Surface.Catalogue.PageLive do
   data __window_id__, :string, default: nil
 
   def mount(params, session, socket) do
-    {components, examples_and_playgrounds} = Catalogue.get_components_info()
+    {components, examples_and_playgrounds} = Util.get_components_info()
 
     socket =
       socket
@@ -130,8 +130,8 @@ defmodule Surface.Catalogue.PageLive do
     component_module = get_component_by_name(component_name)
     examples_and_playgrounds = socket.assigns.examples_and_playgrounds
 
-    examples = Catalogue.get_examples(component_module, examples_and_playgrounds)
-    playgrounds = Catalogue.get_playgrounds(component_module, examples_and_playgrounds)
+    examples = Util.get_examples(component_module, examples_and_playgrounds)
+    playgrounds = Util.get_playgrounds(component_module, examples_and_playgrounds)
 
     socket
     |> assign(:component_name, component_name)
@@ -143,7 +143,7 @@ defmodule Surface.Catalogue.PageLive do
 
   defp maybe_assign_window_id(socket, params, session) do
     if connected?(socket) do
-      window_id = Catalogue.get_window_id(session, params)
+      window_id = Util.get_window_id(session, params)
       assign(socket, :__window_id__, window_id)
     else
       socket

@@ -1,10 +1,7 @@
 defmodule Surface.Components.Form.TextArea.Example do
   use Surface.Example,
-    subject: Surface.Components.Form.TextArea,
-    # TODO: Remove this after moving css files to assets/
-    head: """
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-    """
+    catalogue: Surface.Components.Catalogue,
+    subject: Surface.Components.Form.TextArea
 
   def render(assigns) do
     ~H"""

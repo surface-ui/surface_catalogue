@@ -9,9 +9,11 @@ defmodule Surface.Example do
 
   defmacro __using__(opts) do
     subject = Keyword.fetch!(opts, :subject)
+    container = Keyword.get(opts, :container)
 
     quote do
-      use Surface.LiveView
+      use Surface.LiveView,
+        container: unquote(container)
 
       alias unquote(subject)
       require Surface.Catalogue.Data, as: Data
@@ -34,9 +36,12 @@ defmodule Surface.Example do
     opts = Module.get_attribute(env.module, :opts)
     code = Module.get_attribute(env.module, :code)
 
-    head = Keyword.get(opts, :head, @default_head)
-    style = Keyword.get(opts, :style)
-    class = Keyword.get(opts, :class)
+    config =
+      opts
+      |> Keyword.get(:catalogue)
+      |> Surface.Catalogue.Util.get_catalogue_config()
+
+    head = Keyword.get(opts, :head) || Keyword.get(config, :head) || @default_head
     title = Keyword.get(opts, :title)
     direction = Keyword.get(opts, :direction)
     code_perc = Keyword.get(opts, :code_perc)
@@ -46,8 +51,6 @@ defmodule Surface.Example do
       @moduledoc catalogue: [
         subject: unquote(subject),
         head: unquote(head),
-        style: unquote(style),
-        class: unquote(class),
         title: unquote(title),
         code: unquote(code),
         direction: unquote(direction),

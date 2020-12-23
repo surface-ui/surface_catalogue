@@ -1,14 +1,14 @@
 defmodule Surface.Examples.Button.Example_01 do
   use Surface.Example,
+    catalogue: Surface.Examples.Catalogue,
     subject: Surface.Examples.Button,
-    # TODO: Remove this after moving css files to assets/
-    head: """
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-    """
+    title: "Label",
+    container: {:div, class: "buttons"}
 
   def render(assigns) do
     ~H"""
-    <Button>My Button</Button>
+    <Button label="Label"/>
+    <Button>Slot</Button>
     """
   end
 end
