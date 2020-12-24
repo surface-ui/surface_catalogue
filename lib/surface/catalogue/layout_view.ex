@@ -27,8 +27,6 @@ defmodule Surface.Catalogue.LayoutView do
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
         <title>Component Catalogue</title>
         <link rel="icon" href="data:,">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
         <style>{{ Phoenix.HTML.raw(render("app.css")) }}</style>
         <script>{{ Phoenix.HTML.raw(render("app.js")) }}</script>

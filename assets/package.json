@@ -9,6 +9,8 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "animate.css": "3.7.2",
+    "bulma": "0.8.2",
     "phoenix": "../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view"
