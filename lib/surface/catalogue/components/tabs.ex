@@ -14,18 +14,20 @@ defmodule Surface.Catalogue.Components.Tabs do
   @doc "The tabs to display"
   slot tabs, required: true
 
-  data active_tab, :integer, default: 0
+  data active_tab, :integer
 
   data animation, :string, default: ""
 
   def update(assigns, socket) do
-    # first_visible_tab = Enum.find_index(assigns.tabs, & &1.visible)
+    socket = assign(socket, assigns)
 
     socket =
-      socket
-      |> assign(assigns)
-
-    # |> assign(:active_tab, first_visible_tab)
+      if socket.assigns[:active_tab] do
+        socket
+      else
+        first_visible_tab = Enum.find_index(assigns[:tabs], & &1.visible)
+        assign(socket, :active_tab, first_visible_tab)
+      end
 
     {:ok, socket}
   end
