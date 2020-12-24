@@ -11,6 +11,8 @@ defmodule Surface.Catalogue.Components.Tabs do
 
   prop animated, :boolean, default: true
 
+  prop tab_click_callback, :fun, default: nil
+
   @doc "The tabs to display"
   slot tabs, required: true
 
@@ -70,6 +72,9 @@ defmodule Surface.Catalogue.Components.Tabs do
   def handle_event("tab_click", %{"index" => index_str}, socket) do
     index = String.to_integer(index_str)
     animation = next_animation(socket.assigns, index)
+    if socket.assigns.tab_click_callback do
+      socket.assigns.tab_click_callback.(index)
+    end
     {:noreply, assign(socket, active_tab: index, animation: animation)}
   end
 

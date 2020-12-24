@@ -12,6 +12,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   data event_log_entries, :list, default: []
   data props, :list, default: []
   data events, :list, default: []
+  data has_new_events?, :boolean, default: false
+  data selected_tab_index, :integer, default: 0
 
   def mount(params, session, socket) do
     if connected?(socket) do
@@ -25,7 +27,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   def render(assigns) do
     ~H"""
     <div :show={{ @playground_pid != nil }}>
-      <Tabs id="tools-tabs" animated=false>
+      <Tabs id="tools-tabs" animated=false tab_click_callback={{ &tab_click_callback/1 }}>
         <TabItem label="Properties">
           <div style="margin-top: 0.7rem;">
             <Form for={{ :props_values }} change="change" opts={{ autocomplete: "off" }}>
@@ -35,7 +37,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </Form>
           </div>
         </TabItem>
-        <TabItem label="Event Log" visible={{ @events != [] }}>
+        <TabItem label="Event Log {{ @has_new_events? && "*" || "" }}" visible={{ @events != [] }}>
           <span style="margin-left: 1.0rem;">
             <span class="has-text-weight-semibold">Events: </span>
             <span>{{ available_events(@events) }}</span>
@@ -46,8 +48,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           <hr style="margin: 0.8rem 0;">
           <div id="event-log" style="height: 250px; overflow: scroll; font-family: monospace" class="is-size-7">
             <div id="event-log-content-{{ @event_log_counter }}" phx-update="append" phx-hook="EventLog">
-              <p :for={{ {id, message} <- @event_log_entries }} id={{ id }}>
-                <span> {{ raw(message) }} </span>
+              <p :for={{ {id, message} <- @event_log_entries }} id="event-log-message-{{ id }}">
+                <span style="white-space: break-spaces;">{{ raw(message) }}</span>
               </p>
             </div>
           </div>
@@ -67,17 +69,41 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       |> assign(:props, props)
       |> assign(:events, events)
       |> assign(:props_values, props_values)
+      |> assign(:has_new_events?, false)
+      |> assign(:selected_tab_index, 0)
       |> clear_event_log()
 
     {:noreply, socket}
   end
 
   def handle_info({:playground_event_received, event, value, props_values}, socket) do
-    time = NaiveDateTime.local_now()
-    message = "#{time} - Event <span class=\"has-text-weight-semibold\">\"#{event}\"</span>, #{inspect(value)}"
     id = :erlang.unique_integer([:positive]) |> to_string()
+    time = NaiveDateTime.local_now()
+
+    payload = value |> inspect() |> Code.format_string!() |> to_string()
+    message = """
+    #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{payload}\
+    """
+
+    socket =
+      if socket.assigns.selected_tab_index != 1 do
+        assign(socket, :has_new_events?, true)
+      else
+        socket
+      end
 
     {:noreply, assign(socket, event_log_entries: [{id, message}], props_values: props_values)}
+  end
+
+  def handle_info({:tab_clicked, index}, socket) do
+    socket =
+      if index == 1 do
+        assign(socket, :has_new_events?, false)
+      else
+        socket
+      end
+
+    {:noreply, assign(socket, :selected_tab_index, index)}
   end
 
   def handle_event("change", %{"props_values" => props_values}, socket) do
@@ -98,6 +124,10 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   def handle_event(event, value, socket) do
     IO.inspect("Event #{event} received. Value: #{inspect(value)}")
     {:noreply, socket}
+  end
+
+  def tab_click_callback(index) do
+    send(self(), {:tab_clicked, index})
   end
 
   def clear_event_log(socket) do
