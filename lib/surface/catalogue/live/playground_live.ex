@@ -14,14 +14,11 @@ defmodule Surface.Catalogue.PlaygroundLive do
   end
 
   def handle_params(params, _uri, socket) do
-    # TODO: validate component and playground view
-    component = Module.safe_concat([params["component"]])
-    playground = Module.safe_concat([params["component"], "Playground"])
+    playground = Module.safe_concat([params["playground"]])
     meta = Util.get_metadata(playground)
 
     socket =
       socket
-      |> assign(:component, component)
       |> assign(:playground, playground)
       |> assign(:head, meta[:config][:head] || "")
 

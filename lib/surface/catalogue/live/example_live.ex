@@ -3,17 +3,17 @@ defmodule Surface.Catalogue.ExampleLive do
 
   alias Surface.Catalogue.Util
 
-  data example_view, :module
+  data example, :module
   data head, :string
   data code, :string
 
   def handle_params(params, _uri, socket) do
-    example_view = Module.safe_concat([params["example"]])
-    meta = Util.get_metadata(example_view)
+    example = Module.safe_concat([params["example"]])
+    meta = Util.get_metadata(example)
 
     socket =
       socket
-      |> assign(:example_view, example_view || "")
+      |> assign(:example, example || "")
       |> assign(:head, meta[:config][:head] || "")
 
     {:noreply, socket}
@@ -21,7 +21,7 @@ defmodule Surface.Catalogue.ExampleLive do
 
   def render(assigns) do
     ~H"""
-    <html lang="en" id="myhtml_example">
+    <html lang="en">
       <head>
         {{ Phoenix.HTML.Tag.csrf_meta_tag() }}
         <meta charset="utf-8"/>
@@ -30,7 +30,7 @@ defmodule Surface.Catalogue.ExampleLive do
         {{ raw(@head) }}
       </head>
       <body>
-        {{ live_render(@socket, @example_view, id: "example") }}
+        {{ live_render(@socket, @example, id: "example") }}
       </body>
     </html>
     """

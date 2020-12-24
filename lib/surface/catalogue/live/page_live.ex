@@ -14,6 +14,7 @@ defmodule Surface.Catalogue.PageLive do
   data components, :map
   data action, :string
   data examples, :list
+  data playgrounds, :list
   data __window_id__, :string, default: nil
 
   def mount(params, session, socket) do
@@ -108,7 +109,7 @@ defmodule Surface.Catalogue.PageLive do
                     id="playground-iframe"
                     :if={{ @has_playground? }}
                     :show={{ @action == "playground" }}
-                    src={{ path_to(@socket, PlaygroundLive, @component_name, __window_id__: @__window_id__) }}
+                    src={{ path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__) }}
                     style="width: 100%; overflow-y: scroll;"
                     frameborder="0"
                     phx-hook="IframeBody"
@@ -139,6 +140,7 @@ defmodule Surface.Catalogue.PageLive do
     |> assign(:has_example?, examples != [])
     |> assign(:has_playground?, playgrounds != [])
     |> assign(:examples, examples)
+    |> assign(:playgrounds, playgrounds)
   end
 
   defp maybe_assign_window_id(socket, params, session) do
