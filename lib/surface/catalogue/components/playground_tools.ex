@@ -54,6 +54,66 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </div>
           </div>
         </TabItem>
+        <TabItem label="Debug/Profile">
+          <div id="debug-profile" style="margin-top: 0.7rem;" phx-update="ignore">
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Enable debug</label>
+              </div>
+              <div class="field-body">
+                <div class="field" style="display: flex; align-items: center">
+                  <div class="control" style="width: 400px">
+                    <input
+                      id="debug_profile_enable_debug"
+                      style="height: 26px;"
+                      type="checkbox"
+                      onclick="handleEnableDebugClick(this);"
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Enable latency simulator (ms)</label>
+              </div>
+              <div class="field-body">
+                <div class="field" style="display: flex; align-items: center">
+                  <div class="control" style="width: 25px">
+                    <input
+                      id="debug_profile_enable_latency_sim"
+                      style="height: 26px;"
+                      type="checkbox"
+                      onclick="handleEnableLatencySimClick(this);"
+                    >
+                  </div>
+                  <input
+                    id="debug_profile_latency_sim_value"
+                    type="number"
+                    step="100"
+                    class="input is-small"
+                    style="width: 80px; margin-right: 5px; text-align: right;"
+                    onblur="handleLatencySimValueBlur(this);"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label has-text-grey-light">Enable profiling</label>
+              </div>
+              <div class="field-body">
+                <div class="field" style="display: flex; align-items: center">
+                  <div class="control" style="width: 400px">
+                    <input id="debug_profile_enable_profiling" style="height: 26px;" type="checkbox" value="true" disabled>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabItem>
       </Tabs>
     </div>
     """

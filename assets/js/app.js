@@ -16,7 +16,7 @@ import Prism from './prism.js';
 
 function resizeIframe(iframe) {
   iframe.style.height = "0px"
-  let height = iframe.contentWindow.document.documentElement.scrollHeight
+  const height = iframe.contentWindow.document.documentElement.scrollHeight
   if (height != 0) {
     iframe.style.height = height + 'px'
     iframe.contentWindow.document.body.style.height = height + 'px'
@@ -25,7 +25,7 @@ function resizeIframe(iframe) {
 
 window.togggleNode = (a) => {
   a.parentNode.querySelector('.menu-list').classList.toggle('is-hidden')
-  let i = a.querySelector('span.icon > i')
+  const i = a.querySelector('span.icon > i')
   i.classList.toggle('fa-folder-open')
   i.classList.toggle('fa-folder')
 }
@@ -34,20 +34,143 @@ let Hooks = {}
 
 Hooks.EventLog = {
   updated(){
-    let eventLog = this.el.parentNode
+    const eventLog = this.el.parentNode
     eventLog.scrollTop = eventLog.scrollHeight
+  }
+}
+
+window.handleEnableLatencySimClick = function(checkbox) {
+  let socket = document.getElementById("playground-iframe").contentWindow.liveSocket
+  let valueInput = document.getElementById("debug_profile_latency_sim_value")
+
+  if (checkbox.checked) {
+    valueInput.disabled = false
+    let value = valueInput.value || 1000
+    valueInput.value = value
+    socket.enableLatencySim(value)
+  } else {
+    socket.disableLatencySim()
+    valueInput.disabled = true
+  }
+
+  updatePlaygroundTabLabel()
+}
+
+window.handleEnableDebugClick = function(checkbox) {
+  let socket = document.getElementById("playground-iframe").contentWindow.liveSocket
+
+  if (checkbox.checked) {
+    socket.enableDebug()
+  } else {
+    socket.disableDebug()
+  }
+}
+
+window.handleLatencySimValueBlur = function(input) {
+  const socket = document.getElementById("playground-iframe").contentWindow.liveSocket
+  const oldValue = socket.getLatencySim()
+
+  if (input.value != oldValue) {
+    const value = input.value || 1000
+    input.value = value
+    socket.enableLatencySim(value)
+  }
+}
+
+function initDebugProfile(socket) {
+  const debugCheckbox = document.getElementById("debug_profile_enable_debug")
+  debugCheckbox.checked = socket.isDebugEnabled()
+
+  const latencySimCheckbox = document.getElementById("debug_profile_enable_latency_sim")
+  const latencySimInput = document.getElementById("debug_profile_latency_sim_value")
+  const latencySimValue = socket.getLatencySim()
+
+  if (latencySimValue) {
+    latencySimCheckbox.checked = true
+    latencySimInput.value = latencySimValue
+  }
+  updatePlaygroundTabLabel()
+}
+
+function updatePlaygroundTabLabel() {
+  const socket = document.getElementById("playground-iframe").contentWindow.liveSocket
+  const label = document.getElementById("playground-tab-label")
+
+  if (socket.getLatencySim()) {
+    label.innerText = "Playground(!)"
+  } else {
+    label.innerText = "Playground"
+  }
+}
+
+function maybePatchSocket(socket) {
+  if (socket.patched)
+    return;
+
+  const path = socket.currentLocation.pathname
+  const PHX_LV_DEBUG = `phx:live-socket:debug:${path}`
+  const PHX_LV_PROFILE = `phx:live-socket:profiling:${path}`
+  const PHX_LV_LATENCY_SIM = `phx:live-socket:latency-sim:${path}`
+
+  // Latency Simulation
+
+  socket.enableLatencySim = function(upperBoundMs){
+    console.log(`latency simulator enabled as ${upperBoundMs}ms for the duration of this browser session.`)
+    sessionStorage.setItem(PHX_LV_LATENCY_SIM, upperBoundMs)
+  }
+
+  socket.disableLatencySim = function(){ sessionStorage.removeItem(PHX_LV_LATENCY_SIM)}
+
+  socket.getLatencySim = function() {
+    let str = sessionStorage.getItem(PHX_LV_LATENCY_SIM)
+    return str ? parseInt(str) : null
+  }
+
+  // Debug
+
+  socket.isDebugEnabled = function(){ return sessionStorage.getItem(PHX_LV_DEBUG) === "true" }
+
+  socket.enableDebug = function(){ sessionStorage.setItem(PHX_LV_DEBUG, "true") }
+
+  socket.disableDebug = function(){ sessionStorage.removeItem(PHX_LV_DEBUG) }
+
+  // Profile (not working!)
+
+  // socket.isProfileEnabled = function(){ return sessionStorage.getItem(PHX_LV_PROFILE) === "true" }
+
+  // socket.enableProfiling = function(){ sessionStorage.setItem(PHX_LV_PROFILE, "true") }
+
+  // socket.disableProfiling = function(){ sessionStorage.removeItem(PHX_LV_PROFILE) }
+
+  socket.patched = true
+}
+
+const debug = (view, kind, msg, obj) => {
+  if (window.liveSocket.isDebugEnabled()) {
+    console.log(`${view.id} ${kind}: ${msg} - `, obj)
+  } else if (view.id == "playground") {
+    maybePatchSocket(view.liveSocket)
+    if (view.liveSocket.isDebugEnabled())
+      console.log(`${view.id} ${kind}: ${msg} - `, obj)
   }
 }
 
 Hooks.IframeBody = {
   mounted(){
-    let iframe = this.el
+    const iframe = this.el
     iframe.addEventListener("load", e => {
       resizeIframe(iframe)
+
+      if (iframe.id == "playground-iframe") {
+        const socket = iframe.contentWindow.liveSocket
+        maybePatchSocket(socket)
+
+        initDebugProfile(socket)
+      }
     });
   },
   updated(){
-    let iframe = this.el
+    const iframe = this.el
     resizeIframe(iframe)
   }
 };
@@ -62,14 +185,11 @@ Hooks.Highlight = {
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks, viewLogger: debug})
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 
-// expose liveSocket on window for web console debug logs and latency simulation:
-// >> liveSocket.enableDebug()
-// >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
-// >> liveSocket.disableLatencySim()
+// expose liveSocket on window for web console debug logs and latency simulation
 window.liveSocket = liveSocket
 

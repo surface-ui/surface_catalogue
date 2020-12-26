@@ -72,7 +72,7 @@ defmodule Surface.Catalogue.PageLive do
                   <li :if={{ @has_playground? }} class={{ "is-active": @action == "playground" }}>
                     <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :playground)}}>
                       <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true"></i></span>
-                      <span>Playground</span>
+                      <span id="playground-tab-label" phx-update="ignore">Playground</span>
                     </LivePatch>
                   </li>
                 </ul>

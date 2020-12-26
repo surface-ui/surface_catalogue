@@ -72,7 +72,9 @@ defmodule Surface.Catalogue.Util do
   end
 
   def get_playgrounds(component, examples_and_playgrounds) do
-    examples_and_playgrounds[component][:playgrounds] || []
+    for example <- examples_and_playgrounds[component][:playgrounds] || [] do
+      inspect(example)
+    end
   end
 
   defp components_reducer(module, Surface.LiveView, acc) do
