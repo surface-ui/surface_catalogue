@@ -45,7 +45,7 @@ window.handleEnableLatencySimClick = function(checkbox) {
 
   if (checkbox.checked) {
     valueInput.disabled = false
-    let value = valueInput.value || 1000
+    let value = valueInput.value || 100
     valueInput.value = value
     socket.enableLatencySim(value)
   } else {
@@ -97,7 +97,7 @@ function updatePlaygroundTabLabel() {
   const label = document.getElementById("playground-tab-label")
 
   if (socket.getLatencySim()) {
-    label.innerText = "Playground(!)"
+    label.innerHTML = 'Playground <span class="is-size-6" title="Latency simulator is enabled">⚠️</span>'
   } else {
     label.innerText = "Playground"
   }

@@ -191,3 +191,23 @@
 #debug-profile .field-label > label {
   width: 180px;
 }
+
+#memory-usage .field-label > label {
+  width: 220px;
+}
+
+#memory-usage .field-body > .field {
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+}
+
+#memory-usage-instances .field-label > label {
+  width: 220px;
+}
+
+#memory-usage-instances .field-body > .field {
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+}

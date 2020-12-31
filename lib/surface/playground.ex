@@ -128,6 +128,10 @@ defmodule Surface.Playground do
     {:noreply, assign(socket, :props, values)}
   end
 
+  def __handle_info__(:wake_up, socket) do
+    {:noreply, socket}
+  end
+
   @doc false
   def __handle_event__(event, value, socket) do
     window_id = socket.assigns[:__window_id__]

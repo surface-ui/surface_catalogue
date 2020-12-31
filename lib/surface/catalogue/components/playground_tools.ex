@@ -6,6 +6,16 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   alias Surface.Catalogue.Components.PropInput
   alias Surface.Components.Form
 
+  @empty_playground_info %{
+    pid: "-",
+    hibernating?: false,
+    total_memory: "-",
+    assigns_memory: "-",
+    components_memory: "-",
+    status: "-",
+    components_instances_memory: []
+  }
+
   data playground_pid, :any, default: nil
   data props_values, :map, default: %{}
   data event_log_counter, :integer, default: 1
@@ -14,6 +24,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   data events, :list, default: []
   data has_new_events?, :boolean, default: false
   data selected_tab_index, :integer, default: 0
+  data playground_info_timer_ref, :any, default: nil
+  data playground_info, :map, default: @empty_playground_info
 
   def mount(params, session, socket) do
     if connected?(socket) do
@@ -114,6 +126,86 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </div>
           </div>
         </TabItem>
+        <TabItem label="Memory usage">
+          <div id="memory-usage" style="margin-top: 0.7rem;">
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Playground's PID</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  {{ @playground_info.pid }}
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Status</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  {{ @playground_info.status }}
+                  <span :if={{ @playground_info.hibernating? }}>&nbsp;(<a :on-click="wake_up">wake up</a>)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Total heap memory</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  {{ @playground_info.total_memory }}
+                  <span :if={{ !@playground_info.hibernating? }}>&nbsp;(<a :on-click="run_gc">run GC</a>)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Playground's sssigns</label>
+              </div>
+              <div class="field-body">
+                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
+                  {{ @playground_info.assigns_memory }}
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Components' assigns</label>
+              </div>
+              <div class="field-body">
+                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
+                  {{ @playground_info.components_memory }}
+                  <span :if={{ @playground_info.components_instances_memory == [] }}>
+                    &nbsp;(no child stateful component)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr style="margin: 0.7rem 0;">
+
+          <div id="memory-usage-instances" style="margin-top: 0.7rem;">
+            <div :for={{ {mod, id, value} <- @playground_info.components_instances_memory }} class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label has-text-grey-dark">
+                  #{{mod}}&lt;ID:{{id}}&gt;
+                </label>
+              </div>
+              <div class="field-body">
+                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
+                  {{ value }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabItem>
       </Tabs>
     </div>
     """
@@ -131,6 +223,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       |> assign(:props_values, props_values)
       |> assign(:has_new_events?, false)
       |> assign(:selected_tab_index, 0)
+      |> schedule_update_playground_info(true, 0)
       |> clear_event_log()
 
     {:noreply, socket}
@@ -152,7 +245,27 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         socket
       end
 
-    {:noreply, assign(socket, event_log_entries: [{id, message}], props_values: props_values)}
+    socket =
+      socket
+      |> assign(event_log_entries: [{id, message}], props_values: props_values)
+      |> schedule_update_playground_info(true)
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:update_playground_info, update_state_memory?}, socket) do
+    socket =
+      if Process.alive?(socket.assigns.playground_pid) do
+        socket
+        |> assign_playground_info(update_state_memory?)
+        |> schedule_update_playground_info(false, 1000)
+      else
+        socket
+        |> cancel_playground_info_udpate()
+        |> assign(:playground_info, @empty_playground_info)
+      end
+
+    {:noreply, socket}
   end
 
   def handle_info({:tab_clicked, index}, socket) do
@@ -174,11 +287,26 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       send(socket.assigns.playground_pid, {:update_props, updated_props_values})
     end
 
-    {:noreply, assign(socket, :props_values, updated_props_values)}
+    socket =
+      socket
+      |> assign(:props_values, updated_props_values)
+      |> schedule_update_playground_info(true)
+
+    {:noreply, socket}
   end
 
   def handle_event("clear_event_log", _, socket) do
     {:noreply, clear_event_log(socket)}
+  end
+
+  def handle_event("run_gc", _, socket) do
+    :erlang.garbage_collect(socket.assigns.playground_pid)
+    {:noreply, assign_playground_info(socket, false)}
+  end
+
+  def handle_event("wake_up", _, socket) do
+    send(socket.assigns.playground_pid, :wake_up)
+    {:noreply, assign_playground_info(socket, false)}
   end
 
   def handle_event(event, value, socket) do
@@ -233,4 +361,95 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   defp available_events(events) do
     Enum.map_join(events, " | ", & &1.name)
   end
+
+  defp schedule_update_playground_info(socket, update_state_memory?, interval \\ 200) do
+    socket = cancel_playground_info_udpate(socket)
+    timer_ref = Process.send_after(self(), {:update_playground_info, update_state_memory?}, interval)
+    assign(socket, :playground_info_timer_ref, timer_ref)
+  end
+
+  defp cancel_playground_info_udpate(socket) do
+    playground_info_timer_ref = socket.assigns.playground_info_timer_ref
+    if playground_info_timer_ref do
+      Process.cancel_timer(playground_info_timer_ref)
+    end
+
+    assign(socket, :playground_info_timer_ref, nil)
+  end
+
+  defp assign_playground_info(socket, update_state_memory?) do
+    playground_pid = socket.assigns.playground_pid
+    word_size = :erlang.system_info(:wordsize)
+
+    playground_info = socket.assigns.playground_info
+
+    playground_info =
+      if update_state_memory? do
+        playground_state = :sys.get_state(playground_pid)
+        assigns_memory = :erts_debug.size(playground_state.socket.assigns)
+
+        {components, _, _} = playground_state.components
+
+        {components_instances_memory, components_memory} =
+          Enum.reduce(components, {[], 0}, fn
+            {_index, {mod, id, data, _, _}}, {instances, total} ->
+              last_mod = mod |> Module.split() |> List.last()
+              size = :erts_debug.size(data)
+              total = total + size
+              formatted_size = format_bytes(size * word_size)
+              instances = [{last_mod, id, formatted_size} | instances]
+              {instances, total}
+          end)
+
+        Map.merge(playground_info, %{
+          assigns_memory: format_bytes(assigns_memory * word_size),
+          components_memory: format_bytes(components_memory * word_size),
+          components_instances_memory: Enum.reverse(components_instances_memory)
+        })
+      else
+        playground_info
+      end
+
+    process_info =
+      playground_pid
+      |> Process.info([:status, :total_heap_size, :current_function])
+      |> Map.new()
+
+    hibernating? = match?({:erlang, :hibernate, _}, process_info.current_function)
+    status = if hibernating?, do: :hibernating, else: process_info.status
+
+    playground_info = Map.merge(playground_info, %{
+      pid: inspect(playground_pid),
+      hibernating?: hibernating?,
+      total_memory: format_bytes(process_info.total_heap_size * word_size),
+      status: inspect(status)
+    })
+
+    assign(socket, :playground_info, playground_info)
+  end
+
+  @doc """
+  Formats bytes.
+  """
+  def format_bytes(bytes) when is_integer(bytes) do
+    cond do
+      bytes >= memory_unit(:TB) -> format_bytes(bytes, :TB)
+      bytes >= memory_unit(:GB) -> format_bytes(bytes, :GB)
+      bytes >= memory_unit(:MB) -> format_bytes(bytes, :MB)
+      bytes >= memory_unit(:KB) -> format_bytes(bytes, :KB)
+      true -> format_bytes(bytes, :B)
+    end
+  end
+
+  defp format_bytes(bytes, :B) when is_integer(bytes), do: "#{bytes} B"
+
+  defp format_bytes(bytes, unit) when is_integer(bytes) do
+    value = bytes / memory_unit(unit)
+    "#{:erlang.float_to_binary(value, decimals: 1)} #{unit}"
+  end
+
+  defp memory_unit(:TB), do: 1024 * 1024 * 1024 * 1024
+  defp memory_unit(:GB), do: 1024 * 1024 * 1024
+  defp memory_unit(:MB), do: 1024 * 1024
+  defp memory_unit(:KB), do: 1024
 end
