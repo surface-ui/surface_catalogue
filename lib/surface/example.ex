@@ -27,6 +27,7 @@ defmodule Surface.Example do
 
       defmacrop sigil_H({:<<>>, meta, [string]} = ast, opts) do
         Module.put_attribute(__CALLER__.module, :code, string)
+
         quote do
           Surface.sigil_H(unquote(ast), unquote(opts))
         end
@@ -52,10 +53,10 @@ defmodule Surface.Example do
 
     quote do
       @moduledoc catalogue: [
-        subject: unquote(subject),
-        config: unquote(config),
-        code: unquote(code)
-      ]
+                   subject: unquote(subject),
+                   config: unquote(config),
+                   code: unquote(code)
+                 ]
     end
   end
 end

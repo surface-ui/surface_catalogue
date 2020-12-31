@@ -4,10 +4,11 @@ defmodule Surface.Examples.Button.Playground do
     subject: Surface.Examples.Button,
     container: {:div, style: "height: 60px;"}
 
-  data props, :map, default: %{
-    label: "My Button",
-    color: "success"
-  }
+  data props, :map,
+    default: %{
+      label: "My Button",
+      color: "success"
+    }
 
   def render(assigns) do
     ~H"""

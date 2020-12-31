@@ -68,7 +68,8 @@ defmodule Surface.Catalogue.Util do
         end
 
       {inspect(example), title, code, direction, demo_perc, code_perc}
-    end |> Enum.sort()
+    end
+    |> Enum.sort()
   end
 
   def get_playgrounds(component, examples_and_playgrounds) do
@@ -83,18 +84,22 @@ defmodule Surface.Catalogue.Util do
     case get_metadata(module) do
       %{subject: subject, code: _} ->
         initial = %{examples: [module], playgrounds: []}
+
         examples_and_playgrounds =
           Map.update(examples_and_playgrounds, subject, initial, fn info ->
             %{info | examples: [module | info.examples]}
           end)
+
         {components, examples_and_playgrounds}
 
       %{subject: subject} ->
         initial = %{examples: [], playgrounds: [module]}
+
         examples_and_playgrounds =
           Map.update(examples_and_playgrounds, subject, initial, fn info ->
             %{info | playgrounds: [module | info.playgrounds]}
           end)
+
         {components, examples_and_playgrounds}
 
       nil ->

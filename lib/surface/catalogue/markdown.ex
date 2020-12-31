@@ -32,11 +32,13 @@ defmodule Surface.Catalogue.Markdown do
 
               #{text}
               """
+
               IO.warn(message)
 
             msg ->
               IO.warn(msg)
           end)
+
           html
       end
 

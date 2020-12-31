@@ -41,6 +41,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro get!(path) do
     {subject, selector} = split_path(path)
+
     quote do
       unquote(__MODULE__).__get__!(unquote(subject), unquote(selector))
     end
@@ -53,6 +54,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro get(path) do
     {subject, selector} = split_path(path)
+
     quote do
       get_in(unquote(subject), unquote(selector))
     end
@@ -65,6 +67,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro get_and_update(path, fun) do
     {subject, selector} = split_path(path)
+
     quote do
       get_and_update_in(unquote(subject), unquote(selector), unquote(fun))
     end
@@ -77,6 +80,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro pop(path) do
     {subject, selector} = split_path(path)
+
     quote do
       pop_in(unquote(subject), unquote(selector))
     end
@@ -89,6 +93,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro update(path, fun) do
     {subject, selector} = split_path(path)
+
     quote do
       update_in(unquote(subject), unquote(selector), unquote(fun))
     end
@@ -99,6 +104,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro delete(path) do
     {subject, selector} = split_path(path)
+
     quote do
       unquote(__MODULE__).__delete__(unquote(subject), unquote(selector))
     end
@@ -109,6 +115,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro insert_at(path, pos, value) do
     {subject, selector} = split_path(path)
+
     quote do
       unquote(__MODULE__).__insert_at__(
         unquote(subject),
@@ -124,6 +131,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro append(path, value) do
     {subject, selector} = split_path(path)
+
     quote do
       unquote(__MODULE__).__insert_at__(unquote(subject), unquote(selector), -1, unquote(value))
     end
@@ -134,6 +142,7 @@ defmodule Surface.Catalogue.Data do
   """
   defmacro prepend(path, value) do
     {subject, selector} = split_path(path)
+
     quote do
       unquote(__MODULE__).__insert_at__(unquote(subject), unquote(selector), 0, unquote(value))
     end
@@ -148,7 +157,7 @@ defmodule Surface.Catalogue.Data do
       [] ->
         raise "no value found"
 
-      [_|_] ->
+      [_ | _] ->
         raise "more than one value found"
     end
   end
@@ -189,13 +198,13 @@ defmodule Surface.Catalogue.Data do
     end
   end
 
-  defp quoted_access_fun([key: value]) do
+  defp quoted_access_fun(key: value) do
     quote do
       Access.key(unquote(value))
     end
   end
 
-  defp quoted_access_fun([index: value]) do
+  defp quoted_access_fun(index: value) do
     quote do
       Access.at(unquote(value))
     end
@@ -244,6 +253,7 @@ defmodule Surface.Catalogue.Data do
 
   defp get_and_update_slice([head | rest], from..to = range, next, updates, gets, index) do
     new_index = index + 1
+
     if index >= from and index <= to do
       case next.(head) do
         {get, update} ->

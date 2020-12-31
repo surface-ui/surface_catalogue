@@ -63,9 +63,9 @@ defmodule Surface.Playground do
     module_doc =
       quote do
         @moduledoc catalogue: [
-          subject: unquote(subject),
-          config: unquote(config)
-        ]
+                     subject: unquote(subject),
+                     config: unquote(config)
+                   ]
       end
 
     if Module.defines?(env.module, {:handle_event, 3}) do
@@ -77,6 +77,7 @@ defmodule Surface.Playground do
         @impl true
         def handle_event(event, value, socket) do
           result = super(event, value, socket)
+
           socket =
             case result do
               {:noreply, socket} -> socket
@@ -117,6 +118,7 @@ defmodule Surface.Playground do
         "Surface.Catalogue:#{window_id}",
         {:playground_init, self(), subject, props, events, props_values_with_events}
       )
+
       {:ok, assign(socket, :props, props_values_with_events)}
     else
       {:ok, socket}

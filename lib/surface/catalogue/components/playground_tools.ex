@@ -211,7 +211,10 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     """
   end
 
-  def handle_info({:playground_init, playground_pid, subject, props, events, props_values}, socket) do
+  def handle_info(
+        {:playground_init, playground_pid, subject, props, events, props_values},
+        socket
+      ) do
     Tabs.set_active_tab("tools-tabs", 0)
 
     socket =
@@ -234,6 +237,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     time = NaiveDateTime.local_now()
 
     payload = value |> inspect() |> Code.format_string!() |> to_string()
+
     message = """
     #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{payload}\
     """
@@ -364,12 +368,16 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   defp schedule_update_playground_info(socket, update_state_memory?, interval \\ 200) do
     socket = cancel_playground_info_udpate(socket)
-    timer_ref = Process.send_after(self(), {:update_playground_info, update_state_memory?}, interval)
+
+    timer_ref =
+      Process.send_after(self(), {:update_playground_info, update_state_memory?}, interval)
+
     assign(socket, :playground_info_timer_ref, timer_ref)
   end
 
   defp cancel_playground_info_udpate(socket) do
     playground_info_timer_ref = socket.assigns.playground_info_timer_ref
+
     if playground_info_timer_ref do
       Process.cancel_timer(playground_info_timer_ref)
     end
@@ -418,12 +426,13 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     hibernating? = match?({:erlang, :hibernate, _}, process_info.current_function)
     status = if hibernating?, do: :hibernating, else: process_info.status
 
-    playground_info = Map.merge(playground_info, %{
-      pid: inspect(playground_pid),
-      hibernating?: hibernating?,
-      total_memory: format_bytes(process_info.total_heap_size * word_size),
-      status: inspect(status)
-    })
+    playground_info =
+      Map.merge(playground_info, %{
+        pid: inspect(playground_pid),
+        hibernating?: hibernating?,
+        total_memory: format_bytes(process_info.total_heap_size * word_size),
+        status: inspect(status)
+      })
 
     assign(socket, :playground_info, playground_info)
   end
