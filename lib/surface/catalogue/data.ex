@@ -35,6 +35,18 @@ defmodule Surface.Catalogue.Data do
   end
 
   @doc """
+  Gets an existing value from the given nested structure.
+
+  Raises an error if none or more than one value is found.
+  """
+  defmacro get!(path) do
+    {subject, selector} = split_path(path)
+    quote do
+      unquote(__MODULE__).__get__!(unquote(subject), unquote(selector))
+    end
+  end
+
+  @doc """
   Gets a value from the given nested structure.
 
   A wrapper around `get_in/2`
@@ -124,6 +136,20 @@ defmodule Surface.Catalogue.Data do
     {subject, selector} = split_path(path)
     quote do
       unquote(__MODULE__).__insert_at__(unquote(subject), unquote(selector), 0, unquote(value))
+    end
+  end
+
+  @doc false
+  def __get__!(subject, selector) do
+    case get_in(subject, selector) |> List.flatten() do
+      [item] ->
+        item
+
+      [] ->
+        raise "no value found"
+
+      [_|_] ->
+        raise "more than one value found"
     end
   end
 

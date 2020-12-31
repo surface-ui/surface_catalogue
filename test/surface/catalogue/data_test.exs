@@ -110,6 +110,22 @@ defmodule Surface.Catalogue.DataTest do
       assert [%{id: "Card_6"}, %{id: "Card_7"}] = cards_2
     end
 
+    test "get! returns a single value", %{lists: lists} do
+      assert %{text: "Fix bug #6"} = Data.get!(lists[_].cards[& &1.id == "Card_6"])
+    end
+
+    test "get! raises if no value is found", %{lists: lists} do
+      assert_raise(RuntimeError, "no value found", fn ->
+        Data.get!(lists[_].cards[& &1.id == "unknown"])
+      end)
+    end
+
+    test "get! raises if more than one value is found", %{lists: lists} do
+      assert_raise(RuntimeError, "more than one value found", fn ->
+        Data.get!(lists[_].cards[& &1.id =~ ~r/Card/])
+      end)
+    end
+
     test "get with negative end index", %{lists: lists} do
       [cards_1, cards_2] = Data.get(lists[_].cards[1..-2])
 
