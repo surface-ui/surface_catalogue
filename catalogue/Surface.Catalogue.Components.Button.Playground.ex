@@ -1,7 +1,7 @@
-defmodule Surface.Examples.Button.Playground do
-  use Surface.Playground,
-    catalogue: Surface.Examples.Catalogue,
-    subject: Surface.Examples.Button,
+defmodule Surface.Catalogue.Components.Button.Playground do
+  use Surface.Catalogue.Playground,
+    catalogue: Surface.Catalogue.Components.Catalogue,
+    subject: Surface.Catalogue.Components.Button,
     container: {:div, style: "height: 60px;"}
 
   data props, :map,

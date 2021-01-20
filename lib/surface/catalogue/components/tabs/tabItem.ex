@@ -14,4 +14,7 @@ defmodule Surface.Catalogue.Components.Tabs.TabItem do
 
   @doc "Item is visible"
   prop visible, :boolean, default: true
+
+  @doc "Indicate that the information has changed"
+  prop changed, :boolean, default: false
 end

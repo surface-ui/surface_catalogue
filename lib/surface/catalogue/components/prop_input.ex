@@ -54,9 +54,22 @@ defmodule Surface.Catalogue.Components.PropInput do
         </div>
         """
 
-      {:list, []} ->
+      {:atom, []} ->
         ~H"""
-        <TextInput field={{ prop.name }} value={{ inspect(value) }} class="input is-small" />
+        <TextInput field={{ prop.name }} value={{ value_to_string(value) }} class="input is-small" />
+        """
+
+      {:atom, choices} ->
+        choices = Enum.map(choices, &inspect/1)
+        ~H"""
+        <div class="select is-small">
+          <Select field={{ prop.name }} options={{ ["" | choices] }} selected={{ value_to_string(value) }}/>
+        </div>
+        """
+
+      {:css_class, _} ->
+        ~H"""
+        <TextInput field={{ prop.name }} value={{ value }} class="input is-small" />
         """
 
       {:integer, []} ->
@@ -71,10 +84,20 @@ defmodule Surface.Catalogue.Components.PropInput do
         </div>
         """
 
-      _ ->
+      {type, []} when type in [:list, :keyword] ->
         ~H"""
-        TODO
+        <TextInput field={{ prop.name }} value={{ inspect(value) }} class="input is-small" />
+        """
+
+      {type, _} ->
+        ~H"""
+        <span class="is-size-7">
+          {{ value_to_string(nil) }} [editor not available for type <b>{{ inspect(type) }}</b>]
+        </span>
         """
     end
   end
+
+  defp value_to_string(nil), do: ""
+  defp value_to_string(value), do: inspect(value)
 end

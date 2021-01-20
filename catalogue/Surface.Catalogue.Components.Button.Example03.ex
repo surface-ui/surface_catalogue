@@ -1,7 +1,7 @@
-defmodule Surface.Examples.Button.Example_03 do
-  use Surface.Example,
-    catalogue: Surface.Examples.Catalogue,
-    subject: Surface.Examples.Button,
+defmodule Surface.Catalogue.Components.Button.Example03 do
+  use Surface.Catalogue.Example,
+    catalogue: Surface.Catalogue.Components.Catalogue,
+    subject: Surface.Catalogue.Components.Button,
     title: "Outlined, Rounded and Loading",
     code_perc: 65,
     container: {:div, class: "buttons"}

@@ -1,5 +1,12 @@
-defmodule Surface.Components.Catalogue do
+defmodule Surface.Catalogue.Components.Catalogue do
   @behaviour Surface.Catalogue
+
+  @cwd File.cwd!()
+
+  @impl true
+  def path() do
+    @cwd |> Path.join("catalogue")
+  end
 
   @impl true
   def config() do

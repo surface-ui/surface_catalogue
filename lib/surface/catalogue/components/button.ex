@@ -1,4 +1,4 @@
-defmodule Surface.Examples.Button do
+defmodule Surface.Catalogue.Components.Button do
   @moduledoc """
   The classic **button**, in different colors, sizes, and states
   """

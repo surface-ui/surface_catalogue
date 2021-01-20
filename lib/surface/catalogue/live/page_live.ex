@@ -1,6 +1,7 @@
 defmodule Surface.Catalogue.PageLive do
   use Surface.LiveView
 
+  alias Surface.Catalogue.Playground
   alias Surface.Catalogue.Util
   alias Surface.Catalogue.Components.{ComponentInfo, ComponentTree, PlaygroundTools}
   alias Surface.Components.LivePatch
@@ -145,7 +146,7 @@ defmodule Surface.Catalogue.PageLive do
 
   defp maybe_assign_window_id(socket, params, session) do
     if connected?(socket) do
-      window_id = Util.get_window_id(session, params)
+      window_id = Playground.get_window_id(session, params)
       assign(socket, :__window_id__, window_id)
     else
       socket

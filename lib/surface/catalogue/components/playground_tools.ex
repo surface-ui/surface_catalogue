@@ -5,6 +5,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   alias Surface.Catalogue.Components.Tabs.TabItem
   alias Surface.Catalogue.Components.PropInput
   alias Surface.Components.Form
+  alias Surface.Catalogue.Playground
 
   @empty_playground_info %{
     pid: "-",
@@ -29,8 +30,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def mount(params, session, socket) do
     if connected?(socket) do
-      window_id = Surface.Catalogue.Util.get_window_id(session, params)
-      Phoenix.PubSub.subscribe(Surface.Catalogue.PubSub, "Surface.Catalogue:#{window_id}")
+      window_id = Playground.get_window_id(session, params)
+      Playground.subscribe(window_id)
     end
 
     {:ok, socket, temporary_assigns: [event_log_entries: []]}
@@ -49,7 +50,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </Form>
           </div>
         </TabItem>
-        <TabItem label="Event Log {{ @has_new_events? && "*" || "" }}" visible={{ @events != [] }}>
+        <TabItem label="Event Log" visible={{ @events != [] }} changed={{ @has_new_events? }}>
           <span style="margin-left: 1.0rem;">
             <span class="has-text-weight-semibold">Events: </span>
             <span>{{ available_events(@events) }}</span>
@@ -341,11 +342,30 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     end
   end
 
+  defp convert_prop_value(:atom, "") do
+    nil
+  end
+
+  defp convert_prop_value(:atom, ":" <> value) do
+    String.to_atom(value)
+  end
+
+  defp convert_prop_value(:atom, value) do
+    String.to_atom(value)
+  end
+
   defp convert_prop_value(:integer, value) do
     String.to_integer(value)
   end
 
-  defp convert_prop_value(:list, value) do
+  defp convert_prop_value(:css_class, value) do
+    case Surface.TypeHandler.CssClass.expr_to_value([value], []) do
+      {:ok, value} -> value
+      _ -> ""
+    end
+  end
+
+  defp convert_prop_value(type, value) when type in [:list, :keyword] do
     try do
       case Code.eval_string(value) do
         {val, _} when is_list(val) -> val

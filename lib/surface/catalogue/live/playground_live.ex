@@ -2,13 +2,14 @@ defmodule Surface.Catalogue.PlaygroundLive do
   use Surface.LiveView
 
   alias Surface.Catalogue.Util
+  alias Surface.Catalogue.Playground
 
   data playground, :module
   data head, :string
   data __window_id__, :string
 
   def mount(params, session, socket) do
-    window_id = Util.get_window_id(session, params)
+    window_id = Playground.get_window_id(session, params)
     socket = assign(socket, :__window_id__, window_id)
     {:ok, socket, temporary_assigns: [event_log_entries: []]}
   end

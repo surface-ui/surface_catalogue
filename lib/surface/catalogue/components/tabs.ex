@@ -48,6 +48,7 @@ defmodule Surface.Catalogue.Components.Tabs do
                 <i class={{ tab.icon }} aria-hidden="true"></i>
               </span>
               <span>{{ tab.label }}</span>
+              <span style="width: 15px; margin-left: 2px;">{{ raw(tab.changed && "*" || "&nbsp") }}</span>
             </a>
           </li>
         </ul>

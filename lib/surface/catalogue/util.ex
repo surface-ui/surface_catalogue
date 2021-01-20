@@ -1,18 +1,6 @@
 defmodule Surface.Catalogue.Util do
   @moduledoc false
 
-  def get_catalogue_config(nil) do
-    []
-  end
-
-  def get_catalogue_config(catalogue) do
-    if module_loaded?(catalogue) do
-      catalogue.config()
-    else
-      []
-    end
-  end
-
   def get_metadata(module) do
     case Code.fetch_docs(module) do
       {:docs_v1, _, _, "text/markdown", docs, %{catalogue: meta}, _} ->
@@ -24,15 +12,9 @@ defmodule Surface.Catalogue.Util do
     end
   end
 
-  def get_window_id(session, params) do
-    key = "__window_id__"
-
-    get_value_by_key(session, key) ||
-      get_value_by_key(params, key) ||
-      Base.encode16(:crypto.strong_rand_bytes(16))
-  end
-
   def get_components_info do
+    IO.puts ">>> get_components_info"
+    examples_and_playgrounds = Surface.Catalogue.Loader.get_examples_and_playgrounds()
     for [app] <- loaded_applications(),
         {:ok, modules} = :application.get_key(app, :modules),
         module <- modules,
@@ -40,9 +22,18 @@ defmodule Surface.Catalogue.Util do
         String.starts_with?(module_str, "Elixir."),
         module_loaded?(module),
         function_exported?(module, :component_type, 0),
-        reduce: {%{}, %{}} do
+        reduce: {%{}, examples_and_playgrounds} do
       acc ->
         components_reducer(module, module.component_type(), acc)
+    end
+  end
+
+  def get_catalogues do
+    for [app] <- loaded_applications(),
+        {:ok, modules} = :application.get_key(app, :modules),
+        module <- modules,
+        Surface.Catalogue in Keyword.get(module.module_info()[:attributes], :behaviour, []) do
+      module
     end
   end
 
@@ -118,14 +109,6 @@ defmodule Surface.Catalogue.Util do
     end
   end
 
-  defp get_value_by_key(map, key) when is_map(map) do
-    map[key]
-  end
-
-  defp get_value_by_key(_map, _key) do
-    nil
-  end
-
   defp add_node([first | rest], parent) do
     node = Map.get(parent, first, %{})
     Map.put(parent, first, add_node(rest, node))
@@ -144,7 +127,7 @@ defmodule Surface.Catalogue.Util do
     :ets.match(:ac_tab, {{:loaded, :"$1"}, :_})
   end
 
-  def module_loaded?(module) do
+  defp module_loaded?(module) do
     match?({:module, _mod}, Code.ensure_compiled(module))
   end
 end

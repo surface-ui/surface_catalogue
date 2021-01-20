@@ -6,10 +6,12 @@ defmodule Surface.Catalogue.MixProject do
       app: :surface_catalogue,
       version: "0.1.0",
       elixir: "~> 1.8",
+      elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      xref: [exclude: Surface.Catalogue.Playground]
     ]
   end
 
@@ -19,6 +21,10 @@ defmodule Surface.Catalogue.MixProject do
       extra_applications: [:logger]
     ]
   end
+
+  defp elixirc_paths(:dev), do: ["lib", "catalogue"]
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp aliases do
     [
