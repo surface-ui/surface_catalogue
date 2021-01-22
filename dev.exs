@@ -23,7 +23,7 @@ Application.put_env(:surface_catalogue, DemoWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"lib/surface/catalogue/(live|components)/.*(ex)$",
-      ~r"lib/surface/catalogue/examples/.*(ex)$"
+      ~r"priv/catalogue/.*(ex)$"
     ]
   ]
 )

@@ -13,27 +13,13 @@ defmodule Surface.Catalogue.Util do
   end
 
   def get_components_info do
-    IO.puts ">>> get_components_info"
-    examples_and_playgrounds = Surface.Catalogue.Loader.get_examples_and_playgrounds()
     for [app] <- loaded_applications(),
-        {:ok, modules} = :application.get_key(app, :modules),
-        module <- modules,
-        module_str = to_string(module),
-        String.starts_with?(module_str, "Elixir."),
+        module <- app_modules(app),
         module_loaded?(module),
         function_exported?(module, :component_type, 0),
-        reduce: {%{}, examples_and_playgrounds} do
+        reduce: {%{}, %{}} do
       acc ->
         components_reducer(module, module.component_type(), acc)
-    end
-  end
-
-  def get_catalogues do
-    for [app] <- loaded_applications(),
-        {:ok, modules} = :application.get_key(app, :modules),
-        module <- modules,
-        Surface.Catalogue in Keyword.get(module.module_info()[:attributes], :behaviour, []) do
-      module
     end
   end
 
@@ -129,5 +115,17 @@ defmodule Surface.Catalogue.Util do
 
   defp module_loaded?(module) do
     match?({:module, _mod}, Code.ensure_compiled(module))
+  end
+
+  defp app_modules(app) do
+    app
+    |> Application.app_dir()
+    |> Path.join("ebin/Elixir.*.beam")
+    |> Path.wildcard()
+    |> Enum.map(&beam_to_module/1)
+  end
+
+  defp beam_to_module(path) do
+    path |> Path.basename(".beam") |> String.to_atom()
   end
 end

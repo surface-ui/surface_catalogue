@@ -5,8 +5,7 @@ defmodule Surface.Catalogue.Application do
 
   def start(_type, _args) do
     children = [
-      {Phoenix.PubSub, name: Surface.Catalogue.PubSub},
-      Surface.Catalogue.Loader
+      {Phoenix.PubSub, name: Surface.Catalogue.PubSub}
     ]
 
     opts = [strategy: :one_for_one, name: Surface.Catalogue.Supervisor]

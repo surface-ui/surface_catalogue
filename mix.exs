@@ -22,7 +22,7 @@ defmodule Surface.Catalogue.MixProject do
     ]
   end
 
-  defp elixirc_paths(:dev), do: ["lib", "catalogue"]
+  defp elixirc_paths(:dev), do: ["lib"] ++ catalogues()
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
@@ -40,6 +40,13 @@ defmodule Surface.Catalogue.MixProject do
       {:plug_cowboy, "~> 2.0", only: :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:surface, path: "../surface", override: true}
+    ]
+  end
+
+  defp catalogues do
+    [
+      "priv/catalogue",
+      Path.expand("../surface/priv/catalogue")
     ]
   end
 end

@@ -14,7 +14,7 @@ def deps do
 end
 ```
 
-Once installed, update your router's configuration:
+Update your `router.ex` configuration:
 
 ```elixir
 # lib/my_app_web/router.ex
@@ -33,7 +33,80 @@ end
 
 That's all!
 
-Run `mix phx.server` and access the "/catalogue" to start playing with your components.
+Run `mix phx.server` and access "/catalogue" to see the list of all available components in
+your project.
+
+## Loading Examples and Playgrounds
+
+If you want to access examples and playgrounds for components, edit your `mix.exs` file,
+adding a new entry for `elixirc_paths` along with a `catalogues` function listing the
+catalogues you want to be loaded:
+
+```elixir
+...
+
+defp elixirc_paths(:dev), do: ["lib"] ++ catalogues()
+
+...
+
+defp catalogues do
+  [
+    # Local catalogue
+    "priv/catalogue",
+    # Dependencies catalogues
+    "deps/surface/priv/catalogue",
+    "deps/surface_bulma/priv/catalogue",
+    # External catalogues
+    "/Users/johndoe/workspace/my_componensts/priv/catalogue",
+    Path.expand("../other_componensts/priv/catalogue")
+  ]
+end
+```
+
+Then update the endpoint configuration in `config/dev.exs` to set up live reloading
+for your catalogue:
+
+```elixir
+config :my_app, MyAppWeb.Endpoint,
+  live_reload: [
+    patterns: [
+      ~r"priv/catalogue/.*(ex)$",
+      ...
+    ]
+  ]
+```
+
+> **Note**: Without the above configurations, the list of available components is
+> still presented in the catalogue page. However, when selecting a component, only
+> its documentation and API will be shown. No example/playground will be loaded nor
+> tracked by Phoenix's live reloader.
+
+## Sharing catalogues
+
+If you're working on a suite of components that you want to share as a library, you
+may need to provide additional information about the catalogue. This will be necessary
+whenever your components require any `css` or `js` code that might not be available
+on the host project.
+
+To provide that addicional information you must create a module inplementing the
+`Surface.Catalogue` in your `priv/catalogue/` folder. Example:
+
+```elixir
+defmodule MySuite.Catalogue do
+  @behaviour Surface.Catalogue
+
+  @impl true
+  def config() do
+    [
+      head: """
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
+      <script defer type="module" src="/js/app.js"></script>
+      """
+    ]
+  end
+end
+```
+
 
 ## Contributing
 

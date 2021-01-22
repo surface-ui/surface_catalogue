@@ -12,20 +12,25 @@ defmodule Surface.Catalogue.PageLive do
   data component_module, :module
   data has_example?, :boolean
   data has_playground?, :boolean
-  data components, :map
+  data components, :map, default: %{}
   data action, :string
-  data examples, :list
-  data playgrounds, :list
+  data examples_and_playgrounds, :map, default: %{}
+  data examples, :list, default: []
+  data playgrounds, :list, default: []
   data __window_id__, :string, default: nil
 
   def mount(params, session, socket) do
-    {components, examples_and_playgrounds} = Util.get_components_info()
-
     socket =
-      socket
-      |> maybe_assign_window_id(params, session)
-      |> assign(:components, components)
-      |> assign(:examples_and_playgrounds, examples_and_playgrounds)
+      if connected?(socket) do
+        {components, examples_and_playgrounds} = Util.get_components_info()
+
+        socket
+        |> maybe_assign_window_id(params, session)
+        |> assign(:components, components)
+        |> assign(:examples_and_playgrounds, examples_and_playgrounds)
+      else
+        socket
+      end
 
     {:ok, socket}
   end
