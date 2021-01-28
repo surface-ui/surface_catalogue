@@ -57,8 +57,8 @@ defp catalogues do
     "deps/surface/priv/catalogue",
     "deps/surface_bulma/priv/catalogue",
     # External catalogues
-    "/Users/johndoe/workspace/my_componensts/priv/catalogue",
-    Path.expand("../other_componensts/priv/catalogue")
+    Path.expand("../my_componensts/priv/catalogue"),
+    "/Users/johndoe/workspace/other_componensts/priv/catalogue"
   ]
 end
 ```
@@ -89,18 +89,17 @@ whenever your components require any `css` or `js` code that might not be availa
 on the host project.
 
 To provide that addicional information you must create a module inplementing the
-`Surface.Catalogue` in your `priv/catalogue/` folder. Example:
+`Surface.Catalogue` behaviour in your `priv/catalogue/` folder. Example:
 
 ```elixir
 defmodule MySuite.Catalogue do
-  @behaviour Surface.Catalogue
+  use Surface.Catalogue
 
   @impl true
   def config() do
     [
-      head: """
+      head_css: """
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css" />
-      <script defer type="module" src="/js/app.js"></script>
       """
     ]
   end
@@ -108,9 +107,10 @@ end
 ```
 
 
-## Contributing
+## Running the catalogue from `surface_catalogue`
 
-You can run a standalone version of the catalogue with the following commands:
+You can run a standalone version of the catalogue by running the following command
+inside the `surface_catalogue` project:
 
 ```
 mix dev

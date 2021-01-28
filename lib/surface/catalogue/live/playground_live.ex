@@ -1,11 +1,11 @@
 defmodule Surface.Catalogue.PlaygroundLive do
   use Surface.LiveView
 
-  alias Surface.Catalogue.Util
   alias Surface.Catalogue.Playground
 
   data playground, :module
-  data head, :string
+  data head_css, :string
+  data head_js, :string
   data __window_id__, :string
 
   def mount(params, session, socket) do
@@ -16,12 +16,13 @@ defmodule Surface.Catalogue.PlaygroundLive do
 
   def handle_params(params, _uri, socket) do
     playground = Module.safe_concat([params["playground"]])
-    meta = Util.get_metadata(playground)
+    config = Surface.Catalogue.get_config(playground)
 
     socket =
       socket
       |> assign(:playground, playground)
-      |> assign(:head, meta[:config][:head] || "")
+      |> assign(:head_css, config[:head_css] || "")
+      |> assign(:head_js, config[:head_js] || "")
 
     {:noreply, socket}
   end
@@ -34,7 +35,8 @@ defmodule Surface.Catalogue.PlaygroundLive do
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
-        {{ raw(@head) }}
+        {{ raw(@head_css) }}
+        {{ raw(@head_js) }}
       </head>
       <body>
         {{ live_render(@socket, @playground, id: "playground", session: %{"__window_id__" => @__window_id__}) }}

@@ -23,8 +23,7 @@ Application.put_env(:surface_catalogue, DemoWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"lib/surface/catalogue/(live|components)/.*(ex)$",
-      ~r"priv/catalogue/.*(ex)$"
-    ]
+    ] ++ Enum.map(Mix.Project.get.catalogues, fn i -> ~r[#{Path.join(i, "")}\/.*(ex)$] end)
   ]
 )
 

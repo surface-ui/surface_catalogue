@@ -1,12 +1,9 @@
 defmodule Surface.Catalogue.PageLive do
   use Surface.LiveView
 
-  alias Surface.Catalogue.Playground
-  alias Surface.Catalogue.Util
+  alias Surface.Catalogue.{Playground, Util, ExampleLive, PlaygroundLive}
   alias Surface.Catalogue.Components.{ComponentInfo, ComponentTree, PlaygroundTools}
   alias Surface.Components.LivePatch
-  alias Surface.Catalogue.ExampleLive
-  alias Surface.Catalogue.PlaygroundLive
 
   data component_name, :string
   data component_module, :module
@@ -124,6 +121,13 @@ defmodule Surface.Catalogue.PageLive do
                     <PlaygroundTools id="playground_tools" session={{ %{"__window_id__" => @__window_id__} }} />
                   </div>
                 </If>
+                <div :if={{ !connected?(@socket) }} class="container">
+                  <div class="columns is-centered is-vcentered is-mobile" style="height: 300px">
+                    <div class="column is-narrow has-text-centered subtitle has-text-grey">
+                      Loading live {{ @action }}...
+                    </div>
+                  </div>
+                </div>
               </div>
             </If>
           </div>

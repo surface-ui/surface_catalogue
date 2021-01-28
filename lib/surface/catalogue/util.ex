@@ -1,17 +1,6 @@
 defmodule Surface.Catalogue.Util do
   @moduledoc false
 
-  def get_metadata(module) do
-    case Code.fetch_docs(module) do
-      {:docs_v1, _, _, "text/markdown", docs, %{catalogue: meta}, _} ->
-        doc = Map.get(docs, "en")
-        meta |> Map.new() |> Map.put(:doc, doc)
-
-      _ ->
-        nil
-    end
-  end
-
   def get_components_info do
     for [app] <- loaded_applications(),
         module <- app_modules(app),
@@ -25,8 +14,8 @@ defmodule Surface.Catalogue.Util do
 
   def get_examples(component, examples_and_playgrounds) do
     for example <- examples_and_playgrounds[component][:examples] || [] do
-      meta = get_metadata(example)
-      config = meta[:config]
+      meta = Surface.Catalogue.get_metadata(example)
+      config = Surface.Catalogue.get_config(example)
       code = meta |> Map.get(:code, "") |> String.trim_trailing()
 
       title = Keyword.get(config, :title)
@@ -58,7 +47,7 @@ defmodule Surface.Catalogue.Util do
   defp components_reducer(module, Surface.LiveView, acc) do
     {components, examples_and_playgrounds} = acc
 
-    case get_metadata(module) do
+    case Surface.Catalogue.get_metadata(module) do
       %{subject: subject, code: _} ->
         initial = %{examples: [module], playgrounds: []}
 
