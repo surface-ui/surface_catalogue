@@ -68,6 +68,9 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           </div>
         </TabItem>
         <TabItem label="Debug/Profile">
+          <div id="debug-profile-disabled" style="margin-top: 3.0rem; text-align: center;" phx-update="ignore">
+            The <strong>window.liveSocket</strong> has not been set. Debug/Profiling is disabled.
+          </div>
           <div id="debug-profile" style="margin-top: 0.7rem;" phx-update="ignore">
             <div class="field is-horizontal">
               <div class="field-label is-small">

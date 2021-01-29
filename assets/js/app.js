@@ -78,6 +78,18 @@ window.handleLatencySimValueBlur = function(input) {
 }
 
 function initDebugProfile(socket) {
+  const debugProfileDiv = document.getElementById("debug-profile")
+  const debugProfileDisabledDiv = document.getElementById("debug-profile-disabled")
+
+  if (!socket) {
+    debugProfileDiv.hidden = true
+    debugProfileDisabledDiv.hidden = false
+    return
+  }
+
+  debugProfileDiv.hidden = false
+  debugProfileDisabledDiv.hidden = true
+
   const debugCheckbox = document.getElementById("debug_profile_enable_debug")
   debugCheckbox.checked = socket.isDebugEnabled()
 
@@ -104,8 +116,13 @@ function updatePlaygroundTabLabel() {
 }
 
 function maybePatchSocket(socket) {
+  if (!socket) {
+    console.log("[Catalogue] window.liveSocket has not been set. Debug/Profile tab will be disabled.")
+    return
+  }
+
   if (socket.patched)
-    return;
+    return
 
   const path = socket.currentLocation.pathname
   const PHX_LV_DEBUG = `phx:live-socket:debug:${path}`
@@ -164,7 +181,6 @@ Hooks.IframeBody = {
       if (iframe.id == "playground-iframe") {
         const socket = iframe.contentWindow.liveSocket
         maybePatchSocket(socket)
-
         initDebugProfile(socket)
       }
     });
