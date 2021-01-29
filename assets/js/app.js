@@ -66,6 +66,16 @@ window.handleEnableDebugClick = function(checkbox) {
   }
 }
 
+window.handleEnableProfileClick = function(checkbox) {
+  let socket = document.getElementById("playground-iframe").contentWindow.liveSocket
+
+  if (checkbox.checked) {
+    socket.enableProfiling()
+  } else {
+    socket.disableProfiling()
+  }
+}
+
 window.handleLatencySimValueBlur = function(input) {
   const socket = document.getElementById("playground-iframe").contentWindow.liveSocket
   const oldValue = socket.getLatencySim()
@@ -92,6 +102,9 @@ function initDebugProfile(socket) {
 
   const debugCheckbox = document.getElementById("debug_profile_enable_debug")
   debugCheckbox.checked = socket.isDebugEnabled()
+
+  const profileCheckbox = document.getElementById("debug_profile_enable_profile")
+  profileCheckbox.checked = socket.isProfileEnabled()
 
   const latencySimCheckbox = document.getElementById("debug_profile_enable_latency_sim")
   const latencySimInput = document.getElementById("debug_profile_latency_sim_value")
@@ -151,13 +164,13 @@ function maybePatchSocket(socket) {
 
   socket.disableDebug = function(){ sessionStorage.removeItem(PHX_LV_DEBUG) }
 
-  // Profile (not working!)
+  // Profile
 
-  // socket.isProfileEnabled = function(){ return sessionStorage.getItem(PHX_LV_PROFILE) === "true" }
+  socket.isProfileEnabled = function(){ return sessionStorage.getItem(PHX_LV_PROFILE) === "true" }
 
-  // socket.enableProfiling = function(){ sessionStorage.setItem(PHX_LV_PROFILE, "true") }
+  socket.enableProfiling = function(){ sessionStorage.setItem(PHX_LV_PROFILE, "true") }
 
-  // socket.disableProfiling = function(){ sessionStorage.removeItem(PHX_LV_PROFILE) }
+  socket.disableProfiling = function(){ sessionStorage.removeItem(PHX_LV_PROFILE) }
 
   socket.patched = true
 }

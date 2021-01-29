@@ -118,12 +118,18 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
             <div class="field is-horizontal">
               <div class="field-label is-small">
-                <label class="label has-text-grey-light">Enable profiling</label>
+                <label class="label">Enable profiling</label>
               </div>
               <div class="field-body">
                 <div class="field" style="display: flex; align-items: center">
                   <div class="control" style="width: 400px">
-                    <input id="debug_profile_enable_profiling" style="height: 26px;" type="checkbox" value="true" disabled>
+                    <input
+                      id="debug_profile_enable_profile"
+                      style="height: 26px;"
+                      type="checkbox"
+                      value="true"
+                      onclick="handleEnableProfileClick(this);"
+                    >
                   </div>
                 </div>
               </div>
