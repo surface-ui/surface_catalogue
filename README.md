@@ -2,9 +2,9 @@
 
 A **PoC** of something similar to https://storybook.js.org/ for [Surface](https://github.com/msaraiva/surface).
 
-## Installation (development-only usage)
+## Installation
 
-Add `surface_catalogue` to your list of dependencies in `mix.exs`:
+Add `surface_catalogue` to your list of dependencies in `mix.exs` (development-only):
 
 ```elixir
 def deps do
@@ -45,11 +45,7 @@ catalogues you want to be loaded:
 ```elixir
 ...
 
-defp elixirc_paths(:dev), do: ["lib"] ++ catalogues()
-
-...
-
-defp catalogues do
+def catalogues do
   [
     # Local catalogue
     "priv/catalogue",
@@ -61,6 +57,10 @@ defp catalogues do
     "/Users/johndoe/workspace/other_componensts/priv/catalogue"
   ]
 end
+
+defp elixirc_paths(:dev), do: ["lib"] ++ catalogues()
+
+...
 ```
 
 Then update the endpoint configuration in `config/dev.exs` to set up live reloading
@@ -106,11 +106,51 @@ defmodule MySuite.Catalogue do
 end
 ```
 
+## Running the built-in catalogue server
 
-## Running the catalogue from `surface_catalogue`
+In case you're working on a lib that doesn't initialize its own Phoenix endpoint, you
+can use the built-in server provided by the `surface_catalogue` following these steps:
 
-You can run a standalone version of the catalogue by running the following command
-inside the `surface_catalogue` project:
+Create a `dev.exs` script at the root of your project with the following content:
+
+```elixir
+# iex -S mix dev
+
+Logger.configure(level: :debug)
+
+# Start the catalogue server
+Surface.Catalogue.Server.start(
+  live_reload: [
+    patterns: [
+      ~r"lib/my_lib_web/live/.*(ex)$"
+    ]
+  ]
+)
+```
+
+Make sure you set the `patterns` option according to your project.
+
+To make things easier, add an alias run the script in your `mix.exs`:
+
+```elixir
+def project do
+  [
+    ...,
+    aliases: aliases()
+  ]
+end
+
+...
+
+defp aliases do
+  [
+    dev: "run --no-halt dev.exs",
+    ...
+  ]
+end
+```
+
+Run the server with:
 
 ```
 mix dev
@@ -122,11 +162,18 @@ or using `iex`:
 iex -S mix dev
 ```
 
-Then you can access the catalogue at [localhost:4444](http://localhost:4444/).
+You can now access the catalogue at [localhost:4000](http://localhost:4000/).
+
+If you need, you can also start the server using a different port:
+
+```
+PORT=4444 iex -S mix dev
+```
 
 ## Credits
 
-The `dev.exs` script was mostly extracted from [phoenix_live_dashboard](https://github.com/phoenixframework/phoenix_live_dashboard).
+The `Surface.Catalogue.Server` implementation was mostly extracted from the `dev.exs` script
+from [phoenix_live_dashboard](https://github.com/phoenixframework/phoenix_live_dashboard).
 All credits to the Phoenix Core Team.
 
 ## License
