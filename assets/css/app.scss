@@ -48,6 +48,12 @@
   border-bottom-width: 2px;
 }
 
+#playground-iframe {
+  resize: both;
+  border: 1px solid rgb(221, 221, 221);
+  border-radius: 3px;
+}
+
 #playground_tools .tabs {
   margin-bottom: 0.8rem;
 }
@@ -162,7 +168,8 @@
   padding: 0rem 1.5rem;
   margin: 0;
   font-size: 1em;
-  height: 100%;
+  /* Doesn't work on Safari */
+  /* height: 100%; */
 }
 
 .Example > .code > pre > code {

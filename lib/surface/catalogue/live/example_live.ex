@@ -30,7 +30,7 @@ defmodule Surface.Catalogue.ExampleLive do
         {{ raw(@head_css) }}
         {{ raw(@head_js) }}
       </head>
-      <body>
+      <body style="overflow: hidden;">
         {{ live_render(@socket, @example, id: "example") }}
       </body>
     </html>

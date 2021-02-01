@@ -14,15 +14,6 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import Prism from './prism.js';
 
-function resizeIframe(iframe) {
-  iframe.style.height = "0px"
-  const height = iframe.contentWindow.document.documentElement.scrollHeight
-  if (height != 0) {
-    iframe.style.height = height + 'px'
-    iframe.contentWindow.document.body.style.height = height + 'px'
-  }
-}
-
 window.togggleNode = (a) => {
   a.parentNode.querySelector('.menu-list').classList.toggle('is-hidden')
   const i = a.querySelector('span.icon > i')
@@ -189,18 +180,25 @@ Hooks.IframeBody = {
   mounted(){
     const iframe = this.el
     iframe.addEventListener("load", e => {
-      resizeIframe(iframe)
-
       if (iframe.id == "playground-iframe") {
         const socket = iframe.contentWindow.liveSocket
         maybePatchSocket(socket)
         initDebugProfile(socket)
       }
     });
-  },
-  updated(){
-    const iframe = this.el
-    resizeIframe(iframe)
+    let sendResize;
+    iframe.contentWindow.addEventListener("resize", e => {
+      if (iframe.id == "playground-iframe") {
+        if (iframe.offsetWidth > iframe.parentElement.offsetWidth)
+          iframe.style.width = "100%"
+
+        const self = this
+        clearTimeout(sendResize)
+        sendResize = setTimeout(function() {
+          self.pushEvent("playground_resize", {height: iframe.style.height, width: iframe.style.width})
+        }, 300)
+      }
+    });
   }
 };
 

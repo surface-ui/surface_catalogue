@@ -5,7 +5,10 @@ defmodule Surface.Catalogue.PageLive do
   alias Surface.Catalogue.Components.{ComponentInfo, ComponentTree, PlaygroundTools}
   alias Surface.Components.LivePatch
 
-  data component_name, :string
+  @playground_default_height "160px"
+  @playground_default_width "100%"
+
+  data component_name, :string, default: nil
   data component_module, :module
   data has_example?, :boolean
   data has_playground?, :boolean
@@ -15,6 +18,8 @@ defmodule Surface.Catalogue.PageLive do
   data examples, :list, default: []
   data playgrounds, :list, default: []
   data __window_id__, :string, default: nil
+  data playground_height, :string, default: "150px"
+  data playground_width, :string, default: "100%"
 
   def mount(params, session, socket) do
     socket =
@@ -85,17 +90,17 @@ defmodule Surface.Catalogue.PageLive do
                   <ComponentInfo module={{ @component_module }} />
                 </div>
                 <If condition={{ connected?(@socket) }}>
-                  <For each={{ {{example, title, code, direction, demo_perc, code_perc}, index} <- Enum.with_index(@examples, 1) }}>
+                  <For each={{ {{example, title, height, code, direction, demo_perc, code_perc}, index} <- Enum.with_index(@examples, 1) }}>
                     <h3 :show={{ @action == "example" && title }} id="example-{{index}}" class="example-title title is-4 is-spaced">
                       <a href="#example-{{index}}">#</a> {{ title }}
                     </h3>
-                    <div :show={{ @action == "example" }} class="Example {{direction}}"
-                    >
+                    <div :show={{ @action == "example" }} class="Example {{direction}}">
                       <div class="demo" style="width: {{demo_perc}}%">
                         <iframe
+                          scrolling="no"
                           id="example-iframe-{{index}}"
                           src={{ path_to(@socket, ExampleLive, example, __window_id__: @__window_id__) }}
-                          style="width: 100%; overflow-y: scroll;"
+                          style="overflow-y: hidden; width: 100%; height: {{ height }}px;"
                           frameborder="0"
                           phx-hook="IframeBody"
                         />
@@ -108,15 +113,16 @@ defmodule Surface.Catalogue.PageLive do
                       </div>
                     </div>
                   </For>
+                  <div :show={{ @action == "playground" }}>
                   <iframe
                     id="playground-iframe"
                     :if={{ @has_playground? }}
-                    :show={{ @action == "playground" }}
                     src={{ path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__) }}
-                    style="width: 100%; overflow-y: scroll;"
+                    style="height: {{ @playground_height }}; width: {{ @playground_width }};"
                     frameborder="0"
                     phx-hook="IframeBody"
                   />
+                  </div>
                   <div :show={{ @action == "playground" }} style="padding-top: 1.5rem;">
                     <PlaygroundTools id="playground_tools" session={{ %{"__window_id__" => @__window_id__} }} />
                   </div>
@@ -137,12 +143,35 @@ defmodule Surface.Catalogue.PageLive do
     """
   end
 
+  def handle_event("playground_resize", %{"height" => height, "width" => width}, socket) do
+    {:noreply, assign(socket, playground_height: height, playground_width: width)}
+  end
+
   defp assign_component_info(socket, component_name) do
     component_module = get_component_by_name(component_name)
     examples_and_playgrounds = socket.assigns.examples_and_playgrounds
 
     examples = Util.get_examples(component_module, examples_and_playgrounds)
     playgrounds = Util.get_playgrounds(component_module, examples_and_playgrounds)
+    playground = Enum.at(playgrounds, 0)
+
+    playground_height =
+      if playground do
+        playground_module = Module.safe_concat([playground])
+        playground_config = Surface.Catalogue.get_config(playground_module)
+        height = Keyword.get(playground_config, :height)
+        padding = 30
+        height && "#{height + padding}px"
+      end
+
+    socket =
+      if component_name != socket.assigns.component_name do
+        socket
+        |> assign(:playground_height, playground_height || @playground_default_height)
+        |> assign(:playground_width, @playground_default_width)
+      else
+        socket
+      end
 
     socket
     |> assign(:component_name, component_name)

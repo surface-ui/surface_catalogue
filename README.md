@@ -1,6 +1,7 @@
 # Surface Catalogue
 
-A **PoC** of something similar to https://storybook.js.org/ for [Surface](https://github.com/msaraiva/surface).
+This is mostly a prototype, meant to validate a few ideas to have something similar to
+https://storybook.js.org/ for [Surface](https://github.com/msaraiva/surface).
 
 ## Installation
 

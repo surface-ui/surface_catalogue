@@ -20,6 +20,7 @@ defmodule Surface.Catalogue.Util do
 
       title = Keyword.get(config, :title)
       direction = Keyword.get(config, :direction) || "horizontal"
+      height = Keyword.get(config, :height) || 100
 
       {demo_perc, code_perc} =
         case {direction, Keyword.get(config, :code_perc)} do
@@ -33,7 +34,7 @@ defmodule Surface.Catalogue.Util do
             {10 - value, value}
         end
 
-      {inspect(example), title, code, direction, demo_perc, code_perc}
+      {inspect(example), title, height, code, direction, demo_perc, code_perc}
     end
     |> Enum.sort()
   end

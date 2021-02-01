@@ -6,6 +6,7 @@ defmodule Surface.Catalogue.PlaygroundLive do
   data playground, :module
   data head_css, :string
   data head_js, :string
+  data body, :string
   data __window_id__, :string
 
   def mount(params, session, socket) do
@@ -18,11 +19,14 @@ defmodule Surface.Catalogue.PlaygroundLive do
     playground = Module.safe_concat([params["playground"]])
     config = Surface.Catalogue.get_config(playground)
 
+    default_body = [style: "background: rgb(249, 250, 251); padding: 15px; height: 100%;"]
+
     socket =
       socket
       |> assign(:playground, playground)
       |> assign(:head_css, config[:head_css] || "")
       |> assign(:head_js, config[:head_js] || "")
+      |> assign(:body, Keyword.merge(default_body, config[:body] || []))
 
     {:noreply, socket}
   end
@@ -38,7 +42,7 @@ defmodule Surface.Catalogue.PlaygroundLive do
         {{ raw(@head_css) }}
         {{ raw(@head_js) }}
       </head>
-      <body>
+      <body :attrs={{ @body }}>
         {{ live_render(@socket, @playground, id: "playground", session: %{"__window_id__" => @__window_id__}) }}
       </body>
     </html>
