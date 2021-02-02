@@ -61,6 +61,7 @@ defmodule Surface.Catalogue.Components.PropInput do
 
       {:atom, choices} ->
         choices = Enum.map(choices, &inspect/1)
+
         ~H"""
         <div class="select is-small">
           <Select field={{ prop.name }} options={{ ["" | choices] }} selected={{ value_to_string(value) }}/>

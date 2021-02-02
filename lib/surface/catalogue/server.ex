@@ -20,7 +20,7 @@ defmodule Surface.Catalogue.Server do
 
     scope "/" do
       pipe_through :browser
-      surface_catalogue "/"
+      surface_catalogue("/")
     end
   end
 
@@ -83,7 +83,8 @@ defmodule Surface.Catalogue.Server do
   end
 
   defp catalogues_files_patterns do
-    mix_project = Mix.Project.get
+    mix_project = Mix.Project.get()
+
     if function_exported?(mix_project, :catalogues, 0) do
       Enum.flat_map(mix_project.catalogues(), fn path ->
         path = Path.join(path, "")
@@ -114,6 +115,7 @@ defmodule Surface.Catalogue.Server do
         Keyword.merge(lr1, lr2, fn
           :patterns, p1, p2 ->
             p1 ++ p2
+
           _, _p1, p2 ->
             p2
         end)
