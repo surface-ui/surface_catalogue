@@ -1,16 +1,19 @@
 defmodule Surface.Catalogue.MixProject do
   use Mix.Project
 
+  @version "0.0.1"
+
   def project do
     [
       app: :surface_catalogue,
-      version: "0.0.1",
+      version: @version,
       elixir: "~> 1.8",
       description: "An initial prototype of the Surface Catalogue",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      docs: docs(),
       aliases: aliases(),
       xref: [exclude: Surface.Catalogue.Playground],
       package: package()
@@ -47,7 +50,15 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_reload, "~> 1.2"},
-      {:surface, "~> 0.2.1"}
+      {:surface, "~> 0.2.1"},
+      {:ex_doc, ">= 0.19.0", only: :docs}
+    ]
+  end
+
+  defp docs do
+    [
+      source_ref: "v#{@version}",
+      source_url: "https://github.com/surface-ui/surface_catalogue"
     ]
   end
 
