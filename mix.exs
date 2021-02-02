@@ -45,7 +45,7 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_reload, "~> 1.2"},
-      {:surface, "~> 0.2.0"}
+      {:surface, "~> 0.2.1"}
     ]
   end
 end

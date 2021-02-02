@@ -20,7 +20,7 @@ defmodule Surface.Catalogue.Util do
 
       title = Keyword.get(config, :title)
       direction = Keyword.get(config, :direction) || "horizontal"
-      height = Keyword.get(config, :height) || 100
+      height = Keyword.get(config, :height) || "120px"
 
       {demo_perc, code_perc} =
         case {direction, Keyword.get(config, :code_perc)} do

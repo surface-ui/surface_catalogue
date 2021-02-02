@@ -135,7 +135,6 @@
 
 .Example.vertical .demo {
   width: 100%;
-  padding: 1.5rem;
 }
 
 .Example.vertical .code > pre {
@@ -151,15 +150,18 @@
 
 .Example.horizontal .demo {
   width: 50%;
-  padding: 1.5rem;
 }
 
 .Example.horizontal > div {
   width: 50%;
 }
 
-.Example.horizontal .code > pre {
+.Example.horizontal .code {
   border-left: 1px solid #ffdd57;
+  background: #1e1e1e;
+}
+
+.Example.horizontal .code > pre {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
@@ -168,8 +170,6 @@
   padding: 0rem 1.5rem;
   margin: 0;
   font-size: 1em;
-  /* Doesn't work on Safari */
-  /* height: 100%; */
 }
 
 .Example > .code > pre > code {

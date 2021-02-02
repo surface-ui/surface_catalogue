@@ -1,9 +1,12 @@
 defmodule Surface.Catalogue.ExampleLive do
   use Surface.LiveView
 
+  @default_body [style: "padding: 1.5rem; height: 100%;"]
+
   data example, :module
   data head_css, :string
   data head_js, :string
+  data body, :keyword
   data code, :string
 
   def handle_params(params, _uri, socket) do
@@ -15,6 +18,7 @@ defmodule Surface.Catalogue.ExampleLive do
       |> assign(:example, example || "")
       |> assign(:head_css, config[:head_css] || "")
       |> assign(:head_js, config[:head_js] || "")
+      |> assign(:body, config[:body] || @default_body)
 
     {:noreply, socket}
   end
@@ -30,7 +34,7 @@ defmodule Surface.Catalogue.ExampleLive do
         {{ raw(@head_css) }}
         {{ raw(@head_js) }}
       </head>
-      <body style="overflow: hidden;">
+      <body :attrs={{ @body }}>
         {{ live_render(@socket, @example, id: "example") }}
       </body>
     </html>

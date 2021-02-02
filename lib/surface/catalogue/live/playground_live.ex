@@ -3,10 +3,12 @@ defmodule Surface.Catalogue.PlaygroundLive do
 
   alias Surface.Catalogue.Playground
 
+  @default_body [style: "padding: 1.5rem; height: 100%; background-color: #f5f5f5"]
+
   data playground, :module
   data head_css, :string
   data head_js, :string
-  data body, :string
+  data body, :keyword
   data __window_id__, :string
 
   def mount(params, session, socket) do
@@ -19,14 +21,12 @@ defmodule Surface.Catalogue.PlaygroundLive do
     playground = Module.safe_concat([params["playground"]])
     config = Surface.Catalogue.get_config(playground)
 
-    default_body = [style: "background: rgb(249, 250, 251); padding: 15px; height: 100%;"]
-
     socket =
       socket
       |> assign(:playground, playground)
       |> assign(:head_css, config[:head_css] || "")
       |> assign(:head_js, config[:head_js] || "")
-      |> assign(:body, Keyword.merge(default_body, config[:body] || []))
+      |> assign(:body, config[:body] || @default_body)
 
     {:noreply, socket}
   end

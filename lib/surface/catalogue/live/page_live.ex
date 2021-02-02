@@ -18,8 +18,8 @@ defmodule Surface.Catalogue.PageLive do
   data examples, :list, default: []
   data playgrounds, :list, default: []
   data __window_id__, :string, default: nil
-  data playground_height, :string, default: "150px"
-  data playground_width, :string, default: "100%"
+  data playground_height, :string, default: @playground_default_height
+  data playground_width, :string, default: @playground_default_width
 
   def mount(params, session, socket) do
     socket =
@@ -100,7 +100,7 @@ defmodule Surface.Catalogue.PageLive do
                           scrolling="no"
                           id="example-iframe-{{index}}"
                           src={{ path_to(@socket, ExampleLive, example, __window_id__: @__window_id__) }}
-                          style="overflow-y: hidden; width: 100%; height: {{ height }}px;"
+                          style="overflow-y: hidden; width: 100%; height: {{ height }};"
                           frameborder="0"
                           phx-hook="IframeBody"
                         />
@@ -159,9 +159,7 @@ defmodule Surface.Catalogue.PageLive do
       if playground do
         playground_module = Module.safe_concat([playground])
         playground_config = Surface.Catalogue.get_config(playground_module)
-        height = Keyword.get(playground_config, :height)
-        padding = 30
-        height && "#{height + padding}px"
+        Keyword.fetch!(playground_config, :height)
       end
 
     socket =
