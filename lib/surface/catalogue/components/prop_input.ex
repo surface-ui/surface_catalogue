@@ -32,7 +32,7 @@ defmodule Surface.Catalogue.Components.PropInput do
   end
 
   defp input(assigns) do
-    value = assigns.value || assigns.prop.opts[:default]
+    value = if assigns.value != nil, do: assigns.value, else: assigns.prop.opts[:default]
     choices = assigns.prop.opts[:values] || []
     prop = assigns.prop
 
