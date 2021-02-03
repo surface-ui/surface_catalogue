@@ -10,7 +10,7 @@ Add `surface_catalogue` to your list of dependencies in `mix.exs` (development-o
 ```elixir
 def deps do
   [
-    {:surface_catalogue, "~> 0.0.1", only: :dev}
+    {:surface_catalogue, "~> 0.0.2", only: :dev}
   ]
 end
 ```

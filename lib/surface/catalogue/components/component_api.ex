@@ -168,7 +168,7 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
   defp fetch_functions(module) do
     callbacks =
       for {:behaviour, [mod]} <- module.module_info()[:attributes],
-        callback <- mod.behaviour_info(:callbacks) do
+          callback <- mod.behaviour_info(:callbacks) do
         callback
       end
 

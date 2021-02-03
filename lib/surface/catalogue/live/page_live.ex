@@ -221,6 +221,7 @@ defmodule Surface.Catalogue.PageLive do
 
   defp loading(message) do
     assigns = %{}
+
     ~H"""
     <div class="columns is-centered is-vcentered is-mobile" style="height: 300px">
       <div class="column is-narrow has-text-centered subtitle has-text-grey">
