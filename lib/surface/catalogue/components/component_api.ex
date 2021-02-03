@@ -166,14 +166,26 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
   end
 
   defp fetch_functions(module) do
+    callbacks =
+      for {:behaviour, [mod]} <- module.module_info()[:attributes],
+        callback <- mod.behaviour_info(:callbacks) do
+        callback
+      end
+
     case Code.fetch_docs(module) do
       {:docs_v1, _line, _beam_language, "text/markdown", _moduledoc, _metadata, docs} ->
-        for {{:function, _func, _arity}, _line, [sig | _], %{"en" => doc}, _} <- docs do
-          %{signature: sig, doc: doc}
+        for {{:function, func, arity}, _line, [sig | _], doc, _} <- docs,
+            text = extract_doc_text(doc),
+            {func, arity} not in callbacks do
+          %{signature: sig, doc: text}
         end
 
       _ ->
         []
     end
   end
+
+  defp extract_doc_text(%{"en" => doc}), do: doc
+  defp extract_doc_text(:none), do: ""
+  defp extract_doc_text(_), do: nil
 end
