@@ -24,6 +24,16 @@ defmodule Surface.Catalogue.Server do
     end
   end
 
+  defmodule ErrorView do
+    use Phoenix.View,
+      root: "lib/surface/catalogue/templates",
+      namespace: Surface.Catalogue
+
+    def template_not_found(template, _assigns) do
+      Phoenix.Controller.status_message_from_template(template)
+    end
+  end
+
   defmodule Endpoint do
     use Phoenix.Endpoint, otp_app: :surface_catalogue
 
@@ -60,6 +70,7 @@ defmodule Surface.Catalogue.Server do
       secret_key_base: "Hu4qQN3iKzTV4fJxhorPQlA/osH9fAMtbtjVS58PFgfw3ja5Z18Q/WSNR9wP4OfW",
       live_view: [signing_salt: "hMegieSe"],
       http: [port: System.get_env("PORT") || 4000],
+      render_errors: [view: ErrorView],
       debug_errors: true,
       check_origin: false,
       pubsub_server: __MODULE__.PubSub,
