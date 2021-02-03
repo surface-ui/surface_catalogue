@@ -239,6 +239,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       |> schedule_update_playground_info(true, 0)
       |> clear_event_log()
 
+    send(socket.parent_pid, {:playground_tools_initialized, subject})
+
     {:noreply, socket}
   end
 
