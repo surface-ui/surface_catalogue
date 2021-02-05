@@ -14,12 +14,14 @@ defmodule Surface.Catalogue.Components.StateDialog do
   def update(assigns, socket) do
     socket =
       if assigns[:component_id] do
-        code = get_state_string(
-          assigns.playground_pid,
-          assigns.component_id,
-          show_builtin: socket.assigns.show_builtin,
-          show_private: socket.assigns.show_private
-        )
+        code =
+          get_state_string(
+            assigns.playground_pid,
+            assigns.component_id,
+            show_builtin: socket.assigns.show_builtin,
+            show_private: socket.assigns.show_private
+          )
+
         assign(socket, :code, code)
       else
         socket
@@ -102,12 +104,13 @@ defmodule Surface.Catalogue.Components.StateDialog do
     playground_pid = socket.assigns.playground_pid
     component_id = socket.assigns.component_id
 
-    code = get_state_string(
-      playground_pid,
-      component_id,
-      show_builtin: show_builtin,
-      show_private: show_private
-    )
+    code =
+      get_state_string(
+        playground_pid,
+        component_id,
+        show_builtin: show_builtin,
+        show_private: show_private
+      )
 
     socket =
       socket
@@ -151,7 +154,10 @@ defmodule Surface.Catalogue.Components.StateDialog do
   defp get_component_info(playground_pid, component_id) do
     playground_state = :sys.get_state(playground_pid)
     {components, _, _} = playground_state.components
-    {_, {mod, _, data, _, _}} = Enum.find(components, &match?({_, {_, ^component_id, _, _, _}}, &1))
+
+    {_, {mod, _, data, _, _}} =
+      Enum.find(components, &match?({_, {_, ^component_id, _, _, _}}, &1))
+
     {mod, data}
   end
 end

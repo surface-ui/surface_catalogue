@@ -13,7 +13,7 @@ defmodule Surface.Catalogue.LayoutView do
 
   @app_js File.read!(js_path)
   @app_css File.read!(css_path)
-  @makeup_css Makeup.stylesheet(Makeup.Styles.HTML.StyleMap.monokai_style, "makeup-highlight")
+  @makeup_css Makeup.stylesheet(Makeup.Styles.HTML.StyleMap.monokai_style(), "makeup-highlight")
 
   def render("app.js", _), do: @app_js
   def render("app.css", _), do: @app_css

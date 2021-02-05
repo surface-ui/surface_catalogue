@@ -19,7 +19,11 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   }
 
   @playground_info_update_interval 250
-  @playground_info_update_interval_native :erlang.convert_time_unit(@playground_info_update_interval, :millisecond, :native)
+  @playground_info_update_interval_native :erlang.convert_time_unit(
+                                            @playground_info_update_interval,
+                                            :millisecond,
+                                            :native
+                                          )
 
   data playground_pid, :any, default: nil
   data props_values, :map, default: %{}
