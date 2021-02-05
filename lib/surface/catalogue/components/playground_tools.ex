@@ -17,6 +17,9 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     components_instances_memory: []
   }
 
+  @playground_info_update_interval 250
+  @playground_info_update_interval_native :erlang.convert_time_unit(@playground_info_update_interval, :millisecond, :native)
+
   data playground_pid, :any, default: nil
   data props_values, :map, default: %{}
   data event_log_counter, :integer, default: 1
@@ -25,8 +28,9 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   data events, :list, default: []
   data has_new_events?, :boolean, default: false
   data selected_tab_index, :integer, default: 0
-  data playground_info_timer_ref, :any, default: nil
   data playground_info, :map, default: @empty_playground_info
+  data playground_info_timer_ref, :any, default: nil
+  data playground_info_last_updated, :integer, default: nil
 
   def mount(params, session, socket) do
     if connected?(socket) do
@@ -192,7 +196,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                 <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
                   {{ @playground_info.components_memory }}
                   <span :if={{ @playground_info.components_instances_memory == [] }}>
-                    &nbsp;(no child stateful component)
+                    &nbsp;(no stateful child component)
                   </span>
                 </div>
               </div>
@@ -236,12 +240,23 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       |> assign(:props_values, props_values)
       |> assign(:has_new_events?, false)
       |> assign(:selected_tab_index, 0)
-      |> schedule_update_playground_info(true, 0)
+      |> assign(:playground_info_last_updated, nil)
+      |> update_playground_info()
       |> clear_event_log()
+
+    :erlang.trace(playground_pid, true, [:receive])
 
     send(socket.parent_pid, {:playground_tools_initialized, subject})
 
     {:noreply, socket}
+  end
+
+  def handle_info({:trace, _pid, :receive, {:system, _, _}}, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info({:trace, _pid, :receive, _msg}, socket) do
+    {:noreply, update_playground_info(socket)}
   end
 
   def handle_info({:playground_event_received, event, value, props_values}, socket) do
@@ -261,27 +276,11 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         socket
       end
 
-    socket =
-      socket
-      |> assign(event_log_entries: [{id, message}], props_values: props_values)
-      |> schedule_update_playground_info(true)
-
-    {:noreply, socket}
+    {:noreply, assign(socket, event_log_entries: [{id, message}], props_values: props_values)}
   end
 
-  def handle_info({:update_playground_info, update_state_memory?}, socket) do
-    socket =
-      if Process.alive?(socket.assigns.playground_pid) do
-        socket
-        |> assign_playground_info(update_state_memory?)
-        |> schedule_update_playground_info(false, 1000)
-      else
-        socket
-        |> cancel_playground_info_udpate()
-        |> assign(:playground_info, @empty_playground_info)
-      end
-
-    {:noreply, socket}
+  def handle_info(:update_playground_info, socket) do
+    {:noreply, assign_playground_info(socket)}
   end
 
   def handle_info({:tab_clicked, index}, socket) do
@@ -303,12 +302,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       send(socket.assigns.playground_pid, {:update_props, updated_props_values})
     end
 
-    socket =
-      socket
-      |> assign(:props_values, updated_props_values)
-      |> schedule_update_playground_info(true)
-
-    {:noreply, socket}
+    {:noreply, assign(socket, :props_values, updated_props_values)}
   end
 
   def handle_event("clear_event_log", _, socket) do
@@ -317,12 +311,12 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def handle_event("run_gc", _, socket) do
     :erlang.garbage_collect(socket.assigns.playground_pid)
-    {:noreply, assign_playground_info(socket, false)}
+    {:noreply, update_playground_info(socket)}
   end
 
   def handle_event("wake_up", _, socket) do
     send(socket.assigns.playground_pid, :wake_up)
-    {:noreply, assign_playground_info(socket, false)}
+    {:noreply, socket}
   end
 
   def handle_event(event, value, socket) do
@@ -397,13 +391,19 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     Enum.map_join(events, " | ", & &1.name)
   end
 
-  defp schedule_update_playground_info(socket, update_state_memory?, interval \\ 200) do
+  defp update_playground_info(socket) do
     socket = cancel_playground_info_udpate(socket)
+    time = :erlang.monotonic_time()
+    last_updated = socket.assigns.playground_info_last_updated
 
-    timer_ref =
-      Process.send_after(self(), {:update_playground_info, update_state_memory?}, interval)
+    if !last_updated || time - last_updated > @playground_info_update_interval_native do
+      assign_playground_info(socket)
+    else
+      timer_ref =
+        Process.send_after(self(), :update_playground_info, @playground_info_update_interval)
 
-    assign(socket, :playground_info_timer_ref, timer_ref)
+      assign(socket, :playground_info_timer_ref, timer_ref)
+    end
   end
 
   defp cancel_playground_info_udpate(socket) do
@@ -416,38 +416,25 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     assign(socket, :playground_info_timer_ref, nil)
   end
 
-  defp assign_playground_info(socket, update_state_memory?) do
+  defp assign_playground_info(socket) do
     playground_pid = socket.assigns.playground_pid
-    word_size = :erlang.system_info(:wordsize)
-
-    playground_info = socket.assigns.playground_info
 
     playground_info =
-      if update_state_memory? do
-        playground_state = :sys.get_state(playground_pid)
-        assigns_memory = :erts_debug.size(playground_state.socket.assigns)
-
-        {components, _, _} = playground_state.components
-
-        {components_instances_memory, components_memory} =
-          Enum.reduce(components, {[], 0}, fn
-            {_index, {mod, id, data, _, _}}, {instances, total} ->
-              last_mod = mod |> Module.split() |> List.last()
-              size = :erts_debug.size(data)
-              total = total + size
-              formatted_size = format_bytes(size * word_size)
-              instances = [{last_mod, id, formatted_size} | instances]
-              {instances, total}
-          end)
-
-        Map.merge(playground_info, %{
-          assigns_memory: format_bytes(assigns_memory * word_size),
-          components_memory: format_bytes(components_memory * word_size),
-          components_instances_memory: Enum.reverse(components_instances_memory)
-        })
+      if Process.alive?(playground_pid) do
+        get_playground_info(playground_pid)
       else
-        playground_info
+        @empty_playground_info
       end
+
+    socket
+    |> assign(:playground_info, playground_info)
+    |> assign(:playground_info_last_updated, :erlang.monotonic_time())
+  end
+
+  defp get_playground_info(playground_pid) do
+    word_size = :erlang.system_info(:wordsize)
+    playground_state = :sys.get_state(playground_pid)
+    assigns_memory = :erts_debug.size(playground_state.socket.assigns)
 
     process_info =
       playground_pid
@@ -457,21 +444,31 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     hibernating? = match?({:erlang, :hibernate, _}, process_info.current_function)
     status = if hibernating?, do: :hibernating, else: process_info.status
 
-    playground_info =
-      Map.merge(playground_info, %{
-        pid: inspect(playground_pid),
-        hibernating?: hibernating?,
-        total_memory: format_bytes(process_info.total_heap_size * word_size),
-        status: inspect(status)
-      })
+    {components, _, _} = playground_state.components
 
-    assign(socket, :playground_info, playground_info)
+    {components_instances_memory, components_memory} =
+      Enum.reduce(components, {[], 0}, fn
+        {_index, {mod, id, data, _, _}}, {instances, total} ->
+          last_mod = mod |> Module.split() |> List.last()
+          size = :erts_debug.size(data)
+          total = total + size
+          formatted_size = format_bytes(size * word_size)
+          instances = [{last_mod, id, formatted_size} | instances]
+          {instances, total}
+      end)
+
+    %{
+      pid: inspect(playground_pid),
+      hibernating?: hibernating?,
+      total_memory: format_bytes(process_info.total_heap_size * word_size),
+      status: inspect(status),
+      assigns_memory: format_bytes(assigns_memory * word_size),
+      components_memory: format_bytes(components_memory * word_size),
+      components_instances_memory: Enum.reverse(components_instances_memory)
+    }
   end
 
-  @doc """
-  Formats bytes.
-  """
-  def format_bytes(bytes) when is_integer(bytes) do
+  defp format_bytes(bytes) when is_integer(bytes) do
     cond do
       bytes >= memory_unit(:TB) -> format_bytes(bytes, :TB)
       bytes >= memory_unit(:GB) -> format_bytes(bytes, :GB)
