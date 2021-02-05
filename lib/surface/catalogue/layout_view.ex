@@ -13,9 +13,11 @@ defmodule Surface.Catalogue.LayoutView do
 
   @app_js File.read!(js_path)
   @app_css File.read!(css_path)
+  @makeup_css Makeup.stylesheet(Makeup.Styles.HTML.StyleMap.monokai_style, "makeup-highlight")
 
   def render("app.js", _), do: @app_js
   def render("app.css", _), do: @app_css
+  def render("makeup.css", _), do: @makeup_css
 
   def render(_, assigns) do
     ~H"""
@@ -29,6 +31,7 @@ defmodule Surface.Catalogue.LayoutView do
         <link rel="icon" href="data:,">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
         <style>{{ Phoenix.HTML.raw(render("app.css")) }}</style>
+        <style>{{ Phoenix.HTML.raw(render("makeup.css")) }}</style>
         <script>{{ Phoenix.HTML.raw(render("app.js")) }}</script>
       </head>
       <body>

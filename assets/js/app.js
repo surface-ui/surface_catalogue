@@ -79,8 +79,8 @@ window.handleLatencySimValueBlur = function(input) {
 }
 
 function initDebugProfile(socket) {
-  const debugProfileDiv = document.getElementById("debug-profile")
-  const debugProfileDisabledDiv = document.getElementById("debug-profile-disabled")
+  const debugProfileDiv = document.getElementById("playground-tools-debug-profile")
+  const debugProfileDisabledDiv = document.getElementById("playground-tools-debug-profile-disabled")
 
   if (!socket) {
     debugProfileDiv.hidden = true

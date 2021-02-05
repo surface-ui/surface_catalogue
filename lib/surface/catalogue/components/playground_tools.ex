@@ -4,6 +4,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   alias Surface.Catalogue.Components.Tabs
   alias Surface.Catalogue.Components.Tabs.TabItem
   alias Surface.Catalogue.Components.PropInput
+  alias Surface.Catalogue.Components.StateDialog
   alias Surface.Components.Form
   alias Surface.Catalogue.Playground
 
@@ -44,7 +45,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   def render(assigns) do
     ~H"""
     <div :show={{ @playground_pid != nil }}>
-      <Tabs id="tools-tabs" animated=false tab_click_callback={{ &tab_click_callback/1 }}>
+      <Tabs id="playground-tools-tabs" animated=false tab_click_callback={{ &tab_click_callback/1 }}>
         <TabItem label="Properties">
           <div style="margin-top: 0.7rem;">
             <Form for={{ :props_values }} change="change" opts={{ autocomplete: "off" }}>
@@ -71,11 +72,91 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </div>
           </div>
         </TabItem>
+        <TabItem label="State">
+          <div id="playground-tools-state" style="margin-top: 0.7rem;">
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Playground's PID</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  {{ @playground_info.pid }}
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Status</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  {{ @playground_info.status }}
+                  <span :if={{ @playground_info.hibernating? }}>&nbsp;(<a :on-click="wake_up">wake up</a>)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Total heap memory</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  {{ @playground_info.total_memory }}
+                  <span :if={{ !@playground_info.hibernating? }}>&nbsp;(<a :on-click="run_gc">run GC</a>)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Playground's sssigns</label>
+              </div>
+              <div class="field-body">
+                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
+                  {{ @playground_info.assigns_memory }}
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Components' assigns</label>
+              </div>
+              <div class="field-body">
+                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
+                  {{ @playground_info.components_memory }}
+                  <span :if={{ @playground_info.components_instances_memory == [] }}>
+                    &nbsp;(no stateful child component)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr style="margin: 0.7rem 0;">
+
+          <div id="playground-tools-state-instances" style="margin-top: 0.7rem;">
+            <div :for={{ {mod, id, value} <- @playground_info.components_instances_memory }} class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label has-text-grey-dark">
+                  {{mod}}&lt;<a :on-click="show_component_state" phx-value-component={{id}}>#{{id}}</a>&gt;
+                </label>
+              </div>
+              <div class="field-body">
+                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
+                  {{ value }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabItem>
         <TabItem label="Debug/Profile">
-          <div id="debug-profile-disabled" style="margin-top: 3.0rem; text-align: center;" phx-update="ignore">
+          <div id="playground-tools-debug-profile-disabled" style="margin-top: 3.0rem; text-align: center;" phx-update="ignore">
             The <strong>window.liveSocket</strong> has not been set. Debug/Profiling is disabled.
           </div>
-          <div id="debug-profile" style="margin-top: 0.7rem;" phx-update="ignore">
+          <div id="playground-tools-debug-profile" style="margin-top: 0.7rem;" phx-update="ignore">
             <div class="field is-horizontal">
               <div class="field-label is-small">
                 <label class="label">Enable debug</label>
@@ -140,87 +221,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </div>
           </div>
         </TabItem>
-        <TabItem label="Memory usage">
-          <div id="memory-usage" style="margin-top: 0.7rem;">
-            <div class="field is-horizontal">
-              <div class="field-label is-small">
-                <label class="label">Playground's PID</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  {{ @playground_info.pid }}
-                </div>
-              </div>
-            </div>
-
-            <div class="field is-horizontal">
-              <div class="field-label is-small">
-                <label class="label">Status</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  {{ @playground_info.status }}
-                  <span :if={{ @playground_info.hibernating? }}>&nbsp;(<a :on-click="wake_up">wake up</a>)</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="field is-horizontal">
-              <div class="field-label is-small">
-                <label class="label">Total heap memory</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  {{ @playground_info.total_memory }}
-                  <span :if={{ !@playground_info.hibernating? }}>&nbsp;(<a :on-click="run_gc">run GC</a>)</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="field is-horizontal">
-              <div class="field-label is-small">
-                <label class="label">Playground's sssigns</label>
-              </div>
-              <div class="field-body">
-                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
-                  {{ @playground_info.assigns_memory }}
-                </div>
-              </div>
-            </div>
-
-            <div class="field is-horizontal">
-              <div class="field-label is-small">
-                <label class="label">Components' assigns</label>
-              </div>
-              <div class="field-body">
-                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
-                  {{ @playground_info.components_memory }}
-                  <span :if={{ @playground_info.components_instances_memory == [] }}>
-                    &nbsp;(no stateful child component)
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <hr style="margin: 0.7rem 0;">
-
-          <div id="memory-usage-instances" style="margin-top: 0.7rem;">
-            <div :for={{ {mod, id, value} <- @playground_info.components_instances_memory }} class="field is-horizontal">
-              <div class="field-label is-small">
-                <label class="label has-text-grey-dark">
-                  #{{mod}}&lt;ID:{{id}}&gt;
-                </label>
-              </div>
-              <div class="field-body">
-                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
-                  {{ value }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </TabItem>
       </Tabs>
+      <StateDialog id="component_state_dialog"/>
     </div>
     """
   end
@@ -229,7 +231,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         {:playground_init, playground_pid, subject, props, events, props_values},
         socket
       ) do
-    Tabs.set_active_tab("tools-tabs", 0)
+    Tabs.set_active_tab("playground-tools-tabs", 0)
 
     socket =
       socket
@@ -316,6 +318,11 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def handle_event("wake_up", _, socket) do
     send(socket.assigns.playground_pid, :wake_up)
+    {:noreply, socket}
+  end
+
+  def handle_event("show_component_state", %{"component" => component}, socket) do
+    StateDialog.show("component_state_dialog", socket.assigns.playground_pid, component)
     {:noreply, socket}
   end
 

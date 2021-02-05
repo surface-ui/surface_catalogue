@@ -195,25 +195,25 @@
   margin-right: 0px;
 }
 
-#debug-profile .field-label > label {
+#playground-tools-debug-profile .field-label > label {
   width: 180px;
 }
 
-#memory-usage .field-label > label {
+#playground-tools-state .field-label > label {
   width: 270px;
 }
 
-#memory-usage .field-body > .field {
+#playground-tools-state .field-body > .field {
   display: flex;
   align-items: flex-end;
   font-size: 14px;
 }
 
-#memory-usage-instances .field-label > label {
+#playground-tools-state-instances .field-label > label {
   width: 270px;
 }
 
-#memory-usage-instances .field-body > .field {
+#playground-tools-state-instances .field-body > .field {
   display: flex;
   align-items: flex-end;
   font-size: 14px;
