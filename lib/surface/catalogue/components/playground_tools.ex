@@ -116,6 +116,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
               <div class="field-body">
                 <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
                   {{ @playground_info.assigns_memory }}
+                  <span class="has-text-dark">&nbsp;(<a :on-click="show_playground_state">show</a>)</span>
                 </div>
               </div>
             </div>
@@ -323,6 +324,11 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def handle_event("show_component_state", %{"component" => component}, socket) do
     StateDialog.show("component_state_dialog", socket.assigns.playground_pid, component)
+    {:noreply, socket}
+  end
+
+  def handle_event("show_playground_state", _, socket) do
+    StateDialog.show("component_state_dialog", socket.assigns.playground_pid, :playground)
     {:noreply, socket}
   end
 

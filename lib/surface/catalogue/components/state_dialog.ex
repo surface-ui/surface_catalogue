@@ -1,7 +1,7 @@
 defmodule Surface.Catalogue.Components.StateDialog do
   use Surface.LiveComponent
 
-  data component_id, :string, default: ""
+  data component_id, :any, default: ""
   data code, :string, default: ""
   data show, :boolean, default: false
   data show_builtin, :boolean, default: false
@@ -122,25 +122,30 @@ defmodule Surface.Catalogue.Components.StateDialog do
     show_builtin = Keyword.fetch!(opts, :show_builtin)
     show_private = Keyword.fetch!(opts, :show_private)
 
-    {mod, component_state} = get_component_info(playground_pid, component_id)
-    assigns = mod.__data__() ++ mod.__props__()
+    {mod, assigns} = get_component_info(playground_pid, component_id)
+    assigns_defs = mod.__data__() ++ mod.__props__()
 
-    component_state =
-      for {k, v} <- component_state,
-          info = Enum.find(assigns, %{}, &(&1.name == k)),
+    assigns =
+      for {k, v} <- assigns,
+          info = Enum.find(assigns_defs, %{}, &(&1.name == k)),
           show_builtin || info[:doc] != "Built-in assign",
           show_private || info != %{},
           into: %{} do
         {k, v}
       end
 
-    code = inspect(component_state, width: :infinity)
+    code = inspect(assigns, width: :infinity)
     code_length = String.length(code)
     width = max(25, min(100, code_length - 1))
 
-    component_state
+    assigns
     |> inspect(pretty: true, width: width)
     |> Makeup.highlight_inner_html()
+  end
+
+  defp get_component_info(playground_pid, :playground) do
+    playground_state = :sys.get_state(playground_pid)
+    {playground_state.socket.view, playground_state.socket.assigns}
   end
 
   defp get_component_info(playground_pid, component_id) do
