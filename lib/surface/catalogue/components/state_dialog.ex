@@ -2,7 +2,8 @@ defmodule Surface.Catalogue.Components.StateDialog do
   use Surface.LiveComponent
 
   data component_id, :any, default: ""
-  data code, :string, default: ""
+  data formatted_id, :atom, default: nil
+  data formatted_assigns, :string, default: ""
   data show, :boolean, default: false
   data show_builtin, :boolean, default: false
   data show_private, :boolean, default: false
@@ -14,15 +15,17 @@ defmodule Surface.Catalogue.Components.StateDialog do
   def update(assigns, socket) do
     socket =
       if assigns[:component_id] do
-        code =
-          get_state_string(
+        {formatted_id, formatted_assigns} =
+          get_component_formatted_info(
             assigns.playground_pid,
             assigns.component_id,
             show_builtin: socket.assigns.show_builtin,
             show_private: socket.assigns.show_private
           )
 
-        assign(socket, :code, code)
+        socket
+        |> assign(:formatted_id, formatted_id)
+        |> assign(:formatted_assigns, formatted_assigns)
       else
         socket
       end
@@ -37,14 +40,14 @@ defmodule Surface.Catalogue.Components.StateDialog do
       <div class="modal-card" style="width: unset; min-width: 600px;">
         <header class="modal-card-head">
           <p class="modal-card-title has-text-grey has-text-weight-medium">
-            State of #{{ @component_id }}
+            {{@formatted_id}}
           </p>
         </header>
         <section class="modal-card-body" style="padding: 0px 1px; background-color: #ddd;">
           <div class="code" style="width: 100%; overflow-y: auto; max-height: 500px;">
             <pre class="makeup-highlight" style="padding: 0rem 1.5rem">
               <code>
-    {{ raw(@code) }}</code>
+    {{ raw(@formatted_assigns) }}</code>
             </pre>
           </div>
         </section>
@@ -104,8 +107,8 @@ defmodule Surface.Catalogue.Components.StateDialog do
     playground_pid = socket.assigns.playground_pid
     component_id = socket.assigns.component_id
 
-    code =
-      get_state_string(
+    {_formatted_id, formatted_assigns} =
+      get_component_formatted_info(
         playground_pid,
         component_id,
         show_builtin: show_builtin,
@@ -116,12 +119,12 @@ defmodule Surface.Catalogue.Components.StateDialog do
       socket
       |> assign(:show_builtin, show_builtin)
       |> assign(:show_private, show_private)
-      |> assign(:code, code)
+      |> assign(:formatted_assigns, formatted_assigns)
 
     {:noreply, socket}
   end
 
-  defp get_state_string(playground_pid, component_id, opts) do
+  defp get_component_formatted_info(playground_pid, component_id, opts) do
     show_builtin = Keyword.fetch!(opts, :show_builtin)
     show_private = Keyword.fetch!(opts, :show_private)
 
@@ -141,9 +144,20 @@ defmodule Surface.Catalogue.Components.StateDialog do
     code_length = String.length(code)
     width = max(25, min(100, code_length - 1))
 
-    assigns
-    |> inspect(pretty: true, width: width)
-    |> Makeup.highlight_inner_html()
+    formatted_assigns =
+      assigns
+      |> inspect(pretty: true, width: width)
+      |> Makeup.highlight_inner_html()
+
+    formatted_id =
+      if component_id == :playground do
+        "Playground"
+      else
+        last_mod = mod |> Module.split() |> List.last()
+        "#{last_mod}<\##{component_id}>"
+      end
+
+    {formatted_id, formatted_assigns}
   end
 
   defp get_component_info(playground_pid, :playground) do

@@ -59,23 +59,6 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </Form>
           </div>
         </TabItem>
-        <TabItem label="Event Log" visible={{ @events != [] }} changed={{ @has_new_events? }}>
-          <span style="margin-left: 1.0rem;">
-            <span class="has-text-weight-semibold">Events: </span>
-            <span>{{ available_events(@events) }}</span>
-            <span style="float: right; padding-right: 1.0rem;">
-              <a :on-click="clear_event_log">Clear</a>
-            </span>
-          </span>
-          <hr style="margin: 0.8rem 0;">
-          <div id="event-log" style="height: 250px; overflow: scroll; font-family: monospace" class="is-size-7">
-            <div id="event-log-content-{{ @event_log_counter }}" phx-update="append" phx-hook="EventLog">
-              <p :for={{ {id, message} <- @event_log_entries }} id="event-log-message-{{ id }}">
-                <span style="white-space: break-spaces;">{{ raw(message) }}</span>
-              </p>
-            </div>
-          </div>
-        </TabItem>
         <TabItem label="State">
           <div id="playground-tools-state" style="margin-top: 0.7rem;">
             <div class="field is-horizontal">
@@ -154,6 +137,23 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                   {{ value }}
                 </div>
               </div>
+            </div>
+          </div>
+        </TabItem>
+        <TabItem label="Event Log" visible={{ @events != [] }} changed={{ @has_new_events? }}>
+          <span style="margin-left: 1.0rem;">
+            <span class="has-text-weight-semibold">Events: </span>
+            <span>{{ available_events(@events) }}</span>
+            <span style="float: right; padding-right: 1.0rem;">
+              <a :on-click="clear_event_log">Clear</a>
+            </span>
+          </span>
+          <hr style="margin: 0.8rem 0;">
+          <div id="event-log" style="height: 250px; overflow: scroll; font-family: monospace" class="is-size-7">
+            <div id="event-log-content-{{ @event_log_counter }}" phx-update="append" phx-hook="EventLog">
+              <p :for={{ {id, message} <- @event_log_entries }} id="event-log-message-{{ id }}">
+                <span style="white-space: break-spaces;">{{ raw(message) }}</span>
+              </p>
             </div>
           </div>
         </TabItem>
