@@ -1,7 +1,7 @@
 defmodule Surface.Catalogue.PageLive do
   use Surface.LiveView
 
-  alias Surface.Catalogue.{Playground, Util, ExampleLive, PlaygroundLive}
+  alias Surface.Catalogue.{Playground, Util, ExampleLive, PlaygroundLive, Markdown}
   alias Surface.Catalogue.Components.{ComponentInfo, ComponentTree, PlaygroundTools}
   alias Surface.Components.LivePatch
 
@@ -107,25 +107,32 @@ defmodule Surface.Catalogue.PageLive do
                   <ComponentInfo module={{ @component_module }} />
                 </div>
                 <div :show={{ @action == "example" }}>
-                  <For each={{ {{example, title, height, code, direction, demo_perc, code_perc}, index} <- Enum.with_index(@examples, 1) }}>
-                    <h3 :show={{ title }} id="example-{{index}}" class="example-title title is-4 is-spaced">
-                      <a href="#example-{{index}}">#</a> {{ title }}
+                  <For each={{ {example, index} <- Enum.with_index(@examples, 1) }}>
+                    <h3
+                      :show={{ example.title }}
+                      id="example-{{index}}"
+                      class={{ "example-title title is-4 is-spaced", "is-marginless": example.doc != "" }}
+                    >
+                      <a href="#example-{{index}}">#</a> {{ example.title }}
                     </h3>
-                    <div :show={{ @action == "example" }} class="Example {{direction}}">
-                      <div class="demo" style="width: {{demo_perc}}%">
+                    <div :if={{ example.doc != "" }} style="padding-bottom: 1.5rem;">
+                      {{ example.doc |> Markdown.to_html() }}
+                    </div>
+                    <div :show={{ @action == "example" }} class="Example {{example.direction}}">
+                      <div class="demo" style="width: {{example.demo_perc}}%">
                         <iframe
                           scrolling="no"
                           id="example-iframe-{{index}}"
-                          src={{ path_to(@socket, ExampleLive, example, __window_id__: @__window_id__) }}
-                          style="overflow-y: hidden; width: 100%; height: {{ height }};"
+                          src={{ path_to(@socket, ExampleLive, example.module_name, __window_id__: @__window_id__) }}
+                          style="overflow-y: hidden; width: 100%; height: {{ example.height }};"
                           frameborder="0"
                           phx-hook="IframeBody"
                         />
                       </div>
-                      <div class="code" style="width: {{code_perc}}%">
+                      <div class="code" style="width: {{example.code_perc}}%">
                         <pre class="language-jsx">
                           <code class="content language-jsx" phx-hook="Highlight" id="example-code-{{index}}">
-    {{ code }}</code>
+    {{ example.code }}</code>
                         </pre>
                       </div>
                     </div>

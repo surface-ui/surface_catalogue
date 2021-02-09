@@ -17,6 +17,12 @@ defmodule Surface.Catalogue.Util do
       meta = Surface.Catalogue.get_metadata(example)
       config = Surface.Catalogue.get_config(example)
       code = meta |> Map.get(:code, "") |> String.trim_trailing()
+      doc =
+        meta
+        |> Map.get(:doc, "")
+        |> String.split("### Properties")
+        |> List.first
+        |> String.trim()
 
       title = Keyword.get(config, :title)
       direction = Keyword.get(config, :direction) || "horizontal"
@@ -34,7 +40,16 @@ defmodule Surface.Catalogue.Util do
             {10 - value, value}
         end
 
-      {inspect(example), title, height, code, direction, demo_perc, code_perc}
+      %{
+        module_name: inspect(example),
+        doc: doc,
+        title: title,
+        height: height,
+        code: code,
+        direction: direction,
+        demo_perc: demo_perc,
+        code_perc: code_perc
+      }
     end
     |> Enum.sort()
   end
