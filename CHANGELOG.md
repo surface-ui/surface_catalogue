@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.4 (2021-02-11)
+
+  * Show description for each example based on its `@moduledoc`
+
 ## v0.0.3 (2021-02-05)
 
   * Allow inspect assigns/state of live components

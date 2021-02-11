@@ -17,11 +17,12 @@ defmodule Surface.Catalogue.Util do
       meta = Surface.Catalogue.get_metadata(example)
       config = Surface.Catalogue.get_config(example)
       code = meta |> Map.get(:code, "") |> String.trim_trailing()
+
       doc =
         meta
         |> Map.get(:doc, "")
         |> String.split("### Properties")
-        |> List.first
+        |> List.first()
         |> String.trim()
 
       title = Keyword.get(config, :title)
