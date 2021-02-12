@@ -8,6 +8,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   alias Surface.Components.Form
   alias Surface.Catalogue.Playground
 
+  @event_log_tab 2
+
   @empty_playground_info %{
     pid: "-",
     hibernating?: false,
@@ -267,23 +269,29 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   def handle_info({:playground_event_received, event, value, props_values}, socket) do
-    id = :erlang.unique_integer([:positive]) |> to_string()
-    time = NaiveDateTime.local_now()
+    event_from_subject? = Enum.any?(socket.assigns.events, &("#{&1.name}" == event))
 
-    payload = value |> inspect() |> Code.format_string!() |> to_string()
+    if event_from_subject? do
+      id = :erlang.unique_integer([:positive]) |> to_string()
+      time = NaiveDateTime.local_now()
 
-    message = """
-    #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{payload}\
-    """
+      payload = value |> inspect() |> Code.format_string!() |> to_string()
 
-    socket =
-      if socket.assigns.selected_tab_index != 1 do
-        assign(socket, :has_new_events?, true)
-      else
-        socket
-      end
+      message = """
+      #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{payload}\
+      """
 
-    {:noreply, assign(socket, event_log_entries: [{id, message}], props_values: props_values)}
+      socket =
+        if socket.assigns.selected_tab_index != @event_log_tab do
+          assign(socket, :has_new_events?, true)
+        else
+          socket
+        end
+
+      {:noreply, assign(socket, event_log_entries: [{id, message}], props_values: props_values)}
+    else
+      {:noreply, assign(socket, props_values: props_values)}
+    end
   end
 
   def handle_info(:update_playground_info, socket) do
@@ -292,7 +300,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def handle_info({:tab_clicked, index}, socket) do
     socket =
-      if index == 1 do
+      if index == @event_log_tab do
         assign(socket, :has_new_events?, false)
       else
         socket
@@ -322,16 +330,18 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   def handle_event("wake_up", _, socket) do
-    send(socket.assigns.playground_pid, :wake_up)
+    wakeup_playground(socket.assigns.playground_pid)
     {:noreply, socket}
   end
 
   def handle_event("show_component_state", %{"component" => component}, socket) do
+    wakeup_playground(socket.assigns.playground_pid)
     StateDialog.show("component_state_dialog", socket.assigns.playground_pid, component)
     {:noreply, socket}
   end
 
   def handle_event("show_playground_state", _, socket) do
+    wakeup_playground(socket.assigns.playground_pid)
     StateDialog.show("component_state_dialog", socket.assigns.playground_pid, :playground)
     {:noreply, socket}
   end
@@ -483,6 +493,10 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       components_memory: format_bytes(components_memory * word_size),
       components_instances_memory: Enum.reverse(components_instances_memory)
     }
+  end
+
+  defp wakeup_playground(playground_pid) do
+    send(playground_pid, :wake_up)
   end
 
   defp format_bytes(bytes) when is_integer(bytes) do
