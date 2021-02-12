@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.5 (2021-02-12)
+
+  * Only log events of the playgrouns's subject
+  * Fix feedback of pending events
+
 ## v0.0.4 (2021-02-11)
 
   * Show description for each example based on its `@moduledoc`
