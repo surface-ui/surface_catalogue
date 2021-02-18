@@ -44,7 +44,12 @@ defmodule Surface.Catalogue.Components.PropInput do
 
       {:string, []} ->
         ~H"""
-        <TextInput field={{ prop.name }} value={{ value }} class="input is-small" />
+        <TextInput
+          field={{ prop.name }}
+          value={{ value }}
+          class="input is-small"
+          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
+        />
         """
 
       {:string, choices} ->
@@ -56,7 +61,12 @@ defmodule Surface.Catalogue.Components.PropInput do
 
       {:atom, []} ->
         ~H"""
-        <TextInput field={{ prop.name }} value={{ value_to_string(value) }} class="input is-small" />
+        <TextInput
+          field={{ prop.name }}
+          value={{ value_to_string(value) }}
+          class="input is-small"
+          opts={{ placeholder: value == nil && "nil" }}
+        />
         """
 
       {:atom, choices} ->
@@ -70,12 +80,22 @@ defmodule Surface.Catalogue.Components.PropInput do
 
       {:css_class, _} ->
         ~H"""
-        <TextInput field={{ prop.name }} value={{ value }} class="input is-small" />
+        <TextInput
+          field={{ prop.name }}
+          value={{ css_value_to_string(value) }}
+          class="input is-small"
+          opts={{ placeholder: value == nil && "nil" }}
+        />
         """
 
       {:integer, []} ->
         ~H"""
-        <NumberInput field={{ prop.name }} value={{ value }} class="input is-small" />
+        <NumberInput
+          field={{ prop.name }}
+          value={{ value }}
+          class="input is-small"
+          opts={{ placeholder: value == nil && "nil" }}
+        />
         """
 
       {:integer, choices} ->
@@ -87,7 +107,11 @@ defmodule Surface.Catalogue.Components.PropInput do
 
       {type, []} when type in [:list, :keyword] ->
         ~H"""
-        <TextInput field={{ prop.name }} value={{ inspect(value) }} class="input is-small" />
+        <TextInput
+          field={{ prop.name }}
+          value={{ inspect(value) }} class="input is-small"
+          opts={{ placeholder: value == nil && "nil" }}
+        />
         """
 
       {type, _} ->
@@ -101,4 +125,7 @@ defmodule Surface.Catalogue.Components.PropInput do
 
   defp value_to_string(nil), do: ""
   defp value_to_string(value), do: inspect(value)
+
+  defp css_value_to_string(nil), do: ""
+  defp css_value_to_string(value), do: Enum.join(value, " ")
 end

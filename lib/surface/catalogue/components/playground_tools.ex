@@ -278,7 +278,9 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       payload = value |> inspect() |> Code.format_string!() |> to_string()
 
       message = """
-      #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{payload}\
+      #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{
+        payload
+      }\
       """
 
       socket =
@@ -310,7 +312,13 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   def handle_event("change", %{"props_values" => props_values}, socket) do
-    new_props_values = convert_props_values(props_values, socket.assigns.component_module)
+    new_props_values =
+      convert_props_values(
+        props_values,
+        socket.assigns.props_values,
+        socket.assigns.component_module
+      )
+
     updated_props_values = Map.merge(socket.assigns.props_values, new_props_values)
 
     if socket.assigns[:playground_pid] do
@@ -318,6 +326,32 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     end
 
     {:noreply, assign(socket, :props_values, updated_props_values)}
+  end
+
+  def handle_event(
+        "text_prop_keydown",
+        %{"key" => "Backspace", "prop" => prop, "value" => ""},
+        socket
+      ) do
+    prop_name = String.to_atom(prop)
+    prop_info = socket.assigns.component_module.__get_prop__(prop_name)
+
+    if prop_info.opts[:required] do
+      {:noreply, socket}
+    else
+      updated_props_values = Map.put(socket.assigns.props_values, prop_name, nil)
+      socket = assign(socket, :props_values, updated_props_values)
+
+      if socket.assigns[:playground_pid] do
+        send(socket.assigns.playground_pid, {:update_props, updated_props_values})
+      end
+
+      {:noreply, socket}
+    end
+  end
+
+  def handle_event("text_prop_keydown", _, socket) do
+    {:noreply, socket}
   end
 
   def handle_event("clear_event_log", _, socket) do
@@ -359,45 +393,55 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     update(socket, :event_log_counter, &(&1 + 1))
   end
 
-  defp convert_props_values(props_values, component) do
+  defp convert_props_values(props_values, old_values, component) do
     for {k_str, value} <- props_values, into: %{} do
       prop_name = String.to_atom(k_str)
       prop_info = component.__get_prop__(prop_name)
-      {prop_name, convert_prop_value(prop_info.type, value)}
+
+      {prop_name,
+       convert_prop_value(prop_info.type, value, old_values[prop_name], prop_info.opts)}
     end
   end
 
-  defp convert_prop_value(:boolean, value) do
+  defp convert_prop_value(:boolean, value, _old_value, _type_opts) do
     case value do
       "true" -> true
       "false" -> false
     end
   end
 
-  defp convert_prop_value(:atom, "") do
+  defp convert_prop_value(:atom, "", _old_value, _type_opts) do
     nil
   end
 
-  defp convert_prop_value(:atom, ":" <> value) do
+  defp convert_prop_value(:atom, ":" <> value, _old_value, _type_opts) do
     String.to_atom(value)
   end
 
-  defp convert_prop_value(:atom, value) do
+  defp convert_prop_value(:atom, value, _old_value, _type_opts) do
     String.to_atom(value)
   end
 
-  defp convert_prop_value(:integer, value) do
+  defp convert_prop_value(:integer, "", _old_value, _type_opts) do
+    nil
+  end
+
+  defp convert_prop_value(:integer, value, _old_value, _type_opts) do
     String.to_integer(value)
   end
 
-  defp convert_prop_value(:css_class, value) do
+  defp convert_prop_value(:string, "", old_value, _type_opts) when old_value in ["", nil] do
+    old_value
+  end
+
+  defp convert_prop_value(:css_class, value, _old_value, _type_opts) do
     case Surface.TypeHandler.CssClass.expr_to_value([value], []) do
       {:ok, value} -> value
       _ -> ""
     end
   end
 
-  defp convert_prop_value(type, value) when type in [:list, :keyword] do
+  defp convert_prop_value(type, value, _old_value, _type_opts) when type in [:list, :keyword] do
     try do
       case Code.eval_string(value) do
         {val, _} when is_list(val) -> val
@@ -410,7 +454,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     end
   end
 
-  defp convert_prop_value(_type, value) do
+  defp convert_prop_value(_type, value, _old_value, _type_opts) do
     value
   end
 
