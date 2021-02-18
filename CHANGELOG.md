@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.6 (2021-02-18)
+
+  * Allow setting `nil` in the prop editor of the playground
+
 ## v0.0.5 (2021-02-12)
 
   * Only log events of the playgrouns's subject

@@ -10,10 +10,13 @@ Add `surface_catalogue` to your list of dependencies in `mix.exs` (development-o
 ```elixir
 def deps do
   [
-    {:surface_catalogue, "~> 0.0.5", only: :dev}
+    {:surface_catalogue, "~> 0.0.6", only: :dev}
   ]
 end
 ```
+
+> **Note**: If you're using VSCode with ElixirLS, you might need to replace `only: :dev` with `only: [:dev, :test]`
+to avoid warnings.
 
 Update your `router.ex` configuration:
 
