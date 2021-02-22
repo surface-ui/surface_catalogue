@@ -31,12 +31,8 @@ defmodule Surface.Catalogue.Components.PropInput do
     "#{prop.name}#{required_str}"
   end
 
-  defp input(assigns) do
-    value = if assigns.value != nil, do: assigns.value, else: assigns.prop.opts[:default]
-    choices = assigns.prop.opts[:values] || []
-    prop = assigns.prop
-
-    case {prop.type, choices} do
+  defp input(%{prop: prop, value: value} = assigns) do
+    case {prop.type, get_choices(prop)} do
       {:boolean, _} ->
         ~H"""
         <Checkbox field={{ prop.name }} value={{ value }} opts={{ style: "height: 26px;" }}/>
@@ -55,7 +51,7 @@ defmodule Surface.Catalogue.Components.PropInput do
       {:string, choices} ->
         ~H"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ ["" | choices] }} selected={{ value }}/>
+          <Select field={{ prop.name }} options={{ choices }} selected={{ value }}/>
         </div>
         """
 
@@ -70,11 +66,11 @@ defmodule Surface.Catalogue.Components.PropInput do
         """
 
       {:atom, choices} ->
-        choices = Enum.map(choices, &inspect/1)
+        choices = Enum.map(choices, fn {k, v} -> {inspect(k), inspect(v)} end)
 
         ~H"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ ["" | choices] }} selected={{ value_to_string(value) }}/>
+          <Select field={{ prop.name }} options={{ choices }} selected={{ value_to_string(value) }}/>
         </div>
         """
 
@@ -101,7 +97,7 @@ defmodule Surface.Catalogue.Components.PropInput do
       {:integer, choices} ->
         ~H"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ ["" | choices] }} selected={{ value }}/>
+          <Select field={{ prop.name }} options={{ choices }} selected={{ value }}/>
         </div>
         """
 
@@ -117,7 +113,7 @@ defmodule Surface.Catalogue.Components.PropInput do
       {type, _} ->
         ~H"""
         <span class="is-size-7">
-          {{ value_to_string(nil) }} [editor not available for type <b>{{ inspect(type) }}</b>]
+          [editor not available for type <b>{{ inspect(type) }}</b>]
         </span>
         """
     end
@@ -128,4 +124,17 @@ defmodule Surface.Catalogue.Components.PropInput do
 
   defp css_value_to_string(nil), do: ""
   defp css_value_to_string(value), do: Enum.join(value, " ")
+
+  defp get_choices(prop) do
+    values =
+      prop.opts
+      |> Keyword.get(:values, [])
+      |> Enum.map(&{&1, &1})
+
+    cond do
+      values == [] -> []
+      prop.opts[:required] -> values
+      true -> [{"nil", "__NIL__"} | values]
+    end
+  end
 end
