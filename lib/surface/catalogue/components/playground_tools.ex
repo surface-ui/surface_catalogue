@@ -431,11 +431,16 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     String.to_atom(value)
   end
 
+  defp convert_prop_value(:integer, "", _old_value, _type_opts) do
+    nil
+  end
+
   defp convert_prop_value(:integer, value, _old_value, _type_opts) do
     String.to_integer(value)
   end
 
-  defp convert_prop_value(:string, "", old_value, _type_opts) when old_value in ["", nil] do
+  defp convert_prop_value(type, "", old_value, _type_opts)
+       when type in [:string, :css_class] and old_value in ["", nil] do
     old_value
   end
 
@@ -444,6 +449,11 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       {:ok, value} -> value
       _ -> ""
     end
+  end
+
+  defp convert_prop_value(type, "", old_value, _type_opts)
+       when type in [:list, :keyword] and old_value in [[], nil] do
+    old_value
   end
 
   defp convert_prop_value(type, value, _old_value, _type_opts) when type in [:list, :keyword] do

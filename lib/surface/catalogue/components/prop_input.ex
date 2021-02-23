@@ -80,7 +80,7 @@ defmodule Surface.Catalogue.Components.PropInput do
           field={{ prop.name }}
           value={{ css_value_to_string(value) }}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil" }}
+          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
         />
         """
 
@@ -105,8 +105,9 @@ defmodule Surface.Catalogue.Components.PropInput do
         ~H"""
         <TextInput
           field={{ prop.name }}
-          value={{ inspect(value) }} class="input is-small"
-          opts={{ placeholder: value == nil && "nil" }}
+          value={{ value_to_string(value) }}
+          class="input is-small"
+          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
         />
         """
 
@@ -119,10 +120,10 @@ defmodule Surface.Catalogue.Components.PropInput do
     end
   end
 
-  defp value_to_string(nil), do: ""
+  defp value_to_string(nil), do: nil
   defp value_to_string(value), do: inspect(value)
 
-  defp css_value_to_string(nil), do: ""
+  defp css_value_to_string(nil), do: nil
   defp css_value_to_string(value), do: Enum.join(value, " ")
 
   defp get_choices(prop) do
