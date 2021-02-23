@@ -240,18 +240,13 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       ) do
     Tabs.set_active_tab("playground-tools-tabs", 0)
 
-    props_values_with_defaults =
-      props
-      |> get_props_default_values()
-      |> Map.merge(props_values)
-
     socket =
       socket
       |> assign(playground_pid: playground_pid)
       |> assign(:component_module, subject)
       |> assign(:props, props)
       |> assign(:events, events)
-      |> assign(:props_values, props_values_with_defaults)
+      |> assign(:props_values, props_values)
       |> assign(:has_new_events?, false)
       |> assign(:selected_tab_index, 0)
       |> assign(:playground_info_last_updated, nil)
@@ -579,12 +574,4 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   defp memory_unit(:GB), do: 1024 * 1024 * 1024
   defp memory_unit(:MB), do: 1024 * 1024
   defp memory_unit(:KB), do: 1024
-
-  defp get_props_default_values(props) do
-    for %{name: name, opts: opts} <- props,
-        Keyword.has_key?(opts, :default),
-        into: %{} do
-      {name, opts[:default]}
-    end
-  end
 end
