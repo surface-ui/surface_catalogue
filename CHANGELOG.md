@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.0.7 (2021-02-24)
+
+  * Allow setting `nil` for integer and lists in the prop editor
+  * Allow setting `nil` for props with predefined values in the prop editor
+  * Fix default prop values getting cleared after updating props in the prop editor
+  * Fix sorting list of examples
+
 ## v0.0.6 (2021-02-18)
 
   * Allow setting `nil` in the prop editor of the playground
