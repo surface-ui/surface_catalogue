@@ -52,7 +52,7 @@ defmodule Surface.Catalogue.Util do
         code_perc: code_perc
       }
     end
-    |> Enum.sort()
+    |> Enum.sort_by(& &1.module_name)
   end
 
   def get_playgrounds(component, examples_and_playgrounds) do
