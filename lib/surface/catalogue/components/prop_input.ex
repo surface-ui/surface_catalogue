@@ -5,7 +5,7 @@ defmodule Surface.Catalogue.Components.PropInput do
 
   alias Surface.Components.Form.{TextInput, Checkbox, Select, NumberInput}
 
-  prop prop, :any
+  prop prop, :map
 
   prop value, :any
 
