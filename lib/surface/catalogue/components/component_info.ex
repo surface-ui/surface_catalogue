@@ -67,7 +67,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
     case Code.fetch_docs(module) do
       {:docs_v1, _, _, "text/markdown", %{"en" => doc}, _, _} ->
         parts =
-          String.split(doc, ["## Examples", "### Properties"])
+          String.split(doc, ["## Examples", "## Properties", "## Slots", "## Events"])
           |> List.first()
           |> String.split("\n\n", parts: 2)
 
