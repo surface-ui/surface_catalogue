@@ -10,7 +10,7 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
   alias Surface.Catalogue.Markdown
 
   @doc "The component's module"
-  prop module, :any, required: true
+  prop module, :module, required: true
 
   data has_api?, :boolean
   data props, :list

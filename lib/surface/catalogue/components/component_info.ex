@@ -7,7 +7,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
   alias Surface.Catalogue.Markdown
 
   @doc "The component module"
-  prop module, :any, required: true
+  prop module, :module, required: true
 
   data full_module_name, :string
   data doc_summary, :string

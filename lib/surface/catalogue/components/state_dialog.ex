@@ -7,7 +7,7 @@ defmodule Surface.Catalogue.Components.StateDialog do
   data show, :boolean, default: false
   data show_builtin, :boolean, default: false
   data show_private, :boolean, default: false
-  data playground_pid, :any, default: nil
+  data playground_pid, :pid, default: nil
 
   alias Surface.Components.Form
   alias Surface.Components.Form.Checkbox

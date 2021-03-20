@@ -27,7 +27,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                                             :native
                                           )
 
-  data playground_pid, :any, default: nil
+  data playground_pid, :pid, default: nil
   data props_values, :map, default: %{}
   data event_log_counter, :integer, default: 1
   data event_log_entries, :list, default: []
@@ -36,7 +36,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   data has_new_events?, :boolean, default: false
   data selected_tab_index, :integer, default: 0
   data playground_info, :map, default: @empty_playground_info
-  data playground_info_timer_ref, :any, default: nil
+  data playground_info_timer_ref, :reference, default: nil
   data playground_info_last_updated, :integer, default: nil
 
   def mount(params, session, socket) do
