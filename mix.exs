@@ -50,7 +50,7 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_reload, "~> 1.2"},
-      {:surface, "~> 0.3.0"},
+      {:surface, "~> 0.3.2"},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.15.1"}
     ]
