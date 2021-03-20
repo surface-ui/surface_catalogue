@@ -21,7 +21,7 @@ defmodule Surface.Catalogue.Util do
       doc =
         meta
         |> Map.get(:doc, "")
-        |> String.split("### Properties")
+        |> String.split(["## Properties", "## Slots", "## Events"])
         |> List.first()
         |> String.trim()
 
