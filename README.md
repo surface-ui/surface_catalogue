@@ -122,6 +122,8 @@ Create a `dev.exs` script at the root of your project with the following content
 
 Logger.configure(level: :debug)
 
+Code.require_file("deps/surface_catalogue/server.exs")
+
 # Start the catalogue server
 Surface.Catalogue.Server.start(
   live_reload: [

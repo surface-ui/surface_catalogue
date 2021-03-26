@@ -2,6 +2,8 @@
 
 Logger.configure(level: :debug)
 
+Code.require_file("server.exs")
+
 Surface.Catalogue.Server.start(
   watchers: [
     node: [

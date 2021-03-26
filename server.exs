@@ -1,3 +1,7 @@
+# iex -S mix dev
+
+Logger.configure(level: :debug)
+
 defmodule Surface.Catalogue.Server do
   @moduledoc """
   A simple catalogue server that can be used to load catalogues from projects that
