@@ -39,10 +39,10 @@ defmodule Surface.Catalogue.LayoutView do
           <div class="hero-body" style="padding: 1.5rem">
             <div class="container">
               <h1 class="title">
-                <span>Surface UI</span>
+                <span>{{ title() }}</span>
               </h1>
               <h2 class="subtitle" style="margin-right: 30px">
-              My Component Catalogue
+              {{ subtitle() }}
               </h2>
             </div>
           </div>
@@ -63,5 +63,13 @@ defmodule Surface.Catalogue.LayoutView do
 
   defp surface_version() do
     Application.spec(:surface, :vsn)
+  end
+
+  defp title() do
+    Application.get_env(:surface_catalogue, :title) || "Surface UI"
+  end
+
+  defp subtitle() do
+    Application.get_env(:surface_catalogue, :subtitle) || "My Component Catalogue"
   end
 end

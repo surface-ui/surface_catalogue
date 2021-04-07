@@ -11,6 +11,7 @@
   "dependencies": {
     "animate.css": "3.7.2",
     "bulma": "0.8.2",
+    "mermaid": "^8.9.2",
     "phoenix": "../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "phoenix_live_view": "file:../deps/phoenix_live_view"
