@@ -21,15 +21,23 @@ defmodule Surface.Catalogue.PageLive do
   data playground_height, :string, default: @playground_default_height
   data playground_width, :string, default: @playground_default_width
   data playground_tools_initialized?, :boolean, default: false
+  data single_catalogue?, :boolean, default: false
+  data home_view, :module, default: nil
 
   def mount(params, session, socket) do
     socket =
       if connected?(socket) do
         {components, examples_and_playgrounds} = Util.get_components_info()
 
+        catalogues = Application.get_env(:surface_catalogue, :catalogues) || []
+        home_view = Application.get_env(:surface_catalogue, :home_view)
+        single_catalogue? = length(catalogues) == 1
+
         socket
         |> maybe_assign_window_id(params, session)
         |> assign(:components, components)
+        |> assign(:single_catalogue?, single_catalogue?)
+        |> assign(:home_view, home_view)
         |> assign(:examples_and_playgrounds, examples_and_playgrounds)
       else
         socket
@@ -72,9 +80,13 @@ defmodule Surface.Catalogue.PageLive do
             id="component-tree"
             components={{ @components }}
             selected_component={{ @component_name }}
+            single_catalogue?={{ @single_catalogue? }}
           />
           <div class="container column" style="background-color: #fff; min-height: 500px;">
-            <div :if={{ !@component_module }} class="columns is-centered is-vcentered is-mobile" style="height: 300px">
+            <div :if={{ !@component_module and @home_view }}>
+              {{ live_render(@socket, @home_view, id: "home_view") }}
+            </div>
+            <div :if={{ !@component_module and !@home_view}} class="columns is-centered is-vcentered is-mobile" style="height: 300px">
               <div class="column is-narrow has-text-centered subtitle has-text-grey">
                 No component selected
               </div>

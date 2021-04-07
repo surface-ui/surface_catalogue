@@ -5,6 +5,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
 
   alias Surface.Catalogue.Components.ComponentAPI
   alias Surface.Catalogue.Markdown
+  alias Surface.Catalogue.Util
 
   @doc "The component module"
   prop module, :module, required: true
@@ -67,7 +68,8 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
     case Code.fetch_docs(module) do
       {:docs_v1, _, _, "text/markdown", %{"en" => doc}, _, _} ->
         parts =
-          String.split(doc, ["## Examples", "## Properties", "## Slots", "## Events"])
+          doc
+          |> Util.split_doc_sections()
           |> List.first()
           |> String.split("\n\n", parts: 2)
 

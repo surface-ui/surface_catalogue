@@ -21,7 +21,7 @@ defmodule Surface.Catalogue.Util do
       doc =
         meta
         |> Map.get(:doc, "")
-        |> String.split(["## Properties", "## Slots", "## Events"])
+        |> split_doc_sections()
         |> List.first()
         |> String.trim()
 
@@ -61,6 +61,19 @@ defmodule Surface.Catalogue.Util do
     end
   end
 
+  def split_doc_sections(doc) do
+    String.split(doc, [
+      "## Examples",
+      "## Properties",
+      "## Slots",
+      "## Events",
+      "### Examples",
+      "### Properties",
+      "### Slots",
+      "### Events"
+    ])
+  end
+
   defp components_reducer(module, Surface.LiveView, acc) do
     {components, examples_and_playgrounds} = acc
 
@@ -91,13 +104,20 @@ defmodule Surface.Catalogue.Util do
   end
 
   defp components_reducer(module, _type, {components, examples} = acc) do
+    visible_catalogues = Application.get_env(:surface_catalogue, :catalogues)
+
     docs = Code.fetch_docs(module)
 
     if match?({:docs_v1, _, _, _, :hidden, _, _}, docs) do
       acc
     else
       module_parts = Module.split(module)
-      {add_node(module_parts, components), examples}
+
+      if !visible_catalogues or Enum.at(module_parts, 0) in visible_catalogues do
+        {add_node(module_parts, components), examples}
+      else
+        acc
+      end
     end
   end
 
