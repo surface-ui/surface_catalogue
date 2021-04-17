@@ -28,6 +28,7 @@ defmodule Surface.Catalogue.Util do
       title = Keyword.get(config, :title)
       direction = Keyword.get(config, :direction) || "horizontal"
       height = Keyword.get(config, :height) || "120px"
+      scrolling = Keyword.get(config, :scrolling) || false
 
       {demo_perc, code_perc} =
         case {direction, Keyword.get(config, :code_perc)} do
@@ -49,7 +50,8 @@ defmodule Surface.Catalogue.Util do
         code: code,
         direction: direction,
         demo_perc: demo_perc,
-        code_perc: code_perc
+        code_perc: code_perc,
+        scrolling: scrolling
       }
     end
     |> Enum.sort_by(& &1.module_name)

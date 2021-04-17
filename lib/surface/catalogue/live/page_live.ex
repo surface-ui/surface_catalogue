@@ -133,7 +133,7 @@ defmodule Surface.Catalogue.PageLive do
                     <div :show={{ @action == "example" }} class="Example {{example.direction}}">
                       <div class="demo" style="width: {{example.demo_perc}}%">
                         <iframe
-                          scrolling="no"
+                          scrolling={{ if example.scrolling, do: "yes", else: "no"}}
                           id="example-iframe-{{index}}"
                           src={{ path_to(@socket, ExampleLive, example.module_name, __window_id__: @__window_id__) }}
                           style="overflow-y: hidden; width: 100%; height: {{ example.height }};"
