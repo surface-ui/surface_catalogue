@@ -122,6 +122,10 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
     "—"
   end
 
+  defp format_values(%Range{} = range) do
+    raw(["<code>", inspect(range), "</code>"])
+  end
+
   defp format_values(values) do
     values
     |> Enum.map(fn value -> raw(["<code>", format_value(value), "</code>"]) end)
