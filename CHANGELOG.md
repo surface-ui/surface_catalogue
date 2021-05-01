@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.0.8 (2021-05-01)
+
+  * Update to Surface v0.4.0
+  * Support for single catalogue
+  * Support setting title and subtitle from config
+  * Add scrolling to example config, dynamic scrolling setting on iframe (#10)
+
 ## v0.0.7 (2021-02-24)
 
   * Allow setting `nil` for integer and lists in the prop editor
