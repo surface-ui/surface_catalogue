@@ -17,7 +17,7 @@ defmodule Surface.Catalogue.Markdown do
       |> String.trim_leading()
 
     html =
-      case Earmark.as_html(markdown, smartypants: false) do
+      case Earmark.as_html(markdown, smartypants: false, code_class_prefix: "language-") do
         {:ok, html, messages} ->
           Enum.each(messages, fn msg -> IO.warn(msg) end)
           html
