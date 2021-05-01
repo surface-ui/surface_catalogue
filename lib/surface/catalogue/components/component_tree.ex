@@ -107,6 +107,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
   end
 
   defp show_nodes?(parent_keys, selected_component, single_catalogue?) do
-    has_child_selected?(parent_keys, selected_component) or (single_catalogue? and length(parent_keys) == 1)
+    has_child_selected?(parent_keys, selected_component) or
+      (single_catalogue? and length(parent_keys) == 1)
   end
 end
