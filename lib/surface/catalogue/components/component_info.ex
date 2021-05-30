@@ -50,16 +50,16 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
   def render(assigns) do
     ~H"""
     <div class="ComponentInfo">
-      <h1 class="title">{{ @full_module_name }}</h1>
-      {{ Markdown.to_html(@doc_summary, class: "subtitle") }}
+      <h1 class="title">{@full_module_name}</h1>
+      {Markdown.to_html(@doc_summary, class: "subtitle")}
       <hr>
-      {{ @doc_details |> Markdown.to_html() }}
-      <div :if={{ !@has_docs? }}>No documentation available.</div>
-      <hr :if={{ !@has_docs? or @has_details? }}>
-      <h3 id={{ @api_anchor_id }} class="title is-4 is-spaced">
-        <a href={{"##{@api_anchor_id}"}}>#</a> Public API
+      {@doc_details |> Markdown.to_html()}
+      <div :if={!@has_docs?}>No documentation available.</div>
+      <hr :if={!@has_docs? or @has_details?}>
+      <h3 id={@api_anchor_id} class="title is-4 is-spaced">
+        <a href={"##{@api_anchor_id}"}>#</a> Public API
       </h3>
-      <ComponentAPI module={{ @module }}/>
+      <ComponentAPI module={@module}/>
     </div>
     """
   end

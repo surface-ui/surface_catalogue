@@ -30,26 +30,26 @@ defmodule Surface.Catalogue.Components.Table do
 
   def render(assigns) do
     ~H"""
-    <div class={{ @class }}>
-      <table class={{
+    <div class={@class}>
+      <table class={
         :table,
         "is-fullwidth": @expanded,
         "is-bordered": @bordered,
         "is-striped": @striped
-      }}>
+     }>
         <thead>
           <tr>
-            <th :for={{ col <- @cols }}>
-              {{ col.label }}
+            <th :for={col <- @cols}>
+              {col.label}
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            :for={{ {item, index} <- Enum.with_index(@data) }}
-            class={{ row_class_fun(@rowClass).(item, index) }}>
-            <td :for.index={{ index <- @cols }}>
-              <span><slot name="cols" index={{ index }} :props={{ item: item }}/></span>
+            :for={{item, index} <- Enum.with_index(@data)}
+            class={row_class_fun(@rowClass).(item, index)}>
+            <td :for.index={index <- @cols}>
+              <span><#slot name="cols" index={index} :props={item: item}/></span>
             </td>
           </tr>
         </tbody>

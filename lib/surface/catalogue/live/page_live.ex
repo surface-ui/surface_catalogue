@@ -78,36 +78,36 @@ defmodule Surface.Catalogue.PageLive do
         <section class="main-content columns">
           <ComponentTree
             id="component-tree"
-            components={{ @components }}
-            selected_component={{ @component_name }}
-            single_catalogue?={{ @single_catalogue? }}
+            components={@components}
+            selected_component={@component_name}
+            single_catalogue?={@single_catalogue?}
           />
           <div class="container column" style="background-color: #fff; min-height: 500px;">
-            <div :if={{ !@component_module and @home_view }}>
-              {{ live_render(@socket, @home_view, id: "home_view") }}
+            <div :if={!@component_module and @home_view}>
+              {live_render(@socket, @home_view, id: "home_view")}
             </div>
-            <div :if={{ !@component_module and !@home_view}} class="columns is-centered is-vcentered is-mobile" style="height: 300px">
+            <div :if={!@component_module and !@home_view} class="columns is-centered is-vcentered is-mobile" style="height: 300px">
               <div class="column is-narrow has-text-centered subtitle has-text-grey">
                 No component selected
               </div>
             </div>
-            <If condition={{ @component_module }}>
+            {#if @component_module}
               <div class="component tabs is-medium">
                 <ul>
-                  <li class={{ "is-active": @action == "docs" }}>
-                    <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :docs) }}>
+                  <li class={"is-active": @action == "docs"}>
+                    <LivePatch to={path_to(@socket, __MODULE__, @component_name, :docs)}>
                       <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
                       <span>Docs &amp; API</span>
                     </LivePatch>
                   </li>
-                  <li :if={{ @has_example? }} class={{ "is-active": @action == "example" }}>
-                    <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :example)}}>
+                  <li :if={@has_example?} class={"is-active": @action == "example"}>
+                    <LivePatch to={path_to(@socket, __MODULE__, @component_name, :example)}>
                       <span class="icon is-small"><i class="fas fa-image" aria-hidden="true"></i></span>
                       <span>Examples</span>
                     </LivePatch>
                   </li>
-                  <li :if={{ @has_playground? }} class={{ "is-active": @action == "playground" }}>
-                    <LivePatch to={{ path_to(@socket, __MODULE__, @component_name, :playground)}}>
+                  <li :if={@has_playground?} class={"is-active": @action == "playground"}>
+                    <LivePatch to={path_to(@socket, __MODULE__, @component_name, :playground)}>
                       <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true"></i></span>
                       <span id="playground-tab-label" phx-update="ignore">Playground</span>
                     </LivePatch>
@@ -115,64 +115,65 @@ defmodule Surface.Catalogue.PageLive do
                 </ul>
               </div>
               <div class="section">
-                <div :show={{ @action == "docs" }}>
-                  <ComponentInfo module={{ @component_module }} />
+                <div :show={@action == "docs"}>
+                  <ComponentInfo module={@component_module} />
                 </div>
-                <div :show={{ @action == "example" }}>
-                  <For each={{ {example, index} <- Enum.with_index(@examples, 1) }}>
+                <div :show={@action == "example"}>
+                  {#for {example, index} <- Enum.with_index(@examples, 1)}
                     <h3
-                      :show={{ example.title }}
-                      id="example-{{index}}"
-                      class={{ "example-title title is-4 is-spaced", "is-marginless": example.doc != "" }}
+                      :show={example.title}
+                      id={"example-#{index}"}
+                      class={"example-title title is-4 is-spaced", "is-marginless": example.doc != ""}
                     >
-                      <a href="#example-{{index}}">#</a> {{ example.title }}
+                      <a href={"#example-#{index}"}>#</a> {example.title}
                     </h3>
-                    <div :if={{ example.doc != "" }} style="padding-bottom: 1.5rem;">
-                      {{ example.doc |> Markdown.to_html() }}
+                    <div :if={example.doc != ""} style="padding-bottom: 1.5rem;">
+                      {example.doc |> Markdown.to_html()}
                     </div>
-                    <div :show={{ @action == "example" }} class="Example {{example.direction}}">
-                      <div class="demo" style="width: {{example.demo_perc}}%">
+                    <div :show={@action == "example"} class={"Example #{example.direction}"}>
+                      <div class="demo" style={"width: #{example.demo_perc}%"}>
                         <iframe
-                          scrolling={{ if example.scrolling, do: "yes", else: "no"}}
-                          id="example-iframe-{{index}}"
-                          src={{ path_to(@socket, ExampleLive, example.module_name, __window_id__: @__window_id__) }}
-                          style="overflow-y: hidden; width: 100%; height: {{ example.height }};"
+                          scrolling={if example.scrolling, do: "yes", else: "no"}
+                          id={"example-iframe-#{index}"}
+                          src={path_to(@socket, ExampleLive, example.module_name, __window_id__: @__window_id__)}
+                          style={"overflow-y: hidden; width: 100%; height: #{example.height};"}
                           frameborder="0"
                           phx-hook="IframeBody"
                         />
                       </div>
-                      <div class="code" style="width: {{example.code_perc}}%">
+
+                      <div class="code" phx-update="ignore" style={"width: #{example.code_perc}%"}>
                         <pre class="language-surface">
-                          <code class="content language-surface" phx-hook="Highlight" id="example-code-{{index}}">
-    {{ example.code }}</code>
+                          <code class="content language-surface" phx-hook="Highlight" id={"example-code-#{index}"}>
+    {example.code}</code>
                         </pre>
                       </div>
                     </div>
-                  </For>
-                  <div :show={{ !connected?(@socket) }} class="container">
-                    {{ loading("Loading live #{@action}...") }}
+                  {/for}
+                  <div :show={!connected?(@socket)} class="container">
+                    {loading("Loading live #{@action}...")}
                   </div>
                 </div>
-                <div :show={{ @action == "playground" }}>
-                  <div :show={{ @playground_tools_initialized? }}>
+                <div :show={@action == "playground"}>
+                  <div :show={@playground_tools_initialized?}>
                     <iframe
                       id="playground-iframe"
-                      :if={{ @has_playground? }}
-                      src={{ path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__) }}
-                      style="height: {{ @playground_height }}; width: {{ @playground_width }};"
+                      :if={@has_playground?}
+                      src={path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__)}
+                      style={"height: #{@playground_height}; width: #{@playground_width};"}
                       frameborder="0"
                       phx-hook="IframeBody"
                     />
                     <div style="padding-top: 1.5rem;">
-                      <PlaygroundTools id="playground_tools" session={{ %{"__window_id__" => @__window_id__} }} />
+                      <PlaygroundTools id="playground_tools" session={%{"__window_id__" => @__window_id__}} />
                     </div>
                   </div>
-                  <div :show={{ !@playground_tools_initialized? }} class="container">
-                    {{ loading("Loading live #{@action}...") }}
+                  <div :show={!@playground_tools_initialized?} class="container">
+                    {loading("Loading live #{@action}...")}
                   </div>
                 </div>
               </div>
-            </If>
+            {/if}
           </div>
         </section>
       </div>
@@ -244,7 +245,7 @@ defmodule Surface.Catalogue.PageLive do
     ~H"""
     <div class="columns is-centered is-vcentered is-mobile" style="height: 300px">
       <div class="column is-narrow has-text-centered subtitle has-text-grey">
-        {{ message }}
+        {message}
       </div>
     </div>
     """

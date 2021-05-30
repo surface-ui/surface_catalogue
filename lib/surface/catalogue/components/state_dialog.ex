@@ -35,30 +35,30 @@ defmodule Surface.Catalogue.Components.StateDialog do
 
   def render(assigns) do
     ~H"""
-    <div class={{ "modal", "is-active": @show }} :on-window-keydown="hide" phx-key="Escape">
+    <div class={"modal", "is-active": @show} :on-window-keydown="hide" phx-key="Escape">
       <div class="modal-background" style="background-color: rgba(10,10,10,.30)"></div>
       <div class="modal-card" style="width: unset; min-width: 600px;">
         <header class="modal-card-head">
           <p class="modal-card-title has-text-grey has-text-weight-medium">
-            {{@formatted_id}}
+            {@formatted_id}
           </p>
         </header>
         <section class="modal-card-body" style="padding: 0px 1px; background-color: #ddd;">
           <div class="code" style="width: 100%; overflow-y: auto; max-height: 500px;">
             <pre class="makeup-highlight" style="padding: 0rem 1.5rem">
               <code>
-    {{ raw(@formatted_assigns) }}</code>
+    {raw(@formatted_assigns)}</code>
             </pre>
           </div>
         </section>
         <footer class="modal-card-foot" style="padding: 15px 20px;">
           <span style="width: 100%" class="has-text-grey">
-            <Form for={{ :options }} change="options_change">
+            <Form for={:options} change="options_change">
               <div class="columns is-vcentered" style="margin-top: 0px;">
                 <div class="column is-narrow has-text-centered">
                   <div class="control">
                     <label class="checkbox">
-                      <Checkbox field={{ :show_builtin }} value={{ @show_builtin }}/>
+                      <Checkbox field={:show_builtin} value={@show_builtin}/>
                       Built-in assigns
                     </label>
                   </div>
@@ -66,7 +66,7 @@ defmodule Surface.Catalogue.Components.StateDialog do
                 <div class="column is-narrow has-text-centered">
                   <div class="control">
                     <label class="checkbox">
-                      <Checkbox field={{ :show_private }} value={{ @show_private }}/>
+                      <Checkbox field={:show_private} value={@show_private}/>
                       Private assigns
                     </label>
                   </div>

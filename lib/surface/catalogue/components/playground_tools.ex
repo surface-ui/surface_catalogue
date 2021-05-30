@@ -50,14 +50,14 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def render(assigns) do
     ~H"""
-    <div :show={{ @playground_pid != nil }}>
-      <Tabs id="playground-tools-tabs" animated=false tab_click_callback={{ &tab_click_callback/1 }}>
+    <div :show={@playground_pid != nil}>
+      <Tabs id="playground-tools-tabs" animated={false} tab_click_callback={&tab_click_callback/1}>
         <TabItem label="Properties">
           <div style="margin-top: 0.7rem;">
-            <Form for={{ :props_values }} change="change" opts={{ autocomplete: "off" }}>
-              <For each={{ prop <- @props }}>
-                <PropInput prop={{ prop }} value={{ @props_values[prop.name] }}/>
-              </For>
+            <Form for={:props_values} change="change" opts={autocomplete: "off"}>
+              {#for prop <- @props}
+                <PropInput prop={prop} value={@props_values[prop.name]}/>
+              {/for}
             </Form>
           </div>
         </TabItem>
@@ -69,7 +69,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
               </div>
               <div class="field-body">
                 <div class="field">
-                  {{ @playground_info.pid }}
+                  {@playground_info.pid}
                 </div>
               </div>
             </div>
@@ -80,8 +80,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
               </div>
               <div class="field-body">
                 <div class="field">
-                  {{ @playground_info.status }}
-                  <span :if={{ @playground_info.hibernating? }}>&nbsp;(<a :on-click="wake_up">wake up</a>)</span>
+                  {@playground_info.status}
+                  <span :if={@playground_info.hibernating?}>&nbsp;(<a :on-click="wake_up">wake up</a>)</span>
                 </div>
               </div>
             </div>
@@ -92,8 +92,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
               </div>
               <div class="field-body">
                 <div class="field">
-                  {{ @playground_info.total_memory }}
-                  <span :if={{ !@playground_info.hibernating? }}>&nbsp;(<a :on-click="run_gc">run GC</a>)</span>
+                  {@playground_info.total_memory}
+                  <span :if={!@playground_info.hibernating?}>&nbsp;(<a :on-click="run_gc">run GC</a>)</span>
                 </div>
               </div>
             </div>
@@ -103,8 +103,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                 <label class="label">Playground's sssigns</label>
               </div>
               <div class="field-body">
-                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
-                  {{ @playground_info.assigns_memory }}
+                <div class={:field, "has-text-grey-light": @playground_info.hibernating?}>
+                  {@playground_info.assigns_memory}
                   <span class="has-text-dark">&nbsp;(<a :on-click="show_playground_state">show</a>)</span>
                 </div>
               </div>
@@ -115,9 +115,9 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                 <label class="label">Components' assigns</label>
               </div>
               <div class="field-body">
-                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
-                  {{ @playground_info.components_memory }}
-                  <span :if={{ @playground_info.components_instances_memory == [] }}>
+                <div class={:field, "has-text-grey-light": @playground_info.hibernating?}>
+                  {@playground_info.components_memory}
+                  <span :if={@playground_info.components_instances_memory == []}>
                     &nbsp;(no stateful child component)
                   </span>
                 </div>
@@ -128,33 +128,33 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           <hr style="margin: 0.7rem 0;">
 
           <div id="playground-tools-state-instances" style="margin-top: 0.7rem;">
-            <div :for={{ {mod, id, value} <- @playground_info.components_instances_memory }} class="field is-horizontal">
+            <div :for={{mod, id, value} <- @playground_info.components_instances_memory} class="field is-horizontal">
               <div class="field-label is-small">
                 <label class="label has-text-grey-dark">
-                  {{mod}}&lt;<a :on-click="show_component_state" phx-value-component={{id}}>#{{id}}</a>&gt;
+                  {mod}&lt;<a :on-click="show_component_state" phx-value-component={id}>#{id}</a>&gt;
                 </label>
               </div>
               <div class="field-body">
-                <div class={{ :field, "has-text-grey-light": @playground_info.hibernating? }}>
-                  {{ value }}
+                <div class={:field, "has-text-grey-light": @playground_info.hibernating?}>
+                  {value}
                 </div>
               </div>
             </div>
           </div>
         </TabItem>
-        <TabItem label="Event Log" visible={{ @events != [] }} changed={{ @has_new_events? }}>
+        <TabItem label="Event Log" visible={@events != []} changed={@has_new_events?}>
           <span style="margin-left: 1.0rem;">
             <span class="has-text-weight-semibold">Events: </span>
-            <span>{{ available_events(@events) }}</span>
+            <span>{available_events(@events)}</span>
             <span style="float: right; padding-right: 1.0rem;">
               <a :on-click="clear_event_log">Clear</a>
             </span>
           </span>
           <hr style="margin: 0.8rem 0;">
           <div id="event-log" style="height: 250px; overflow: scroll; font-family: monospace" class="is-size-7">
-            <div id="event-log-content-{{ @event_log_counter }}" phx-update="append" phx-hook="EventLog">
-              <p :for={{ {id, message} <- @event_log_entries }} id="event-log-message-{{ id }}">
-                <span style="white-space: break-spaces;">{{ raw(message) }}</span>
+            <div id={"event-log-content-#{@event_log_counter}"} phx-update="append" phx-hook="EventLog">
+              <p :for={{id, message} <- @event_log_entries} id={"event-log-message-#{id}"}>
+                <span style="white-space: break-spaces;">{raw(message)}</span>
               </p>
             </div>
           </div>

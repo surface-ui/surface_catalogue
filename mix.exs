@@ -50,7 +50,7 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:surface, "~> 0.4.0"},
+      {:surface, github: "surface-ui/surface", branch: "surface-next"},
       {:earmark, "~> 1.3"},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.15.1"}
