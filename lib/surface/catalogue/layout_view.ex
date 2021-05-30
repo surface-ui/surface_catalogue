@@ -23,7 +23,7 @@ defmodule Surface.Catalogue.LayoutView do
     ~H"""
     <html lang="en">
       <head>
-        {{ Phoenix.HTML.Tag.csrf_meta_tag() }}
+        {Phoenix.HTML.Tag.csrf_meta_tag()}
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
@@ -39,19 +39,19 @@ defmodule Surface.Catalogue.LayoutView do
           <div class="hero-body" style="padding: 1.5rem">
             <div class="container">
               <h1 class="title">
-                <span>{{ title() }}</span>
+                <span>{title()}</span>
               </h1>
               <h2 class="subtitle" style="margin-right: 30px">
-              {{ subtitle() }}
+              {subtitle()}
               </h2>
             </div>
           </div>
         </section>
-        {{ @inner_content }}
+        {@inner_content}
         <footer class="footer" style="padding: 2rem 1.5rem 2rem; margin-top: 12px;">
           <div class="content has-text-centered">
             <p>
-              <strong>Surface</strong> <i>v{{ surface_version() }}</i> -
+              <strong>Surface</strong> <i>v{surface_version()}</i> -
               <a href="http://github.com/msaraiva/surface">github.com/msaraiva/surface</a>.
             </p>
           </div>

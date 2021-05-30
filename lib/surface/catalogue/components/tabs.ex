@@ -36,30 +36,30 @@ defmodule Surface.Catalogue.Components.Tabs do
 
   def render(assigns) do
     ~H"""
-    <div class={{ "is-fullwidth": @expanded }}>
-      <nav class={{ "tabs",  "is-boxed": @boxed, "is-fullwidth": @expanded }}>
+    <div class={"is-fullwidth": @expanded}>
+      <nav class={"tabs",  "is-boxed": @boxed, "is-fullwidth": @expanded}>
         <ul>
           <li
-            :for={{ {tab, index} <- Enum.with_index(@tabs), tab.visible }}
-            class={{ "is-active": @active_tab == index, isDisabled: tab.disabled }}
+            :for={{tab, index} <- Enum.with_index(@tabs), tab.visible}
+            class={"is-active": @active_tab == index, isDisabled: tab.disabled}
           >
-            <a :on-click="tab_click" phx-value-index={{ index }}>
-              <span :if={{ tab.icon }} class="icon is-small">
-                <i class={{ tab.icon }} aria-hidden="true"></i>
+            <a :on-click="tab_click" phx-value-index={index}>
+              <span :if={tab.icon} class="icon is-small">
+                <i class={tab.icon} aria-hidden="true"></i>
               </span>
-              <span>{{ tab.label }}</span>
-              <span style="width: 15px; margin-left: 2px;">{{ raw(tab.changed && "*" || "&nbsp") }}</span>
+              <span>{tab.label}</span>
+              <span style="width: 15px; margin-left: 2px;">{raw(tab.changed && "*" || "&nbsp")}</span>
             </a>
           </li>
         </ul>
       </nav>
       <section class="tab-content" style="overflow: hidden;">
         <div
-          :for={{ {tab, index} <- Enum.with_index(@tabs) }}
-          :show={{ tab.visible && @active_tab == index }}
-          class="tab-item animated {{ @animation }} faster"
+          :for={{tab, index} <- Enum.with_index(@tabs)}
+          :show={tab.visible && @active_tab == index}
+          class={"tab-item animated #{@animation} faster"}
         >
-          <slot name="tabs" index={{ index }}/>
+          <#slot name="tabs" index={index}/>
         </div>
       </section>
     </div>

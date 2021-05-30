@@ -35,15 +35,15 @@ defmodule Surface.Catalogue.PlaygroundLive do
     ~H"""
     <html lang="en">
       <head>
-        {{ Phoenix.HTML.Tag.csrf_meta_tag() }}
+        {Phoenix.HTML.Tag.csrf_meta_tag()}
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
-        {{ raw(@head_css) }}
-        {{ raw(@head_js) }}
+        {raw(@head_css)}
+        {raw(@head_js)}
       </head>
-      <body :attrs={{ @body }}>
-        {{ live_render(@socket, @playground, id: "playground", session: %{"__window_id__" => @__window_id__}) }}
+      <body :attrs={@body}>
+        {live_render(@socket, @playground, id: "playground", session: %{"__window_id__" => @__window_id__})}
       </body>
     </html>
     """

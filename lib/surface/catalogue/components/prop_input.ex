@@ -13,12 +13,12 @@ defmodule Surface.Catalogue.Components.PropInput do
     ~H"""
     <div class="field is-horizontal">
       <div class="field-label is-small">
-        <label class="label">{{ label(@prop) }}</label>
+        <label class="label">{label(@prop)}</label>
       </div>
       <div class="field-body">
         <div class="field" style="display:flex; align-items:center;">
           <div class="control" style="width: 400px;">
-            {{ input(assigns) }}
+            {input(assigns)}
           </div>
         </div>
       </div>
@@ -35,33 +35,33 @@ defmodule Surface.Catalogue.Components.PropInput do
     case {prop.type, get_choices(prop)} do
       {:boolean, _} ->
         ~H"""
-        <Checkbox field={{ prop.name }} value={{ value }} opts={{ style: "height: 26px;" }}/>
+        <Checkbox field={prop.name} value={value} opts={style: "height: 26px;"}/>
         """
 
       {:string, []} ->
         ~H"""
         <TextInput
-          field={{ prop.name }}
-          value={{ value }}
+          field={prop.name}
+          value={value}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
+          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
         />
         """
 
       {:string, choices} ->
         ~H"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ choices }} selected={{ value }}/>
+          <Select field={prop.name} options={choices} selected={value}/>
         </div>
         """
 
       {:atom, []} ->
         ~H"""
         <TextInput
-          field={{ prop.name }}
-          value={{ value_to_string(value) }}
+          field={prop.name}
+          value={value_to_string(value)}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil" }}
+          opts={placeholder: value == nil && "nil"}
         />
         """
 
@@ -70,51 +70,51 @@ defmodule Surface.Catalogue.Components.PropInput do
 
         ~H"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ choices }} selected={{ value_to_string(value) }}/>
+          <Select field={prop.name} options={choices} selected={value_to_string(value)}/>
         </div>
         """
 
       {:css_class, _} ->
         ~H"""
         <TextInput
-          field={{ prop.name }}
-          value={{ css_value_to_string(value) }}
+          field={prop.name}
+          value={css_value_to_string(value)}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
+          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
         />
         """
 
       {:integer, []} ->
         ~H"""
         <NumberInput
-          field={{ prop.name }}
-          value={{ value }}
+          field={prop.name}
+          value={value}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil" }}
+          opts={placeholder: value == nil && "nil"}
         />
         """
 
       {:integer, choices} ->
         ~H"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ choices }} selected={{ value }}/>
+          <Select field={prop.name} options={choices} selected={value}/>
         </div>
         """
 
       {type, []} when type in [:list, :keyword] ->
         ~H"""
         <TextInput
-          field={{ prop.name }}
-          value={{ value_to_string(value) }}
+          field={prop.name}
+          value={value_to_string(value)}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
+          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
         />
         """
 
       {type, _} ->
         ~H"""
         <span class="is-size-7">
-          [editor not available for type <b>{{ inspect(type) }}</b>]
+          [editor not available for type <b>{inspect(type)}</b>]
         </span>
         """
     end

@@ -15,18 +15,18 @@ defmodule Surface.Catalogue.Components.ComponentTree do
      class="section column is-narrow is-narrow-mobile is-fullheight is-hidden-mobile"
      style="background-color: #f5f5f5; min-width: 270px;"
     >
-      {{ render_node(assigns, @components, @selected_component, @single_catalogue?) }}
+      {render_node(assigns, @components, @selected_component, @single_catalogue?)}
     </aside>
     """
   end
 
   def render_node(assigns, node, selected_component, single_catalogue?, parent_keys \\ []) do
     ~H"""
-    <ul class={{ "menu-list", "is-hidden": !show_nodes?(parent_keys, selected_component, single_catalogue?) }}>
-      <li :if={{ parent_keys == [] }}>
+    <ul class={"menu-list", "is-hidden": !show_nodes?(parent_keys, selected_component, single_catalogue?)}>
+      <li :if={parent_keys == []}>
         <LivePatch
-          to={{ @socket.router.__helpers__().live_path(@socket, Surface.Catalogue.PageLive) }}
-          class={{ "has-text-weight-bold": !selected_component }}
+          to={@socket.router.__helpers__().live_path(@socket, Surface.Catalogue.PageLive)}
+          class={"has-text-weight-bold": !selected_component}
         >
           <span class="icon">
             <i class="fa fa-home" />
@@ -34,37 +34,37 @@ defmodule Surface.Catalogue.Components.ComponentTree do
           Home
         </LivePatch>
       </li>
-      <For each={{ {key, value} <- Enum.sort(node),
+      {#for {key, value} <- Enum.sort(node),
                     mod_path = parent_keys ++ [key],
                     module = Module.concat(mod_path),
                     component_type = component_type(module),
-                    {has_child_selected?} = {has_child_selected?(mod_path, selected_component)} }}>
-        <li :if={{ component_type != :none }}>
+                    {has_child_selected?} = {has_child_selected?(mod_path, selected_component)}}
+        <li :if={component_type != :none}>
           <LivePatch
-            to={{ @socket.router.__helpers__().live_path(@socket, Surface.Catalogue.PageLive, inspect(module)) }}
-            class={{ "has-text-weight-bold": selected_component?(mod_path, selected_component) }}>
+            to={@socket.router.__helpers__().live_path(@socket, Surface.Catalogue.PageLive, inspect(module))}
+            class={"has-text-weight-bold": selected_component?(mod_path, selected_component)}>
             <span class="icon">
-              <i class={{ component_icon(component_type) }}></i>
-            </span> {{ key }}
+              <i class={component_icon(component_type)}></i>
+            </span> {key}
           </LivePatch>
         </li>
-        <li :if={{ value != %{} && @single_catalogue? && parent_keys == [] }}>
+        <li :if={value != %{} && @single_catalogue? && parent_keys == []}>
           <a style="cursor: default;">
             <span class="icon">
               <i class="fa fa-puzzle-piece"></i>
             </span> Components
           </a>
-          {{ render_node(assigns, value, selected_component, single_catalogue?, mod_path) }}
+          {render_node(assigns, value, selected_component, single_catalogue?, mod_path)}
         </li>
-        <li :if={{ value != %{} && (!@single_catalogue? || parent_keys != []) }}>
+        <li :if={value != %{} && (!@single_catalogue? || parent_keys != [])}>
           <a href="#" onclick="togggleNode(this)">
             <span class="icon">
-              <i class={{ :far, "fa-folder-open": has_child_selected?, "fa-folder": !has_child_selected? }}></i>
-            </span> {{ key }}
+              <i class={:far, "fa-folder-open": has_child_selected?, "fa-folder": !has_child_selected?}></i>
+            </span> {key}
           </a>
-          {{ render_node(assigns, value, selected_component, single_catalogue?, mod_path) }}
+          {render_node(assigns, value, selected_component, single_catalogue?, mod_path)}
         </li>
-      </For>
+      {/for}
     </ul>
     """
   end
