@@ -210,6 +210,9 @@ Hooks["Highlight"] = {
 
     // Call it again to fix misplaced selected lines on page reload
     Prism.highlightElement(this.el)
+  },
+  updated() {
+    Prism.highlightElement(this.el);
   }
 }
 

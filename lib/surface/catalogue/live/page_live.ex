@@ -141,7 +141,7 @@ defmodule Surface.Catalogue.PageLive do
                           phx-hook="IframeBody"
                         />
                       </div>
-                      <div class="code" phx-update="ignore" style="width: {{example.code_perc}}%">
+                      <div class="code" style="width: {{example.code_perc}}%">
                         <pre class="language-surface">
                           <code class="content language-surface" phx-hook="Highlight" id="example-code-{{index}}">
     {{ example.code }}</code>
