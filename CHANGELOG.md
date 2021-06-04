@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.9 (2021-06-04)
+
+  * Fix updating example code when switching from one example to another (#14)
+
 ## v0.0.8 (2021-05-01)
 
   * Update to Surface v0.4.0
