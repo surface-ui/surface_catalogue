@@ -41,56 +41,56 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class="ComponentAPI">
-      <div :if={{ !@has_api? }}>No public API defined.</div>
-      <Tabs id={{ "component-info-tabs-#{@module}" }} :if={{ @has_api? }}>
-        <TabItem label="Properties" visible={{ @props != [] }}>
-          <Table data={{ prop <- @props }}>
+      <div :if={!@has_api?}>No public API defined.</div>
+      <Tabs id={"component-info-tabs-#{@module}"} :if={@has_api?}>
+        <TabItem label="Properties" visible={@props != []}>
+          <Table data={prop <- @props}>
             <Column label="Name">
-              <code>{{ prop.name }}</code>
+              <code>{prop.name}</code>
             </Column>
             <Column label="Description">
-              {{ format_required(prop) }} {{ prop.doc |> format_desc() |> Markdown.to_html(strip: true) }}
+              {format_required(prop)} {prop.doc |> format_desc() |> Markdown.to_html(strip: true)}
             </Column>
             <Column label="Type">
-              <code>{{ inspect(prop.type) }}</code>
+              <code>{inspect(prop.type)}</code>
             </Column>
             <Column label="Values">
-              {{ format_values(prop.opts[:values]) }}
+              {format_values(prop.opts[:values])}
             </Column>
             <Column label="Default">
-              {{ format_default(prop.opts) }}
+              {format_default(prop.opts)}
             </Column>
           </Table>
         </TabItem>
-        <TabItem label="Slots" visible={{ @slots != [] }}>
-          <Table data={{ slot <- @slots }}>
+        <TabItem label="Slots" visible={@slots != []}>
+          <Table data={slot <- @slots}>
             <Column label="Name">
-              <code>{{ slot.name }}</code>
+              <code>{slot.name}</code>
             </Column>
             <Column label="Description">
-            {{ format_required(slot) }} {{ slot.doc |> format_desc() |> Markdown.to_html(strip: true) }}
+            {format_required(slot)} {slot.doc |> format_desc() |> Markdown.to_html(strip: true)}
             </Column>
           </Table>
         </TabItem>
-        <TabItem label="Events" visible={{ @events != [] }}>
-          <Table data={{ event <- @events }}>
+        <TabItem label="Events" visible={@events != []}>
+          <Table data={event <- @events}>
             <Column label="Name">
-              <code>{{ event.name }}</code>
+              <code>{event.name}</code>
             </Column>
             <Column label="Description">
-              {{ event.doc |> format_desc() |> Markdown.to_html() }}
+              {event.doc |> format_desc() |> Markdown.to_html()}
             </Column>
           </Table>
         </TabItem>
-        <TabItem label="Functions" visible={{ @functions != [] }}>
-          <Table data={{ func <- @functions }}>
+        <TabItem label="Functions" visible={@functions != []}>
+          <Table data={func <- @functions}>
             <Column label="Name">
-              <code>{{ func.signature }}</code>
+              <code>{func.signature}</code>
             </Column>
             <Column label="Description">
-              {{ func.doc |> format_desc() |> Markdown.to_html() }}
+              {func.doc |> format_desc() |> Markdown.to_html()}
             </Column>
           </Table>
         </TabItem>

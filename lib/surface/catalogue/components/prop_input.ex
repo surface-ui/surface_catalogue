@@ -10,15 +10,15 @@ defmodule Surface.Catalogue.Components.PropInput do
   prop value, :any
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class="field is-horizontal">
       <div class="field-label is-small">
-        <label class="label">{{ label(@prop) }}</label>
+        <label class="label">{label(@prop)}</label>
       </div>
       <div class="field-body">
         <div class="field" style="display:flex; align-items:center;">
           <div class="control" style="width: 400px;">
-            {{ input(assigns) }}
+            {input(assigns)}
           </div>
         </div>
       </div>
@@ -34,87 +34,87 @@ defmodule Surface.Catalogue.Components.PropInput do
   defp input(%{prop: prop, value: value} = assigns) do
     case {prop.type, get_choices(prop)} do
       {:boolean, _} ->
-        ~H"""
-        <Checkbox field={{ prop.name }} value={{ value }} opts={{ style: "height: 26px;" }}/>
+        ~F"""
+        <Checkbox field={prop.name} value={value} opts={style: "height: 26px;"}/>
         """
 
       {:string, []} ->
-        ~H"""
+        ~F"""
         <TextInput
-          field={{ prop.name }}
-          value={{ value }}
+          field={prop.name}
+          value={value}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
+          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
         />
         """
 
       {:string, choices} ->
-        ~H"""
+        ~F"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ choices }} selected={{ value }}/>
+          <Select field={prop.name} options={choices} selected={value}/>
         </div>
         """
 
       {:atom, []} ->
-        ~H"""
+        ~F"""
         <TextInput
-          field={{ prop.name }}
-          value={{ value_to_string(value) }}
+          field={prop.name}
+          value={value_to_string(value)}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil" }}
+          opts={placeholder: value == nil && "nil"}
         />
         """
 
       {:atom, choices} ->
         choices = Enum.map(choices, fn {k, v} -> {inspect(k), inspect(v)} end)
 
-        ~H"""
+        ~F"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ choices }} selected={{ value_to_string(value) }}/>
+          <Select field={prop.name} options={choices} selected={value_to_string(value)}/>
         </div>
         """
 
       {:css_class, _} ->
-        ~H"""
+        ~F"""
         <TextInput
-          field={{ prop.name }}
-          value={{ css_value_to_string(value) }}
+          field={prop.name}
+          value={css_value_to_string(value)}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
+          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
         />
         """
 
       {:integer, []} ->
-        ~H"""
+        ~F"""
         <NumberInput
-          field={{ prop.name }}
-          value={{ value }}
+          field={prop.name}
+          value={value}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil" }}
+          opts={placeholder: value == nil && "nil"}
         />
         """
 
       {:integer, choices} ->
-        ~H"""
+        ~F"""
         <div class="select is-small">
-          <Select field={{ prop.name }} options={{ choices }} selected={{ value }}/>
+          <Select field={prop.name} options={choices} selected={value}/>
         </div>
         """
 
       {type, []} when type in [:list, :keyword] ->
-        ~H"""
+        ~F"""
         <TextInput
-          field={{ prop.name }}
-          value={{ value_to_string(value) }}
+          field={prop.name}
+          value={value_to_string(value)}
           class="input is-small"
-          opts={{ placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name }}
+          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
         />
         """
 
       {type, _} ->
-        ~H"""
+        ~F"""
         <span class="is-size-7">
-          [editor not available for type <b>{{ inspect(type) }}</b>]
+          [editor not available for type <b>{inspect(type)}</b>]
         </span>
         """
     end
