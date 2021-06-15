@@ -49,7 +49,7 @@ defmodule Surface.Catalogue.Components.Table do
             :for={{item, index} <- Enum.with_index(@data)}
             class={row_class_fun(@rowClass).(item, index)}>
             <td :for.index={index <- @cols}>
-              <span><#slot name="cols" index={index} :props={item: item}/></span>
+              <span><#slot name="cols" index={index} :args={item: item}/></span>
             </td>
           </tr>
         </tbody>
