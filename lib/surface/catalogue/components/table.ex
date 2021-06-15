@@ -26,10 +26,10 @@ defmodule Surface.Catalogue.Components.Table do
   prop rowClass, :fun
 
   @doc "The columns of the table"
-  slot cols, props: [item: ^data], required: true
+  slot cols, args: [item: ^data], required: true
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class={@class}>
       <table class={
         :table,

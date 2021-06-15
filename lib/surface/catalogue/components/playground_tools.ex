@@ -49,7 +49,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div :show={@playground_pid != nil}>
       <Tabs id="playground-tools-tabs" animated={false} tab_click_callback={&tab_click_callback/1}>
         <TabItem label="Properties">

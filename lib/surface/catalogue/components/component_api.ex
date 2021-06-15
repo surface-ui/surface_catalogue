@@ -41,7 +41,7 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class="ComponentAPI">
       <div :if={!@has_api?}>No public API defined.</div>
       <Tabs id={"component-info-tabs-#{@module}"} :if={@has_api?}>

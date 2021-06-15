@@ -32,7 +32,7 @@ defmodule Surface.Catalogue.PlaygroundLive do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <html lang="en">
       <head>
         {Phoenix.HTML.Tag.csrf_meta_tag()}

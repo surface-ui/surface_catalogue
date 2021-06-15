@@ -34,7 +34,7 @@ defmodule Surface.Catalogue.Components.StateDialog do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class={"modal", "is-active": @show} :on-window-keydown="hide" phx-key="Escape">
       <div class="modal-background" style="background-color: rgba(10,10,10,.30)"></div>
       <div class="modal-card" style="width: unset; min-width: 600px;">

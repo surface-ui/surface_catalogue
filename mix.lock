@@ -22,6 +22,6 @@
   "plug_cowboy": {:hex, :plug_cowboy, "2.5.0", "51c998f788c4e68fc9f947a5eba8c215fbb1d63a520f7604134cab0270ea6513", [:mix], [{:cowboy, "~> 2.7", [hex: :cowboy, repo: "hexpm", optional: false]}, {:cowboy_telemetry, "~> 0.3", [hex: :cowboy_telemetry, repo: "hexpm", optional: false]}, {:plug, "~> 1.7", [hex: :plug, repo: "hexpm", optional: false]}, {:telemetry, "~> 0.4", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm", "5b2c8925a5e2587446f33810a58c01e66b3c345652eeec809b76ba007acde71a"},
   "plug_crypto": {:hex, :plug_crypto, "1.2.2", "05654514ac717ff3a1843204b424477d9e60c143406aa94daf2274fdd280794d", [:mix], [], "hexpm", "87631c7ad914a5a445f0a3809f99b079113ae4ed4b867348dd9eec288cecb6db"},
   "ranch": {:hex, :ranch, "1.8.0", "8c7a100a139fd57f17327b6413e4167ac559fbc04ca7448e9be9057311597a1d", [:make, :rebar3], [], "hexpm", "49fbcfd3682fab1f5d109351b61257676da1a2fdbe295904176d5e521a2ddfe5"},
-  "surface": {:git, "https://github.com/surface-ui/surface.git", "5a01f86b3da1b9dad6c32e64b1cd455f7c2e8958", [branch: "surface-next"]},
+  "surface": {:git, "https://github.com/surface-ui/surface.git", "f3ffd9af5289d861575974275307bf4cd80614a7", [branch: "master"]},
   "telemetry": {:hex, :telemetry, "0.4.3", "a06428a514bdbc63293cd9a6263aad00ddeb66f608163bdec7c8995784080818", [:rebar3], [], "hexpm", "eb72b8365ffda5bed68a620d1da88525e326cb82a75ee61354fc24b844768041"},
 }

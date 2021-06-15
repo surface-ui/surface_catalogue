@@ -71,7 +71,7 @@ defmodule Surface.Catalogue.PageLive do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div style="position: relative;">
       <div class="sidebar-bg"/>
       <div class="container is-fullhd">
@@ -242,7 +242,7 @@ defmodule Surface.Catalogue.PageLive do
   defp loading(message) do
     assigns = %{}
 
-    ~H"""
+    ~F"""
     <div class="columns is-centered is-vcentered is-mobile" style="height: 300px">
       <div class="column is-narrow has-text-centered subtitle has-text-grey">
         {message}

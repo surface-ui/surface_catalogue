@@ -20,7 +20,7 @@ defmodule Surface.Catalogue.LayoutView do
   def render("makeup.css", _), do: @makeup_css
 
   def render(_, assigns) do
-    ~H"""
+    ~F"""
     <html lang="en">
       <head>
         {Phoenix.HTML.Tag.csrf_meta_tag()}

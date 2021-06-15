@@ -35,7 +35,7 @@ defmodule Surface.Catalogue.Components.Tabs do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class={"is-fullwidth": @expanded}>
       <nav class={"tabs",  "is-boxed": @boxed, "is-fullwidth": @expanded}>
         <ul>

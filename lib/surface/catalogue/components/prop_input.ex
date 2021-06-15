@@ -10,7 +10,7 @@ defmodule Surface.Catalogue.Components.PropInput do
   prop value, :any
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class="field is-horizontal">
       <div class="field-label is-small">
         <label class="label">{label(@prop)}</label>
@@ -34,12 +34,12 @@ defmodule Surface.Catalogue.Components.PropInput do
   defp input(%{prop: prop, value: value} = assigns) do
     case {prop.type, get_choices(prop)} do
       {:boolean, _} ->
-        ~H"""
+        ~F"""
         <Checkbox field={prop.name} value={value} opts={style: "height: 26px;"}/>
         """
 
       {:string, []} ->
-        ~H"""
+        ~F"""
         <TextInput
           field={prop.name}
           value={value}
@@ -49,14 +49,14 @@ defmodule Surface.Catalogue.Components.PropInput do
         """
 
       {:string, choices} ->
-        ~H"""
+        ~F"""
         <div class="select is-small">
           <Select field={prop.name} options={choices} selected={value}/>
         </div>
         """
 
       {:atom, []} ->
-        ~H"""
+        ~F"""
         <TextInput
           field={prop.name}
           value={value_to_string(value)}
@@ -68,14 +68,14 @@ defmodule Surface.Catalogue.Components.PropInput do
       {:atom, choices} ->
         choices = Enum.map(choices, fn {k, v} -> {inspect(k), inspect(v)} end)
 
-        ~H"""
+        ~F"""
         <div class="select is-small">
           <Select field={prop.name} options={choices} selected={value_to_string(value)}/>
         </div>
         """
 
       {:css_class, _} ->
-        ~H"""
+        ~F"""
         <TextInput
           field={prop.name}
           value={css_value_to_string(value)}
@@ -85,7 +85,7 @@ defmodule Surface.Catalogue.Components.PropInput do
         """
 
       {:integer, []} ->
-        ~H"""
+        ~F"""
         <NumberInput
           field={prop.name}
           value={value}
@@ -95,14 +95,14 @@ defmodule Surface.Catalogue.Components.PropInput do
         """
 
       {:integer, choices} ->
-        ~H"""
+        ~F"""
         <div class="select is-small">
           <Select field={prop.name} options={choices} selected={value}/>
         </div>
         """
 
       {type, []} when type in [:list, :keyword] ->
-        ~H"""
+        ~F"""
         <TextInput
           field={prop.name}
           value={value_to_string(value)}
@@ -112,7 +112,7 @@ defmodule Surface.Catalogue.Components.PropInput do
         """
 
       {type, _} ->
-        ~H"""
+        ~F"""
         <span class="is-size-7">
           [editor not available for type <b>{inspect(type)}</b>]
         </span>

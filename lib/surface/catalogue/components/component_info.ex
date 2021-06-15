@@ -48,7 +48,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
   end
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <div class="ComponentInfo">
       <h1 class="title">{@full_module_name}</h1>
       {Markdown.to_html(@doc_summary, class: "subtitle")}

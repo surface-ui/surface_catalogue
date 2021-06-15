@@ -10,7 +10,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
   prop components, :map
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <aside
      class="section column is-narrow is-narrow-mobile is-fullheight is-hidden-mobile"
      style="background-color: #f5f5f5; min-width: 270px;"
@@ -21,7 +21,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
   end
 
   def render_node(assigns, node, selected_component, single_catalogue?, parent_keys \\ []) do
-    ~H"""
+    ~F"""
     <ul class={"menu-list", "is-hidden": !show_nodes?(parent_keys, selected_component, single_catalogue?)}>
       <li :if={parent_keys == []}>
         <LivePatch
