@@ -30,9 +30,9 @@ defmodule Surface.Catalogue.LayoutView do
         <title>Component Catalogue</title>
         <link rel="icon" href="data:,">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-        <style>{{ Phoenix.HTML.raw(render("app.css")) }}</style>
-        <style>{{ Phoenix.HTML.raw(render("makeup.css")) }}</style>
-        <script>{{ Phoenix.HTML.raw(render("app.js")) }}</script>
+        {Phoenix.HTML.raw("<style>" <> render("app.css") <> "</style>")}
+        {Phoenix.HTML.raw("<style>" <> render("makeup.css") <> "</style>")}
+        {Phoenix.HTML.raw("<script>" <> render("app.js") <> "</script>")}
       </head>
       <body>
         <section class="hero is-info">
