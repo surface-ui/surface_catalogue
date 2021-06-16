@@ -1,4 +1,6 @@
 defmodule Surface.Catalogue.Components.StateDialog do
+  @moduledoc false
+
   use Surface.LiveComponent
 
   data component_id, :any, default: ""

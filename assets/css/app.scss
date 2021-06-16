@@ -142,6 +142,10 @@
   margin-bottom: 1.5rem;
 }
 
+.Example .code {
+  display: flex;
+}
+
 .Example.vertical {
   flex-direction: column;
 }

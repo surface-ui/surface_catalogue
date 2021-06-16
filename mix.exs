@@ -29,6 +29,7 @@ defmodule Surface.Catalogue.MixProject do
 
   def catalogues do
     [
+      "priv/catalogue",
       "deps/surface/priv/catalogue"
     ]
   end
