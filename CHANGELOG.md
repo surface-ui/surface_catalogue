@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.0 (2021-06-17)
+
+  * Update Surface to v0.5
+  * Add sample catalogue
+
 ## v0.0.9 (2021-06-04)
 
   * Fix updating example code when switching from one example to another (#14)
