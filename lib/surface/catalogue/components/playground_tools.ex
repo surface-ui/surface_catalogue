@@ -278,9 +278,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       payload = value |> inspect() |> Code.format_string!() |> to_string()
 
       message = """
-      #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{
-        payload
-      }\
+      #{time} - Event <span class="has-text-weight-semibold">"#{event}"</span>, Payload: #{payload}\
       """
 
       socket =
