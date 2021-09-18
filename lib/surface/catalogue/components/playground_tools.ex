@@ -100,7 +100,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
             <div class="field is-horizontal">
               <div class="field-label is-small">
-                <label class="label">Playground's sssigns</label>
+                <label class="label">Playground's assigns</label>
               </div>
               <div class="field-body">
                 <div class={:field, "has-text-grey-light": @playground_info.hibernating?}>
