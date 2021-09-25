@@ -52,6 +52,7 @@ defmodule Surface.Catalogue.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:surface, "~> 0.5.0"},
+      {:phoenix_live_view, "~> 0.16.4"},
       {:earmark, "~> 1.3"},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.15.1"}
