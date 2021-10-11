@@ -17,7 +17,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
   data has_docs?, :boolean
   data api_anchor_id, :string
 
-  def update(assigns, socket) do
+  def update(assigns) do
     prefix = if assigns.module.component_type == Surface.MacroComponent, do: "#", else: ""
 
     module_name =
@@ -34,20 +34,18 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
     has_docs? = has_summary? or has_details?
     api_anchor_id = "#{module_name}-API"
 
-    socket =
-      socket
-      |> assign(assigns)
-      |> assign(:full_module_name, full_module_name)
-      |> assign(:doc_summary, String.trim_trailing(doc_summary || "", "."))
-      |> assign(:doc_details, doc_details)
-      |> assign(:has_details?, has_details?)
-      |> assign(:has_docs?, has_docs?)
-      |> assign(:api_anchor_id, api_anchor_id)
-
-    {:ok, socket}
+    assigns
+    |> assign(assigns)
+    |> assign(:full_module_name, full_module_name)
+    |> assign(:doc_summary, String.trim_trailing(doc_summary || "", "."))
+    |> assign(:doc_details, doc_details)
+    |> assign(:has_details?, has_details?)
+    |> assign(:has_docs?, has_docs?)
+    |> assign(:api_anchor_id, api_anchor_id)
   end
 
   def render(assigns) do
+    assigns = update(assigns)
     ~F"""
     <div class="ComponentInfo">
       <h1 class="title">{@full_module_name}</h1>

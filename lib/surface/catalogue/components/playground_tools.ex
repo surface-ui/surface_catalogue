@@ -54,9 +54,9 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       <Tabs id="playground-tools-tabs" animated={false} tab_click_callback={&tab_click_callback/1}>
         <TabItem label="Properties">
           <div style="margin-top: 0.7rem;">
-            <Form for={:props_values} change="change" opts={autocomplete: "off"}>
+            <Form for={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
               {#for prop <- @props}
-                <PropInput prop={prop} value={@props_values[prop.name]}/>
+                <PropInput prop={prop} value={@props_values[prop.name]} form={form}/>
               {/for}
             </Form>
           </div>

@@ -21,7 +21,6 @@ defmodule Surface.Catalogue.Router do
           live "/examples/:example", ExampleLive
           live "/playgrounds/:playground", PlaygroundLive
         end
-
       end
     end
   end

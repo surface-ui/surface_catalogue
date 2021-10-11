@@ -18,7 +18,7 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
   data slots, :list
   data functions, :list
 
-  def update(assigns, socket) do
+  def update(assigns) do
     %{
       props: props,
       events: events,
@@ -28,19 +28,16 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
 
     has_api? = props != [] || events != [] || slots != [] || functions != []
 
-    socket =
-      socket
-      |> assign(assigns)
-      |> assign(:props, props)
-      |> assign(:events, events)
-      |> assign(:slots, slots)
-      |> assign(:functions, functions)
-      |> assign(:has_api?, has_api?)
-
-    {:ok, socket}
+    assigns
+    |> assign(:props, props)
+    |> assign(:events, events)
+    |> assign(:slots, slots)
+    |> assign(:functions, functions)
+    |> assign(:has_api?, has_api?)
   end
 
   def render(assigns) do
+    assigns = update(assigns)
     ~F"""
     <div class="ComponentAPI">
       <div :if={!@has_api?}>No public API defined.</div>
