@@ -128,15 +128,12 @@ defmodule Surface.Catalogue.Components.PropInput do
   defp css_value_to_string(nil), do: nil
   defp css_value_to_string(value), do: Enum.join(value, " ")
 
-  defp get_choices(prop) do
-    values =
-      prop.opts
-      |> Keyword.get(:values, [])
-      |> Enum.map(&{&1, &1})
+  defp get_choices(%{opts: opts}) do
+    values = for x <- Keyword.get(opts, :values, []), do: {x, x}
 
     cond do
       values == [] -> []
-      prop.opts[:required] -> values
+      opts[:required] -> values
       true -> [{"nil", "__NIL__"} | values]
     end
   end
