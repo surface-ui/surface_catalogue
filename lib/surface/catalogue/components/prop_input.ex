@@ -129,10 +129,8 @@ defmodule Surface.Catalogue.Components.PropInput do
   defp css_value_to_string(value), do: Enum.join(value, " ")
 
   defp get_choices(prop) do
-    values =
-      prop.opts
-      |> Keyword.get(:values, [])
-      |> Enum.map(&{&1, &1})
+    values = Keyword.get(prop.opts, :values, []) ++ Keyword.get(prop.opts, :values!, [])
+    values = Enum.map(values, &{&1, &1})
 
     cond do
       values == [] -> []
