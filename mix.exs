@@ -51,7 +51,7 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.16.4"},
+      {:phoenix_live_view, "~> 0.16.0"},
       {:surface, github: "surface-ui/surface"},
       {:earmark, "~> 1.3"},
       {:ex_doc, ">= 0.19.0", only: :docs},
