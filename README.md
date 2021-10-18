@@ -5,18 +5,15 @@ https://storybook.js.org/ for [Surface](https://github.com/msaraiva/surface).
 
 ## Installation
 
-Add `surface_catalogue` to your list of dependencies in `mix.exs` (development-only):
+Add `surface_catalogue` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:surface_catalogue, "~> 0.1.0", only: :dev}
+    {:surface_catalogue, "~> 0.1.0"}
   ]
 end
 ```
-
-> **Note**: If you're using VSCode with ElixirLS, you might need to replace `only: :dev` with `only: [:dev, :test]`
-to avoid warnings.
 
 Update your `router.ex` configuration:
 
@@ -92,7 +89,7 @@ may need to provide additional information about the catalogue. This will be nec
 whenever your components require any `css` or `js` code that might not be available
 on the host project.
 
-To provide that addicional information you must create a module inplementing the
+To provide that additional information you must create a module implementing the
 `Surface.Catalogue` behaviour in your `priv/catalogue/` folder. Example:
 
 ```elixir
