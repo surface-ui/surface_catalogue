@@ -11,13 +11,13 @@ defmodule Surface.Catalogue.Router do
           PlaygroundLive
         }
 
-        live_session :default, root_layout: {LayoutView, :root} do
+        live_session :catalogue, root_layout: {LayoutView, :root} do
           live "/", PageLive
           live "/components/:component/", PageLive
           live "/components/:component/:action", PageLive
         end
 
-        live_session :playgrounds, root_layout: false do
+        live_session :catalogue_playgrounds, root_layout: false do
           live "/examples/:example", ExampleLive
           live "/playgrounds/:playground", PlaygroundLive
         end
