@@ -1,0 +1,420 @@
+.menu-list li ul {
+  margin-top: .2em;
+  margin-bottom: .3em;
+}
+
+.menu-list li a {
+  padding: .4em .75em;
+}
+
+.animated.faster {
+  animation-duration: 0.3s;
+}
+
+.section {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.sidebar-bg {
+  position: absolute;
+  bottom: 0;
+  right: 50%;
+  left: 0;
+  top: 0;
+  background: #f5f5f5;
+  z-index: -1;
+}
+
+.main-content {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.component.tabs {
+  margin-bottom: 0.5rem;
+}
+
+.component.tabs li.is-active a {
+  border-bottom-width: 2px;
+}
+
+#playground-iframe {
+  resize: both;
+  border: 1px solid rgb(221, 221, 221);
+  border-radius: 3px;
+}
+
+#playground_tools .tabs {
+  margin-bottom: 0.8rem;
+}
+
+@media screen and (min-width: 769px) {
+  .main-content > div.container {
+    min-width: 500px;
+  }
+}
+
+.markdown .section-heading a.hover-link {
+  -webkit-transition: opacity .2s ease-in-out;
+  transition: opacity .2s ease-in-out;
+  display: inline-block;
+  opacity: 0;
+  line-height: 1em;
+  margin-left: -1.6em;
+  text-decoration: none;
+  border: none;
+  font-size: 16px;
+  vertical-align: baseline;
+}
+
+.markdown .section-heading:hover a.hover-link {
+  opacity: 1;
+}
+
+/* Components.ComponentInfo */
+
+.ComponentInfo .subtitle {
+  color: #7a7a7a;
+}
+
+/* Components.ComponentAPI */
+
+.ComponentAPI table{
+  font-size: .9rem;
+}
+
+.ComponentAPI .table td, .table th {
+  line-height: 1.5;
+}
+
+/* MyDemoWeb.Components.Example */
+
+.example-title {
+  padding-top: 1.5rem;
+  padding-bottom: 1.0rem;
+}
+
+.Example[hidden] {
+  display: none;
+}
+
+.Example {
+  position: relative;
+  display: flex;
+  border: 1px solid #ffdd57;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  color: rgba(0,0,0,.7);
+  margin: 2.25rem 0;
+}
+
+.Example:before {
+  background: #ffdd57;
+  border-radius: 4px 4px 0 0;
+  bottom: 100%;
+  content: "Example";
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 700;
+  left: -1px;
+  padding: 4px 8px;
+  position: absolute;
+  text-transform: uppercase;
+  vertical-align: top;
+}
+
+.Example:not(:first-child) {
+  margin-top: 2rem;
+}
+
+.Example:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.Example .code {
+  display: flex;
+}
+
+.Example.vertical {
+  flex-direction: column;
+}
+
+.Example.vertical .demo {
+  width: 100%;
+}
+
+.Example.vertical .code > pre {
+  width: 100%;
+  border-top: 1px solid #ffdd57;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.Example.horizontal {
+  flex-direction: row;
+}
+
+.Example.horizontal .demo {
+  width: 50%;
+}
+
+.Example.horizontal > div {
+  width: 50%;
+}
+
+.Example.horizontal .code {
+  border-left: 1px solid #ffdd57;
+  background: #1e1e1e;
+}
+
+.Example.horizontal .code > pre {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.Example > .code > pre {
+  padding: 0rem 1.5rem;
+  margin: 0;
+  font-size: 1em;
+}
+
+.Example > .code > pre > code {
+  font-family: Menlo, Monaco, "Courier New", monospace;
+  font-size: .9rem;
+}
+
+.Example > .code > pre > code span {
+  font-size: .9rem;
+  /* Unset Bulma defaults so Prism can take over */
+  background-color: unset;
+  display: unset;
+  padding-left: unset;
+  padding-right: unset;
+  white-space: unset;
+}
+
+.Example > .code > pre > code .token.punctuation {
+  color: rgb(128, 128, 128);
+}
+
+.Example > .code > pre > code .token.number {
+  margin-right: 0px;
+}
+
+/* Code highlight (Prism) */
+
+.markdown pre,
+pre[class*="language-"] {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  margin: 0;
+  font-size: 1em;
+  background-color: rgb(30, 30, 30);
+}
+
+pre > code[class*="language-"] {
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+pre > code[class*="language-"] span {
+  font-size: 1rem;
+  display: inherit;
+  /* Unset Bulma defaults so Prism can take over */
+  background-color: unset;
+  padding-left: unset;
+  padding-right: unset;
+  white-space: unset;
+}
+
+pre > code[class*="language-"] .token.keyword {
+  color: #c586c0;
+}
+
+pre > code[class*="language-"] .token.tag,
+pre > code[class*="language-"] .token.tag .token.punctuation,
+pre > code[class*="language-"] .token.attr-value .token.punctuation.attr-equals {
+  color: #d4d4d4;
+}
+
+pre > code[class*="language-"] .token.tag .tag-name {
+  color: #569cd6;
+}
+
+pre > code[class*="language-"] .token.tag > .token.punctuation {
+  color: rgb(128, 128, 128);
+}
+
+pre > code[class*="language-"] .token.doc .token {
+  color: rgb(106, 153, 85);
+}
+
+pre > code[class*="language-"] .embedded-surface-open,
+pre > code[class*="language-"] .embedded-surface-close,
+pre > code[class*="language-"] .token.attr-value .token.punctuation {
+  color: #ce9178;
+}
+
+/* Prism's line-numbers plugin */
+
+.markdown pre.line-numbers,
+pre[class*="language-"].line-numbers {
+	position: relative;
+	padding-left: 3.8em;
+	counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+	position: relative;
+	white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+	position: absolute;
+	pointer-events: none;
+	top: 0;
+	font-size: 100%;
+	left: -3.8em;
+	width: 3em; /* works for line-numbers below 1000 lines */
+	letter-spacing: -1px;
+	border-right: 1px solid #999;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #999;
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}
+
+/* Prism's line-highlight plugin */
+
+pre[data-line] {
+	position: relative;
+	padding: 1em 0 1em 3em;
+}
+
+.line-highlight {
+	position: absolute;
+	left: 0;
+	right: 0;
+	padding: inherit 0;
+	margin-top: 1em; /* Same as .prism’s padding-top */
+
+	background: hsla(24, 20%, 50%,.08);
+	background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+
+	pointer-events: none;
+
+	line-height: inherit;
+	white-space: pre;
+}
+
+@media print {
+	.line-highlight {
+		/*
+		 * This will prevent browsers from replacing the background color with white.
+		 * It's necessary because the element is layered on top of the displayed code.
+		 */
+		-webkit-print-color-adjust: exact;
+		color-adjust: exact;
+	}
+}
+
+	.line-highlight:before,
+	.line-highlight[data-end]:after {
+		content: attr(data-start);
+		position: absolute;
+		top: .4em;
+		left: .6em;
+		min-width: 1em;
+		padding: 0 .5em;
+		background-color: hsla(24, 20%, 50%,.4);
+		color: hsl(24, 20%, 95%);
+		font: bold 65%/1.5 sans-serif;
+		text-align: center;
+		vertical-align: .3em;
+		border-radius: 999px;
+		text-shadow: none;
+		box-shadow: 0 1px white;
+	}
+
+	.line-highlight[data-end]:after {
+		content: attr(data-end);
+		top: auto;
+		bottom: .4em;
+	}
+
+.line-numbers .line-highlight:before,
+.line-numbers .line-highlight:after {
+	content: none;
+}
+
+pre[id].linkable-line-numbers span.line-numbers-rows {
+	pointer-events: all;
+}
+pre[id].linkable-line-numbers span.line-numbers-rows > span:before {
+	cursor: pointer;
+}
+pre[id].linkable-line-numbers span.line-numbers-rows > span:hover:before {
+	background-color: rgba(128, 128, 128, .2);
+}
+
+pre.language-mermaid {
+  background-color: transparent;
+}
+
+pre > code.language-mermaid {
+  visibility: hidden;
+}
+
+/* Mermaid */
+
+pre > code.language-mermaid .messageText {
+  stroke: none !important;
+  font-weight: bold !important;
+}
+
+pre > code[data-processed="true"].language-mermaid {
+  visibility: visible;
+}
+
+#playground-tools-debug-profile .field-label > label {
+  width: 180px;
+}
+
+#playground-tools-state .field-label > label {
+  width: 270px;
+}
+
+#playground-tools-state .field-body > .field {
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+}
+
+#playground-tools-state-instances .field-label > label {
+  width: 270px;
+}
+
+#playground-tools-state-instances .field-body > .field {
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+}

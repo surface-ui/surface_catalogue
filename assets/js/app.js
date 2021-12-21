@@ -1,4 +1,7 @@
-import "../css/app.scss"
+import "../css/prism-vsc-dark-plus.css";
+import "../css/bulma.css";
+import "../css/animate.css";
+import "../css/app.css";
 
 // webpack automatically bundles all modules in your
 // entry points. Those entry points can be configured
@@ -12,9 +15,10 @@ import "../css/app.scss"
 import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
-import Prism from './prism.js';
-import mermaid from "mermaid"
-mermaid.initialize({startOnLoad:false});
+import Prism from '../vendor/prism.js';
+// Uncomment when we start using mermaid
+// import mermaid from "mermaid"
+// mermaid.initialize({startOnLoad:false});
 
 window.togggleNode = (a) => {
   a.parentNode.querySelector('.menu-list').classList.toggle('is-hidden')

@@ -92,7 +92,7 @@ defmodule SurfaceCatalogue.SampleComponents.Button do
         "is-selected": @selected
       ] ++ @class}
       {...@opts}>
-      <slot>{@label}</slot>
+      <#slot>{@label}</#slot>
     </button>
     """
   end

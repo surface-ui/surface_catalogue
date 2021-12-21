@@ -5,14 +5,15 @@ defmodule Surface.Catalogue.LayoutView do
 
   import Surface
 
-  js_path = Path.join(__DIR__, "../../../priv/static/js/app.js")
-  css_path = Path.join(__DIR__, "../../../priv/static/css/app.css")
+
+  js_path = Path.join(__DIR__, "../../../priv/static/assets/app.js")
+  css_path = Path.join(__DIR__, "../../../priv/static/assets/app.css")
 
   @external_resource js_path
   @external_resource css_path
 
-  @app_js File.read!(js_path)
-  @app_css File.read!(css_path)
+  @app_js if File.exists?(js_path), do: File.read!(js_path), else: ""
+  @app_css if File.exists?(css_path), do: File.read!(css_path), else: ""
   @makeup_css Makeup.stylesheet(Makeup.Styles.HTML.StyleMap.monokai_style(), "makeup-highlight")
 
   def render("app.js", _), do: @app_js

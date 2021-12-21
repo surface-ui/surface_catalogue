@@ -50,7 +50,7 @@ defmodule Surface.Catalogue.Server do
       at: "/",
       from: :surface_catalogue,
       gzip: false,
-      only: ~w(css js)
+      only: ~w(assets)
 
     plug Plug.Session,
       store: :cookie,

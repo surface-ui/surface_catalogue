@@ -4,13 +4,7 @@ Logger.configure(level: :debug)
 
 Surface.Catalogue.Server.start(
   watchers: [
-    node: [
-      "node_modules/webpack/bin/webpack.js",
-      "--mode",
-      System.get_env("NODE_ENV") || "production",
-      "--watch-stdin",
-      cd: "assets"
-    ]
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
   ],
   live_reload: [
     patterns: [
