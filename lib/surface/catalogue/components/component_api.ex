@@ -38,6 +38,7 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
 
   def render(assigns) do
     assigns = update(assigns)
+
     ~F"""
     <div class="ComponentAPI">
       <div :if={!@has_api?}>No public API defined.</div>

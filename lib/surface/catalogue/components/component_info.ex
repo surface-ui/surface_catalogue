@@ -46,6 +46,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
 
   def render(assigns) do
     assigns = update(assigns)
+
     ~F"""
     <div class="ComponentInfo">
       <h1 class="title">{@full_module_name}</h1>

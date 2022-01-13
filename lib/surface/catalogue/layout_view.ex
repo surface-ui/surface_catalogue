@@ -5,7 +5,6 @@ defmodule Surface.Catalogue.LayoutView do
 
   import Surface
 
-
   js_path = Path.join(__DIR__, "../../../priv/static/assets/app.js")
   css_path = Path.join(__DIR__, "../../../priv/static/assets/app.css")
 
