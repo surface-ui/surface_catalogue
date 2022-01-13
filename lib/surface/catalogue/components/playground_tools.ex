@@ -438,7 +438,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   defp convert_prop_value(:css_class, value, _old_value, _type_opts) do
-    case Surface.TypeHandler.CssClass.expr_to_value([value], []) do
+    case Surface.TypeHandler.CssClass.expr_to_value([value], [], %{}) do
       {:ok, value} -> value
       _ -> ""
     end

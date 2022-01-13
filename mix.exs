@@ -53,7 +53,7 @@ defmodule Surface.Catalogue.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:surface, github: "surface-ui/surface", ref: "f5cbb1c859ba1e086e545a8967273f03e9a90a36", override: true},
+      {:surface, "~> 0.7.0"},
       {:earmark, "~> 1.3"},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.15.1"}

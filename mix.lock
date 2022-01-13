@@ -26,6 +26,6 @@
   "plug_crypto": {:hex, :plug_crypto, "1.2.2", "05654514ac717ff3a1843204b424477d9e60c143406aa94daf2274fdd280794d", [:mix], [], "hexpm", "87631c7ad914a5a445f0a3809f99b079113ae4ed4b867348dd9eec288cecb6db"},
   "ranch": {:hex, :ranch, "1.8.0", "8c7a100a139fd57f17327b6413e4167ac559fbc04ca7448e9be9057311597a1d", [:make, :rebar3], [], "hexpm", "49fbcfd3682fab1f5d109351b61257676da1a2fdbe295904176d5e521a2ddfe5"},
   "sourceror": {:hex, :sourceror, "0.9.0", "77e8f883be9455812d15913582d2985048ef65d7d931072c548e025a6ea58d5a", [:mix], [], "hexpm", "f56fb5b935df7784504f7d1ba074e0aa83299e2ebd64f75268ffcae62a28f331"},
-  "surface": {:git, "https://github.com/surface-ui/surface.git", "f5cbb1c859ba1e086e545a8967273f03e9a90a36", [ref: "f5cbb1c859ba1e086e545a8967273f03e9a90a36"]},
+  "surface": {:hex, :surface, "0.7.0", "49473f108713585a335e1f9fc1eecad240f55fcdda365cc6e9f03f8dc605f803", [:mix], [{:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: false]}, {:phoenix_live_view, "~> 0.17.4", [hex: :phoenix_live_view, repo: "hexpm", optional: false]}, {:sourceror, "~> 0.9", [hex: :sourceror, repo: "hexpm", optional: false]}], "hexpm", "31b6d74abff6dec748a66708b6579d92c7f051eefdeba2eff0c27937090ce93c"},
   "telemetry": {:hex, :telemetry, "1.0.0", "0f453a102cdf13d506b7c0ab158324c337c41f1cc7548f0bc0e130bbf0ae9452", [:rebar3], [], "hexpm", "73bc09fa59b4a0284efb4624335583c528e07ec9ae76aca96ea0673850aec57a"},
 }
