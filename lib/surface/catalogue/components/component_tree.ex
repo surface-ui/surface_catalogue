@@ -57,7 +57,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
           {render_node(assigns, value, selected_component, single_catalogue?, mod_path)}
         </li>
         <li :if={value != %{} && (!@single_catalogue? || parent_keys != [])}>
-          <a href="#" onclick="togggleNode(this)">
+          <a href="#" onclick="toggleNode(this)">
             <span class="icon">
               <i class={:far, "fa-folder-open": has_child_selected?, "fa-folder": !has_child_selected?}></i>
             </span> {key}
