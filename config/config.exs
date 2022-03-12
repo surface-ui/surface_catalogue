@@ -14,3 +14,7 @@ config :esbuild,
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
+
+# When running `mix dev` inside `surface_catalogue`, there's no need to have the
+# assets in "/assets/catalogue" as they are the same we already have in `/assets`.
+config :surface_catalogue, :assets_path, "/assets"
