@@ -20,7 +20,7 @@ import Prism from '../vendor/prism.js';
 // import mermaid from "mermaid"
 // mermaid.initialize({startOnLoad:false});
 
-window.togggleNode = (a) => {
+window.toggleNode = (a) => {
   a.parentNode.querySelector('.menu-list').classList.toggle('is-hidden')
   const i = a.querySelector('span.icon > i')
   i.classList.toggle('fa-folder-open')
