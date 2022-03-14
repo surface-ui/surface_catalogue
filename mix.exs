@@ -52,8 +52,7 @@ defmodule Surface.Catalogue.MixProject do
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:surface, "~> 0.7.0"},
-      {:earmark, "1.4.19"},
-      {:earmark_parser, "1.4.17", override: true},
+      {:earmark, "~>1.4.19"},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.15.1"}
     ]

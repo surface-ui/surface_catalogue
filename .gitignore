@@ -26,3 +26,5 @@ surface_catalogue-*.tar
 /tmp
 
 node_modules
+
+/priv/static/
