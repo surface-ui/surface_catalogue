@@ -1,7 +1,7 @@
 defmodule Surface.Catalogue.MixProject do
   use Mix.Project
 
-  @version "0.3.0"
+  @version "0.4.0-dev"
 
   def project do
     [
@@ -40,9 +40,7 @@ defmodule Surface.Catalogue.MixProject do
 
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"],
-      dev: "run --no-halt dev.exs",
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      dev: "run --no-halt dev.exs"
     ]
   end
 
@@ -54,7 +52,8 @@ defmodule Surface.Catalogue.MixProject do
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:surface, "~> 0.7.0"},
-      {:earmark, "~> 1.3"},
+      {:earmark, "1.4.19"},
+      {:earmark_parser, "1.4.17", override: true},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.15.1"}
     ]
@@ -70,7 +69,10 @@ defmodule Surface.Catalogue.MixProject do
   defp package do
     %{
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/surface-ui/surface_catalogue"}
+      links: %{"GitHub" => "https://github.com/surface-ui/surface_catalogue"},
+      files:
+        ~w(assets lib priv) ++
+          ~w(CHANGELOG.md LICENSE.md mix.exs package.json README.md)
     }
   end
 end

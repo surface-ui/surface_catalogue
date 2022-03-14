@@ -10,7 +10,7 @@ Add `surface_catalogue` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:surface_catalogue, "~> 0.3.0"}
+    {:surface_catalogue, "~> 0.4.0"}
   ]
 end
 ```
@@ -30,6 +30,30 @@ if Mix.env() == :dev do
     surface_catalogue "/catalogue"
   end
 end
+```
+
+Add a `catalogue` entry in the `:esbuild` config in `config.exs`:
+
+```elixir
+config :esbuild,
+  ...
+  catalogue: [
+    args: ~w(../deps/surface_catalogue/assets/js/app.js --bundle --target=es2016 --minify --outdir=../priv/static/assets/catalogue),
+    cd: Path.expand("../assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+```
+
+Then update the endpoint configuration in `config/dev.exs` to set up the esbuild watcher
+for `catalogue`:
+
+```elixir
+config :my_app, MyAppWeb.Endpoint,
+  ...
+  watchers: [
+    ...,
+    esbuild: {Esbuild, :install_and_run, [:catalogue, ~w(--sourcemap=inline --watch)]},
+  ]
 ```
 
 That's all!

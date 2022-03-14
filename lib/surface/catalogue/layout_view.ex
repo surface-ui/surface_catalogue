@@ -5,18 +5,8 @@ defmodule Surface.Catalogue.LayoutView do
 
   import Surface
 
-  js_path = Path.join(__DIR__, "../../../priv/static/assets/app.js")
-  css_path = Path.join(__DIR__, "../../../priv/static/assets/app.css")
-
-  @external_resource js_path
-  @external_resource css_path
-
-  @app_js if File.exists?(js_path), do: File.read!(js_path), else: ""
-  @app_css if File.exists?(css_path), do: File.read!(css_path), else: ""
   @makeup_css Makeup.stylesheet(Makeup.Styles.HTML.StyleMap.monokai_style(), "makeup-highlight")
 
-  def render("app.js", _), do: @app_js
-  def render("app.css", _), do: @app_css
   def render("makeup.css", _), do: @makeup_css
 
   def render(_, assigns) do
@@ -30,9 +20,9 @@ defmodule Surface.Catalogue.LayoutView do
         <title>Component Catalogue</title>
         <link rel="icon" href="data:,">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-        {Phoenix.HTML.raw("<style>" <> render("app.css") <> "</style>")}
+        <link phx-track-static rel="stylesheet" href={assets_file("app.css")}/>
         {Phoenix.HTML.raw("<style>" <> render("makeup.css") <> "</style>")}
-        {Phoenix.HTML.raw("<script>" <> render("app.js") <> "</script>")}
+        <script defer phx-track-static type="text/javascript" src={assets_file("app.js")}></script>
       </head>
       <body>
         <section class="hero is-info">
@@ -59,6 +49,11 @@ defmodule Surface.Catalogue.LayoutView do
       </body>
     </html>
     """
+  end
+
+  defp assets_file(file) do
+    path = Application.get_env(:surface_catalogue, :assets_path) || "/assets/catalogue/"
+    Path.join(path, file)
   end
 
   defp surface_version() do
