@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.0 (2022-03-14)
+
+  * Use a separate esbuild configuration to build the catalogue app's assets
+  * Fix JS incompatibility with Liveview >= v0.17.6 (#31)
+
 ## v0.3.0 (2022-01-13)
 
   * Update Surface to v0.7
