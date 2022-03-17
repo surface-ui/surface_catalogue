@@ -32,11 +32,12 @@ if Mix.env() == :dev do
 end
 ```
 
-Add a `catalogue` entry in the `:esbuild` config in `config.exs`:
+Add a `:catalogue` entry in the `:esbuild` config in `config.exs`:
 
 ```elixir
 config :esbuild,
-  ...
+  default: ...,
+  # Add a new entry for the catalogue
   catalogue: [
     args: ~w(../deps/surface_catalogue/assets/js/app.js --bundle --target=es2016 --minify --outdir=../priv/static/assets/catalogue),
     cd: Path.expand("../assets", __DIR__),
@@ -44,14 +45,15 @@ config :esbuild,
   ]
 ```
 
-Then update the endpoint configuration in `config/dev.exs` to set up the esbuild watcher
+Then update the endpoint configuration in `config/dev.exs` to add an esbuild watcher
 for `catalogue`:
 
 ```elixir
 config :my_app, MyAppWeb.Endpoint,
   ...
   watchers: [
-    ...,
+    esbuild: ...,
+    # Add an esbuild watcher for :catalogue
     esbuild: {Esbuild, :install_and_run, [:catalogue, ~w(--sourcemap=inline --watch)]},
   ]
 ```
