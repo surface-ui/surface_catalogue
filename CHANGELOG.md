@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.1 (2022-03-21)
+  * Upgrade to earmark 1.4.23, earmark_parser 1.4.24, surface 0.7.3
+  * Stop passing `smartypants` to Earmark
+  * Fix deprecation warnings crashing catalogue
+
 ## v0.4.0 (2022-03-14)
 
   * Use a separate esbuild configuration to build the catalogue app's assets
