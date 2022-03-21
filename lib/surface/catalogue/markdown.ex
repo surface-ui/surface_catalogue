@@ -17,9 +17,9 @@ defmodule Surface.Catalogue.Markdown do
       |> String.trim_leading()
 
     html =
-      case Earmark.as_html(markdown, smartypants: false, code_class_prefix: "language-") do
+      case Earmark.as_html(markdown, code_class_prefix: "language-") do
         {:ok, html, messages} ->
-          Enum.each(messages, fn msg -> IO.warn(msg) end)
+          Enum.each(messages, &warn/1)
           html
 
         {:error, html, messages} ->
@@ -33,10 +33,10 @@ defmodule Surface.Catalogue.Markdown do
               #{text}
               """
 
-              IO.warn(message)
+              warn(message)
 
             msg ->
-              IO.warn(msg)
+              warn(msg)
           end)
 
           html
@@ -47,6 +47,14 @@ defmodule Surface.Catalogue.Markdown do
       {:safe, html}
     else
       {:safe, ~s(<div class="#{class}">#{html}</div>)}
+    end
+  end
+
+  defp warn(val) do
+    if is_binary(val) do
+      IO.warn(val)
+    else
+      val |> inspect() |> IO.warn()
     end
   end
 end
