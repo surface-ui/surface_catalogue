@@ -1,7 +1,7 @@
 # Changelog
 
 ## v0.4.1 (2022-03-21)
-  * Upgrade to earmark 1.4.23, earmark_parser 1.4.24, surface 0.7.3
+  * Upgrade to earmark 1.4.23, earmark_parser 1.4.24
   * Stop passing `smartypants` to Earmark
   * Fix deprecation warnings crashing catalogue
 
