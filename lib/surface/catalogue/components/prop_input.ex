@@ -86,6 +86,16 @@ defmodule Surface.Catalogue.Components.PropInput do
          form={form}/>
         """
 
+      {:number, []} ->
+        ~F"""
+        <NumberInput
+          field={prop.name}
+          value={value}
+          class="input is-small"
+          opts={placeholder: value == nil && "nil"}
+         form={form}/>
+        """
+
       {:integer, []} ->
         ~F"""
         <NumberInput
