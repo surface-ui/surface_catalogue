@@ -428,6 +428,13 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     nil
   end
 
+  defp convert_prop_value(:number, value, _old_value, _type_opts) do
+    case Float.parse(value) do
+      {float, _} -> float
+      _ -> 0.0
+    end
+  end
+
   defp convert_prop_value(:integer, value, _old_value, _type_opts) do
     String.to_integer(value)
   end
