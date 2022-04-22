@@ -12,7 +12,7 @@ defmodule Surface.Catalogue.PageLive do
   data component_module, :module
   data has_example?, :boolean
   data has_playground?, :boolean
-  data components, :map, default: %{}
+  data components, :any, default: []
   data action, :string
   data examples_and_playgrounds, :map, default: %{}
   data examples, :list, default: []
@@ -29,13 +29,15 @@ defmodule Surface.Catalogue.PageLive do
       if connected?(socket) do
         {components, examples_and_playgrounds} = Util.get_components_info()
 
+        extendable_sort_components = components |> Surface.Catalogue.ExtendableSort.handle()
+
         catalogues = Application.get_env(:surface_catalogue, :catalogues) || []
         home_view = Application.get_env(:surface_catalogue, :home_view)
         single_catalogue? = length(catalogues) == 1
 
         socket
         |> maybe_assign_window_id(params, session)
-        |> assign(:components, components)
+        |> assign(:components, extendable_sort_components)
         |> assign(:single_catalogue?, single_catalogue?)
         |> assign(:home_view, home_view)
         |> assign(:examples_and_playgrounds, examples_and_playgrounds)
@@ -76,7 +78,7 @@ defmodule Surface.Catalogue.PageLive do
       <div class="sidebar-bg"/>
       <div class="container is-fullhd">
         <section class="main-content columns">
-          <ComponentTree
+          <Surface.Catalogue.Components.ExtendableSort.Tree
             id="component-tree"
             components={@components}
             selected_component={@component_name}
@@ -86,6 +88,7 @@ defmodule Surface.Catalogue.PageLive do
             <div :if={!@component_module and @home_view}>
               {live_render(@socket, @home_view, id: "home_view")}
             </div>
+
             <div :if={!@component_module and !@home_view} class="columns is-centered is-vcentered is-mobile" style="height: 300px">
               <div class="column is-narrow has-text-centered subtitle has-text-grey">
                 No component selected
