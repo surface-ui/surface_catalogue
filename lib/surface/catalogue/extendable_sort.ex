@@ -9,9 +9,7 @@ defmodule Surface.Catalogue.ExtendableSort do
   def get_sort_config do
     Application.get_env(:surface_catalogue, :sort, [
       Surface.Catalogue.ExtendableSort.Adapters.CategoryFirst,
-      Surface.Catalogue.ExtendableSort.Adapters.ByCodeDirectory,
-      Surface.Catalogue.ExtendableSort.Adapters.ByModuleABC,
-      Surface.Catalogue.ExtendableSort.Adapters.ByTags
+      Surface.Catalogue.ExtendableSort.Adapters.ByCatalogueABC
     ])
   end
 
