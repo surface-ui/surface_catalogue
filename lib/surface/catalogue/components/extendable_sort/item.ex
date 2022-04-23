@@ -13,13 +13,9 @@ defmodule Surface.Catalogue.Components.ExtendableSort.Item do
   def render(assigns, node) when is_list(node) do
     ~F"""
       {#for item <- node}
-        {#if item.__struct__ == Surface.Catalogue.ExtendableSort.Category}
-          <ul>
-            {render(assigns, item)}
-          </ul>
-        {#else}
+
           {render(assigns, item)}
-        {/if}
+
       {#else}
         <div></div>
       {/for}
