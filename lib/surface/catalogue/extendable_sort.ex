@@ -12,4 +12,26 @@ defmodule Surface.Catalogue.ExtendableSort do
       Surface.Catalogue.ExtendableSort.Sort.ByTags
     ])
   end
+
+  def run_extendable(ast, module) do
+    case apply(module, :apply, [ast]) do
+      {:ok, returned_ast} ->
+        {:ok, returned_ast}
+
+      {:error, _message} ->
+        {:error, ast}
+
+      _ ->
+        {:error, ast}
+    end
+  end
+
+  def apply_sort_list(init_ast, [head | tail] = _sort_modules) do
+    {_resp_type, ast} = run_extendable(init_ast, head)
+    apply_sort_list(ast, tail)
+  end
+
+  def apply_sort_list(ast, [] = _sort_modules) do
+    ast
+  end
 end
