@@ -1,15 +1,17 @@
 defmodule Surface.Catalogue.ExtendableSort do
-  def handle(surface_ast) do
+  def handle(surface_ast, config \\ []) do
     surface_ast
     |> Surface.Catalogue.ExtendableSort.MapHandler.to_extendable_sort()
     |> Surface.Catalogue.ExtendableSort.Builder.from_map()
+    |> apply_sort_list(get_sort_config())
   end
 
   def get_sort_config do
     Application.get_env(:surface_catalogue, :sort, [
-      Surface.Catalogue.ExtendableSort.Sort.ByCodeDirectory,
-      Surface.Catalogue.ExtendableSort.Sort.ByModule,
-      Surface.Catalogue.ExtendableSort.Sort.ByTags
+      Surface.Catalogue.ExtendableSort.Adapters.CategoryFirst,
+      Surface.Catalogue.ExtendableSort.Adapters.ByCodeDirectory,
+      Surface.Catalogue.ExtendableSort.Adapters.ByModuleABC,
+      Surface.Catalogue.ExtendableSort.Adapters.ByTags
     ])
   end
 
