@@ -55,7 +55,7 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
               <code>{inspect(prop.type)}</code>
             </Column>
             <Column label="Values">
-              {format_values(prop.opts[:values])}
+              {format_values(prop.opts[:values] || prop.opts[:values!])}
             </Column>
             <Column label="Default">
               {format_default(prop.opts)}
