@@ -68,7 +68,10 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
               <code>{slot.name}</code>
             </Column>
             <Column label="Description">
-            {format_required(slot)} {slot.doc |> format_desc() |> Markdown.to_html(strip: true)}
+              {format_required(slot)} {slot.doc |> format_desc() |> Markdown.to_html(strip: true)}
+            </Column>
+            <Column label="Arguments">
+              {format_args(slot.opts_ast)}
             </Column>
           </Table>
         </TabItem>
@@ -132,6 +135,22 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
 
   defp format_value(value) do
     inspect(value)
+  end
+
+  defp format_args(opts) when opts in [nil, []] do
+    "—"
+  end
+
+  defp format_args(opts) do
+    if Keyword.has_key?(opts, :args) do
+      opts[:args]
+      |> Enum.map(fn key ->
+        raw(["<code>", inspect(key), "</code>"])
+      end)
+      |> Enum.intersperse(", ")
+    else
+      "—"
+    end
   end
 
   defp format_default(opts) do
