@@ -314,22 +314,24 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         %{"_target" => ["props_values", prop_name], "props_values" => props_values},
         socket
       ) do
-    {new_props, new_props_values} =
-      convert_props_and_props_values(
+    {fun, prop_name, new_props_values} =
+      convert_props_values(
         prop_name,
         props_values,
         socket.assigns.props_values,
-        socket.assigns.component_module,
-        socket.assigns.props
+        socket.assigns.component_module
       )
 
-    updated_props_values = Map.merge(socket.assigns.props_values, new_props_values)
+    update_props = fun.(socket.assigns.props, prop_name)
+
+    updated_props_values =
+      Map.merge(socket.assigns.props_values, convert_to_map(prop_name, new_props_values))
 
     if socket.assigns[:playground_pid] do
       send(socket.assigns.playground_pid, {:update_props, updated_props_values})
     end
 
-    {:noreply, assign(socket, props: new_props, props_values: updated_props_values)}
+    {:noreply, assign(socket, props: update_props, props_values: updated_props_values)}
   end
 
   def handle_event(
@@ -397,34 +399,30 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     update(socket, :event_log_counter, &(&1 + 1))
   end
 
-  defp convert_props_and_props_values(prop_key, props_values, old_values, component, props) do
+  defp convert_props_values(prop_key, props_values, old_values, component) do
     prop_name = String.to_atom(prop_key)
     prop_info = component.__get_prop__(prop_name)
 
     if valid_input_value?(prop_info.type, props_values[prop_key]) do
       {
-        remove_error_into_props(props, prop_name),
-        convert_to_map(
-          prop_name,
-          convert_prop_value(
-            prop_info.type,
-            props_values[prop_key],
-            old_values[prop_name],
-            prop_info.opts
-          )
+        &remove_error_into_props/2,
+        prop_name,
+        convert_prop_value(
+          prop_info.type,
+          props_values[prop_key],
+          old_values[prop_name],
+          prop_info.opts
         )
       }
     else
       {
-        put_error_into_props(props, prop_name),
-        convert_to_map(
-          prop_name,
-          convert_prop_value(
-            prop_info.type,
-            old_values[prop_name],
-            old_values[prop_name],
-            prop_info.opts
-          )
+        &put_error_into_props/2,
+        prop_name,
+        convert_prop_value(
+          prop_info.type,
+          old_values[prop_name],
+          old_values[prop_name],
+          prop_info.opts
         )
       }
     end
