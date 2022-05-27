@@ -403,7 +403,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
     if valid_input_value?(prop_info.type, props_values[prop_key]) do
       {
-        remove_error_into_props(props),
+        remove_error_into_props(props, prop_name),
         convert_to_map(
           prop_name,
           convert_prop_value(
@@ -434,9 +434,13 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     Enum.into([{prop_name, prop_value}], %{})
   end
 
-  defp remove_error_into_props(props) do
+  defp remove_error_into_props(props, prop_name) do
     Enum.map(props, fn prop ->
-      Map.drop(prop, [:error])
+      if prop.name == prop_name do
+        Map.drop(prop, [:error])
+      else
+        prop
+      end
     end)
   end
 
