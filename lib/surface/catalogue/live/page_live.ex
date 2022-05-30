@@ -134,8 +134,8 @@ defmodule Surface.Catalogue.PageLive do
                       <div class="demo" style={"width: #{example.demo_perc}%"}>
                         <iframe
                           scrolling={if example.scrolling, do: "yes", else: "no"}
-                          id={"example-iframe-#{index}"}
-                          src={path_to(@socket, ExampleLive, example.module_name, __window_id__: @__window_id__)}
+                          id={"example-iframe-#{index}-#{example.func}"}
+                          src={path_to(@socket, ExampleLive, example.module_name, __window_id__: @__window_id__, func: example.func)}
                           style={"overflow-y: hidden; width: 100%; height: #{example.height};"}
                           frameborder="0"
                           phx-hook="IframeBody"
@@ -144,7 +144,7 @@ defmodule Surface.Catalogue.PageLive do
 
                       <div class="code" style={"width: #{example.code_perc}%"}>
                         <pre class="language-surface">
-                          <code class="content language-surface" phx-hook="Highlight" id={"example-code-#{index}"}>
+                          <code class="content language-surface" phx-hook="Highlight" id={"example-code-#{index}-#{example.func}"}>
     {example.code}</code>
                         </pre>
                       </div>

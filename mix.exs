@@ -51,7 +51,8 @@ defmodule Surface.Catalogue.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:surface, "~> 0.7.0"},
+      # {:surface, "~> 0.7.0"},
+      {:surface, path: "../surface"},
       {:earmark, "~>1.4.21"},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.15.1"}
