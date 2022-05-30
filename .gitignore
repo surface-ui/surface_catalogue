@@ -28,3 +28,5 @@ surface_catalogue-*.tar
 node_modules
 
 /priv/static/
+
+.DS_Store
