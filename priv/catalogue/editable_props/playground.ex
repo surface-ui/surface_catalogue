@@ -1,7 +1,7 @@
-defmodule SurfaceCatalogue.SampleComponents.SampleInputField.Playground do
+defmodule SurfaceCatalogue.SampleComponents.EditableProps.Playground do
   use Surface.Catalogue.Playground,
     catalogue: Surface.Components.Catalogue,
-    subject: SurfaceCatalogue.SampleComponents.SampleInputField,
+    subject: SurfaceCatalogue.SampleComponents.EditableProps,
     height: "355px"
 
   data props, :map,
@@ -19,7 +19,7 @@ defmodule SurfaceCatalogue.SampleComponents.SampleInputField.Playground do
 
   def render(assigns) do
     ~F"""
-    <SampleInputField {...@props}/>
+    <EditableProps {...@props}/>
     """
   end
 end
