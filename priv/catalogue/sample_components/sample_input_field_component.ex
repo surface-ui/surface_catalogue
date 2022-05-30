@@ -1,6 +1,6 @@
-defmodule SurfaceCatalogue.SampleComponents.SampleInputField do
+defmodule SurfaceCatalogue.SampleComponents.EditableProps do
   @moduledoc """
-  The sample **input** field component cover all the inputs available in Playground.
+  A sample component that defines props of all types that can be edited in the Playground.
   """
   use Surface.Component
 
