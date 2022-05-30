@@ -18,3 +18,5 @@ config :esbuild,
 # When running `mix dev` inside `surface_catalogue`, there's no need to have the
 # assets in "/assets/catalogue" as they are the same we already have in `/assets`.
 config :surface_catalogue, :assets_path, "/assets"
+
+import_config "#{Mix.env()}.exs"
