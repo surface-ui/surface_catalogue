@@ -38,6 +38,8 @@ defmodule Surface.Catalogue.Components.PropInput do
       {:boolean, _} ->
         ~F"""
         <Checkbox field={prop.name} value={value} opts={style: "height: 26px;"} form={form}/>
+
+        {error_message(prop)}
         """
 
       {:string, []} ->
@@ -48,6 +50,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           class="input is-small"
           opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
          form={form}/>
+
+        {error_message(prop)}
         """
 
       {:string, choices} ->
@@ -55,6 +59,8 @@ defmodule Surface.Catalogue.Components.PropInput do
         <div class="select is-small">
           <Select field={prop.name} options={choices} selected={value} form={form}/>
         </div>
+
+        {error_message(prop)}
         """
 
       {:atom, []} ->
@@ -65,6 +71,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           class="input is-small"
           opts={placeholder: value == nil && "nil"}
          form={form}/>
+
+        {error_message(prop)}
         """
 
       {:atom, choices} ->
@@ -74,6 +82,8 @@ defmodule Surface.Catalogue.Components.PropInput do
         <div class="select is-small">
           <Select field={prop.name} options={choices} selected={value_to_string(value)} form={form}/>
         </div>
+
+        {error_message(prop)}
         """
 
       {:css_class, _} ->
@@ -84,6 +94,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           class="input is-small"
           opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
          form={form}/>
+
+        {error_message(prop)}
         """
 
       {:number, []} ->
@@ -94,6 +106,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           class="input is-small"
           opts={placeholder: value == nil && "nil"}
          form={form}/>
+
+        {error_message(prop)}
         """
 
       {:integer, []} ->
@@ -104,6 +118,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           class="input is-small"
           opts={placeholder: value == nil && "nil"}
          form={form}/>
+
+        {error_message(prop)}
         """
 
       {:integer, choices} ->
@@ -111,6 +127,8 @@ defmodule Surface.Catalogue.Components.PropInput do
         <div class="select is-small">
           <Select field={prop.name} options={choices} selected={value} form={form}/>
         </div>
+
+        {error_message(prop)}
         """
 
       {type, []} when type in [:list, :keyword] ->
@@ -121,6 +139,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           class="input is-small"
           opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
          form={form}/>
+
+        {error_message(prop)}
         """
 
       {type, _} ->
@@ -147,5 +167,16 @@ defmodule Surface.Catalogue.Components.PropInput do
       prop.opts[:required] -> values
       true -> [{"nil", "__NIL__"} | values]
     end
+  end
+
+  defp error_message(%{error: _} = assigns) do
+    ~F"""
+    <p class="help is-danger">Value must be a {@type}</p>
+    """
+  end
+
+  defp error_message(assigns) do
+    ~F"""
+    """
   end
 end

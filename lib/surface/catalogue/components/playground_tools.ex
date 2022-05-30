@@ -309,21 +309,29 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     {:noreply, assign(socket, :selected_tab_index, index)}
   end
 
-  def handle_event("change", %{"props_values" => props_values}, socket) do
-    new_props_values =
+  def handle_event(
+        "change",
+        %{"_target" => ["props_values", prop_name], "props_values" => props_values},
+        socket
+      ) do
+    {fun, prop_name, new_props_values} =
       convert_props_values(
+        prop_name,
         props_values,
         socket.assigns.props_values,
         socket.assigns.component_module
       )
 
-    updated_props_values = Map.merge(socket.assigns.props_values, new_props_values)
+    update_props = fun.(socket.assigns.props, prop_name)
+
+    updated_props_values =
+      Map.merge(socket.assigns.props_values, convert_to_map(prop_name, new_props_values))
 
     if socket.assigns[:playground_pid] do
       send(socket.assigns.playground_pid, {:update_props, updated_props_values})
     end
 
-    {:noreply, assign(socket, :props_values, updated_props_values)}
+    {:noreply, assign(socket, props: update_props, props_values: updated_props_values)}
   end
 
   def handle_event(
@@ -391,14 +399,57 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     update(socket, :event_log_counter, &(&1 + 1))
   end
 
-  defp convert_props_values(props_values, old_values, component) do
-    for {k_str, value} <- props_values, into: %{} do
-      prop_name = String.to_atom(k_str)
-      prop_info = component.__get_prop__(prop_name)
+  defp convert_props_values(prop_key, props_values, old_values, component) do
+    prop_name = String.to_atom(prop_key)
+    prop_info = component.__get_prop__(prop_name)
 
-      {prop_name,
-       convert_prop_value(prop_info.type, value, old_values[prop_name], prop_info.opts)}
+    if valid_input_value?(prop_info.type, props_values[prop_key]) do
+      {
+        &remove_error_into_props/2,
+        prop_name,
+        convert_prop_value(
+          prop_info.type,
+          props_values[prop_key],
+          old_values[prop_name],
+          prop_info.opts
+        )
+      }
+    else
+      {
+        &put_error_into_props/2,
+        prop_name,
+        convert_prop_value(
+          prop_info.type,
+          old_values[prop_name],
+          old_values[prop_name],
+          prop_info.opts
+        )
+      }
     end
+  end
+
+  defp convert_to_map(prop_name, prop_value) do
+    Enum.into([{prop_name, prop_value}], %{})
+  end
+
+  defp remove_error_into_props(props, prop_name) do
+    Enum.map(props, fn prop ->
+      if prop.name == prop_name do
+        Map.drop(prop, [:error])
+      else
+        prop
+      end
+    end)
+  end
+
+  defp put_error_into_props(props, prop_name) do
+    Enum.map(props, fn prop ->
+      if prop.name == prop_name do
+        Map.put_new(prop, :error, true)
+      else
+        prop
+      end
+    end)
   end
 
   defp convert_prop_value(_type, "__NIL__", _old_value, _type_opts) do
@@ -421,22 +472,31 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   defp convert_prop_value(:atom, value, _old_value, _type_opts) do
-    String.to_atom(value)
+    if is_atom(value) do
+      value
+    else
+      String.to_atom(value)
+    end
   end
 
   defp convert_prop_value(:integer, "", _old_value, _type_opts) do
     nil
   end
 
-  defp convert_prop_value(:number, value, _old_value, _type_opts) do
-    case Float.parse(value) do
-      {float, _} -> float
-      _ -> 0.0
-    end
-  end
-
   defp convert_prop_value(:integer, value, _old_value, _type_opts) do
-    String.to_integer(value)
+    try do
+      case Integer.parse(value) do
+        {new_value, _} ->
+          new_value
+
+        _error ->
+          nil
+      end
+    rescue
+      e ->
+        IO.inspect(e)
+        nil
+    end
   end
 
   defp convert_prop_value(type, "", old_value, _type_opts)
@@ -471,6 +531,18 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   defp convert_prop_value(_type, value, _old_value, _type_opts) do
     value
+  end
+
+  def valid_input_value?(type, input_value) do
+    input_value =
+      if type in [:string, :css_class],
+        do: inspect(input_value),
+        else: input_value
+
+    case Code.string_to_quoted(input_value) do
+      {:ok, quoted} -> Macro.quoted_literal?(quoted)
+      _ -> false
+    end
   end
 
   defp available_events(events) do
