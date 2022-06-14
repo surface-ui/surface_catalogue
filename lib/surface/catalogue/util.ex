@@ -2,10 +2,8 @@ defmodule Surface.Catalogue.Util do
   @moduledoc false
 
   def get_components_info do
-    for [app] <- loaded_applications(),
-        module <- app_modules(app),
+    for module <- Surface.components(),
         module_loaded?(module),
-        function_exported?(module, :component_type, 0),
         reduce: {%{}, %{}} do
       acc ->
         components_reducer(module, module.component_type(), acc)
@@ -13,22 +11,21 @@ defmodule Surface.Catalogue.Util do
   end
 
   def get_examples(component, examples_and_playgrounds) do
-    for example <- examples_and_playgrounds[component][:examples] || [] do
-      meta = Surface.Catalogue.get_metadata(example)
-      config = Surface.Catalogue.get_config(example)
-      code = meta |> Map.get(:code, "") |> String.trim_trailing()
-
-      doc =
-        meta
-        |> Map.get(:doc, "")
-        |> split_doc_sections()
-        |> List.first()
-        |> String.trim()
+    for example <- examples_and_playgrounds[component][:examples] || [],
+        meta = Surface.Catalogue.get_metadata(example),
+        example_config <- meta.examples_configs do
+      config =
+        example
+        |> Surface.Catalogue.get_config()
+        |> Keyword.merge(example_config)
 
       title = Keyword.get(config, :title)
+      func = Keyword.get(config, :func)
       direction = Keyword.get(config, :direction) || "horizontal"
       height = Keyword.get(config, :height) || "120px"
       scrolling = Keyword.get(config, :scrolling) || false
+      doc = Keyword.get(config, :doc) || ""
+      code = String.trim_trailing(Keyword.get(config, :code) || "")
 
       {demo_perc, code_perc} =
         case {direction, Keyword.get(config, :code_perc)} do
@@ -44,6 +41,7 @@ defmodule Surface.Catalogue.Util do
 
       %{
         module_name: inspect(example),
+        func: func,
         doc: doc,
         title: title,
         height: height,
@@ -80,7 +78,7 @@ defmodule Surface.Catalogue.Util do
     {components, examples_and_playgrounds} = acc
 
     case Surface.Catalogue.get_metadata(module) do
-      %{subject: subject, code: _} ->
+      %{subject: subject, type: :example} ->
         initial = %{examples: [module], playgrounds: []}
 
         examples_and_playgrounds =
@@ -90,7 +88,7 @@ defmodule Surface.Catalogue.Util do
 
         {components, examples_and_playgrounds}
 
-      %{subject: subject} ->
+      %{subject: subject, type: :playground} ->
         initial = %{examples: [], playgrounds: [module]}
 
         examples_and_playgrounds =
@@ -132,28 +130,7 @@ defmodule Surface.Catalogue.Util do
     parent
   end
 
-  defp loaded_applications do
-    # If we invoke :application.loaded_applications/0,
-    # it can error if we don't call safe_fixtable before.
-    # Since in both cases we are reaching over the
-    # application controller internals, we choose to match
-    # for performance.
-    :ets.match(:ac_tab, {{:loaded, :"$1"}, :_})
-  end
-
   defp module_loaded?(module) do
     match?({:module, _mod}, Code.ensure_compiled(module))
-  end
-
-  defp app_modules(app) do
-    app
-    |> Application.app_dir()
-    |> Path.join("ebin/Elixir.*.beam")
-    |> Path.wildcard()
-    |> Enum.map(&beam_to_module/1)
-  end
-
-  defp beam_to_module(path) do
-    path |> Path.basename(".beam") |> String.to_atom()
   end
 end

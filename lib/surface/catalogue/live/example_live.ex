@@ -11,6 +11,7 @@ defmodule Surface.Catalogue.ExampleLive do
 
   def handle_params(params, _uri, socket) do
     example = Module.safe_concat([params["example"]])
+    func = params["func"]
     config = Surface.Catalogue.get_config(example)
 
     socket =
@@ -19,6 +20,7 @@ defmodule Surface.Catalogue.ExampleLive do
       |> assign(:head_css, config[:head_css] || "")
       |> assign(:head_js, config[:head_js] || "")
       |> assign(:body, config[:body] || @default_body)
+      |> assign(:func, func)
 
     {:noreply, socket}
   end
@@ -35,7 +37,7 @@ defmodule Surface.Catalogue.ExampleLive do
         {raw(@head_js)}
       </head>
       <body :attrs={@body}>
-        {live_render(@socket, @example, id: "example")}
+        {live_render(@socket, @example, id: "example", session: %{"func" => @func})}
       </body>
     </html>
     """
