@@ -32,6 +32,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   data event_log_counter, :integer, default: 1
   data event_log_entries, :list, default: []
   data props, :list, default: []
+  data slots, :list, default: []
   data events, :list, default: []
   data has_new_events?, :boolean, default: false
   data selected_tab_index, :integer, default: 0
@@ -52,11 +53,20 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     ~F"""
     <div :show={@playground_pid != nil}>
       <Tabs id="playground-tools-tabs" animated={false} tab_click_callback={&tab_click_callback/1}>
-        <TabItem label="Properties">
+        <TabItem label="Properties" visible={@props != []}>
           <div style="margin-top: 0.7rem;">
             <Form for={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
               {#for prop <- @props}
                 <PropInput prop={prop} value={@props_values[prop.name]} form={form}/>
+              {/for}
+            </Form>
+          </div>
+        </TabItem>
+        <TabItem label="Slots">
+          <div style="margin-top: 0.7rem;">
+            <Form for={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
+              {#for slot <- @slots}
+                <PropInput prop={slot} value={@props_values[slot.name]} form={form} nil_placeholder="no slot"/>
               {/for}
             </Form>
           </div>
@@ -235,16 +245,24 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   end
 
   def handle_info(
-        {:playground_init, playground_pid, subject, props, events, props_values},
+        {:playground_init, playground_pid, subject, props, slots, events, props_values},
         socket
       ) do
-    Tabs.set_active_tab("playground-tools-tabs", 0)
+    active_playground_tools_tab =
+      cond do
+        props != [] -> 0
+        slots != [] -> 1
+        true -> 2
+      end
+
+    Tabs.set_active_tab("playground-tools-tabs", active_playground_tools_tab)
 
     socket =
       socket
       |> assign(playground_pid: playground_pid)
       |> assign(:component_module, subject)
       |> assign(:props, props)
+      |> assign(:slots, slots)
       |> assign(:events, events)
       |> assign(:props_values, props_values)
       |> assign(:has_new_events?, false)
@@ -314,12 +332,16 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         %{"_target" => ["props_values", prop_name], "props_values" => props_values},
         socket
       ) do
+    prop_info =
+      Enum.find(socket.assigns.props, &(to_string(&1.name) == prop_name)) ||
+      Enum.find(socket.assigns.slots, &(to_string(&1.name) == prop_name))
+
     {fun, prop_name, new_props_values} =
       convert_props_values(
         prop_name,
         props_values,
         socket.assigns.props_values,
-        socket.assigns.component_module
+        prop_info
       )
 
     update_props = fun.(socket.assigns.props, prop_name)
@@ -339,12 +361,14 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         %{"key" => "Backspace", "prop" => prop, "value" => ""},
         socket
       ) do
-    prop_name = String.to_atom(prop)
-    prop_info = socket.assigns.component_module.__get_prop__(prop_name)
+    prop_info =
+      Enum.find(socket.assigns.props, &(to_string(&1.name) == prop)) ||
+      Enum.find(socket.assigns.slots, &(to_string(&1.name) == prop))
 
     if prop_info.opts[:required] do
       {:noreply, socket}
     else
+      prop_name = String.to_atom(prop)
       updated_props_values = Map.put(socket.assigns.props_values, prop_name, nil)
       socket = assign(socket, :props_values, updated_props_values)
 
@@ -399,9 +423,8 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
     update(socket, :event_log_counter, &(&1 + 1))
   end
 
-  defp convert_props_values(prop_key, props_values, old_values, component) do
+  defp convert_props_values(prop_key, props_values, old_values, prop_info) do
     prop_name = String.to_atom(prop_key)
-    prop_info = component.__get_prop__(prop_name)
 
     if valid_input_value?(prop_info.type, props_values[prop_key]) do
       {
