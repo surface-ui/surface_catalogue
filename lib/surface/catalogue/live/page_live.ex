@@ -20,7 +20,6 @@ defmodule Surface.Catalogue.PageLive do
   data __window_id__, :string, default: nil
   data playground_height, :string, default: @playground_default_height
   data playground_width, :string, default: @playground_default_width
-  data playground_tools_initialized?, :boolean, default: false
   data single_catalogue?, :boolean, default: false
   data home_view, :module, default: nil
 
@@ -48,26 +47,11 @@ defmodule Surface.Catalogue.PageLive do
 
   def handle_params(params, _uri, socket) do
     socket =
-      if params["component"] != socket.assigns.component_name do
-        assign(socket, :playground_tools_initialized?, false)
-      else
-        socket
-      end
-
-    socket =
       socket
       |> assign(:action, params["action"] || "docs")
       |> assign_component_info(params["component"])
 
     {:noreply, socket}
-  end
-
-  def handle_info({:playground_tools_initialized, subject}, socket) do
-    if subject == socket.assigns.component_module do
-      {:noreply, assign(socket, :playground_tools_initialized?, true)}
-    else
-      {:noreply, socket}
-    end
   end
 
   def render(assigns) do
@@ -151,11 +135,11 @@ defmodule Surface.Catalogue.PageLive do
                     </div>
                   {/for}
                   <div :show={!connected?(@socket)} class="container">
-                    {loading("Loading live #{@action}...")}
+                    {loading("Loading live #{@action}s...")}
                   </div>
                 </div>
                 <div :show={@action == "playground"}>
-                  <div :show={@playground_tools_initialized?}>
+                  <div>
                     <iframe
                       id="playground-iframe"
                       :if={@has_playground?}
@@ -168,7 +152,7 @@ defmodule Surface.Catalogue.PageLive do
                       <PlaygroundTools id="playground_tools" session={%{"__window_id__" => @__window_id__}} />
                     </div>
                   </div>
-                  <div :show={!@playground_tools_initialized?} class="container">
+                  <div :show={!connected?(@socket)} class="container">
                     {loading("Loading live #{@action}...")}
                   </div>
                 </div>
