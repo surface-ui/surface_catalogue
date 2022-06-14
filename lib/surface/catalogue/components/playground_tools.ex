@@ -273,7 +273,13 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
     :erlang.trace(playground_pid, true, [:receive])
 
+    send(socket.parent_pid, {:playground_tools_initialized, subject})
+
     {:noreply, socket}
+  end
+
+  def handle_info({:trace, _pid, :receive, {:DOWN, _, _, _, _}}, socket) do
+    {:noreply, assign(socket, :playground_pid, nil)}
   end
 
   def handle_info({:trace, _pid, :receive, {:system, _, _}}, socket) do

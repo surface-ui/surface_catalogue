@@ -20,6 +20,7 @@ defmodule Surface.Catalogue.PageLive do
   data __window_id__, :string, default: nil
   data playground_height, :string, default: @playground_default_height
   data playground_width, :string, default: @playground_default_width
+  data playground_tools_initialized?, :boolean, default: false
   data single_catalogue?, :boolean, default: false
   data home_view, :module, default: nil
 
@@ -47,11 +48,26 @@ defmodule Surface.Catalogue.PageLive do
 
   def handle_params(params, _uri, socket) do
     socket =
+      if params["component"] != socket.assigns.component_name do
+        assign(socket, :playground_tools_initialized?, false)
+      else
+        socket
+      end
+
+    socket =
       socket
       |> assign(:action, params["action"] || "docs")
       |> assign_component_info(params["component"])
 
     {:noreply, socket}
+  end
+
+  def handle_info({:playground_tools_initialized, subject}, socket) do
+    if subject == socket.assigns.component_module do
+      {:noreply, assign(socket, :playground_tools_initialized?, true)}
+    else
+      {:noreply, socket}
+    end
   end
 
   def render(assigns) do
@@ -139,18 +155,16 @@ defmodule Surface.Catalogue.PageLive do
                   </div>
                 </div>
                 <div :show={@action == "playground"}>
-                  <div>
-                    <iframe
-                      id="playground-iframe"
-                      :if={@has_playground?}
-                      src={path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__)}
-                      style={"height: #{@playground_height}; width: #{@playground_width};"}
-                      frameborder="0"
-                      phx-hook="IframeBody"
-                    />
-                    <div style="padding-top: 1.5rem;">
-                      <PlaygroundTools id="playground_tools" session={%{"__window_id__" => @__window_id__}} />
-                    </div>
+                  <iframe
+                    id="playground-iframe"
+                    :if={@has_playground?}
+                    src={path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__)}
+                    style={"height: #{@playground_height}; width: #{@playground_width};"}
+                    frameborder="0"
+                    phx-hook="IframeBody"
+                  />
+                  <div :show={@playground_tools_initialized?} style="padding-top: 1.5rem;">
+                    <PlaygroundTools id="playground_tools" session={%{"__window_id__" => @__window_id__}} />
                   </div>
                   <div :show={!connected?(@socket)} class="container">
                     {loading("Loading live #{@action}...")}
