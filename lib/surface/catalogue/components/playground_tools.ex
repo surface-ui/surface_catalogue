@@ -62,7 +62,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
             </Form>
           </div>
         </TabItem>
-        <TabItem label="Slots">
+        <TabItem label="Slots" visible={@slots != []}>
           <div style="margin-top: 0.7rem;">
             <Form for={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
               {#for slot <- @slots}
