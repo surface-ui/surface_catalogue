@@ -7,7 +7,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
 
   prop selected_component, :string
   prop single_catalogue?, :boolean
-  prop components, :map
+  prop components, :any
 
   def render(assigns) do
     ~F"""
