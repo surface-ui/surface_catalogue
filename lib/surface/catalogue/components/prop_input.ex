@@ -11,7 +11,13 @@ defmodule Surface.Catalogue.Components.PropInput do
 
   prop form, :form
 
+  prop nil_placeholder, :string, default: "nil"
+
+  data placeholder, :any
+
   def render(assigns) do
+    assigns = assign(assigns, :placeholder, assigns.value == nil && assigns.nil_placeholder)
+
     ~F"""
     <div class="field is-horizontal">
       <div class="field-label is-small">
@@ -20,7 +26,7 @@ defmodule Surface.Catalogue.Components.PropInput do
       <div class="field-body">
         <div class="field" style="display:flex; align-items:center;">
           <div class="control" style="width: 400px;">
-            {input(assigns)}
+            <.input prop={@prop}, value={@value} form={@form} placeholder={@placeholder}/>
           </div>
         </div>
       </div>
@@ -48,7 +54,7 @@ defmodule Surface.Catalogue.Components.PropInput do
           field={prop.name}
           value={value}
           class="input is-small"
-          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
+          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
          form={form}/>
 
         {error_message(prop)}
@@ -69,7 +75,7 @@ defmodule Surface.Catalogue.Components.PropInput do
           field={prop.name}
           value={value_to_string(value)}
           class="input is-small"
-          opts={placeholder: value == nil && "nil"}
+          opts={placeholder: @placeholder}
          form={form}/>
 
         {error_message(prop)}
@@ -92,7 +98,7 @@ defmodule Surface.Catalogue.Components.PropInput do
           field={prop.name}
           value={css_value_to_string(value)}
           class="input is-small"
-          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
+          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
          form={form}/>
 
         {error_message(prop)}
@@ -104,7 +110,7 @@ defmodule Surface.Catalogue.Components.PropInput do
           field={prop.name}
           value={value}
           class="input is-small"
-          opts={placeholder: value == nil && "nil"}
+          opts={placeholder: @placeholder}
          form={form}/>
 
         {error_message(prop)}
@@ -116,7 +122,7 @@ defmodule Surface.Catalogue.Components.PropInput do
           field={prop.name}
           value={value}
           class="input is-small"
-          opts={placeholder: value == nil && "nil"}
+          opts={placeholder: @placeholder}
          form={form}/>
 
         {error_message(prop)}
@@ -137,7 +143,7 @@ defmodule Surface.Catalogue.Components.PropInput do
           field={prop.name}
           value={value_to_string(value)}
           class="input is-small"
-          opts={placeholder: value == nil && "nil", phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
+          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
          form={form}/>
 
         {error_message(prop)}

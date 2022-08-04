@@ -74,7 +74,6 @@ defmodule Surface.Catalogue.Server do
       live_view: [signing_salt: "hMegieSe"],
       http: [port: System.get_env("PORT") || 4000],
       render_errors: [view: ErrorView],
-      debug_errors: true,
       check_origin: false,
       pubsub_server: __MODULE__.PubSub,
       live_reload: [

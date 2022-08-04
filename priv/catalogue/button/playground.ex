@@ -4,11 +4,7 @@ defmodule SurfaceCatalogue.SampleComponents.Button.Playground do
     subject: SurfaceCatalogue.SampleComponents.Button,
     height: "170px"
 
-  data props, :map, default: %{}
-
-  def render(assigns) do
-    ~F"""
-    <Button {...@props}/>
-    """
-  end
+  @slots [
+    default: "DEFAULT SLOT"
+  ]
 end

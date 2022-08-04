@@ -151,24 +151,22 @@ defmodule Surface.Catalogue.PageLive do
                     </div>
                   {/for}
                   <div :show={!connected?(@socket)} class="container">
-                    {loading("Loading live #{@action}...")}
+                    {loading("Loading live #{@action}s...")}
                   </div>
                 </div>
                 <div :show={@action == "playground"}>
-                  <div :show={@playground_tools_initialized?}>
-                    <iframe
-                      id="playground-iframe"
-                      :if={@has_playground?}
-                      src={path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__)}
-                      style={"height: #{@playground_height}; width: #{@playground_width};"}
-                      frameborder="0"
-                      phx-hook="IframeBody"
-                    />
-                    <div style="padding-top: 1.5rem;">
-                      <PlaygroundTools id="playground_tools" session={%{"__window_id__" => @__window_id__}} />
-                    </div>
+                  <iframe
+                    id="playground-iframe"
+                    :if={@has_playground?}
+                    src={path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__)}
+                    style={"height: #{@playground_height}; width: #{@playground_width};"}
+                    frameborder="0"
+                    phx-hook="IframeBody"
+                  />
+                  <div :show={@playground_tools_initialized?} style="padding-top: 1.5rem;">
+                    <PlaygroundTools id="playground_tools" session={%{"__window_id__" => @__window_id__}} />
                   </div>
-                  <div :show={!@playground_tools_initialized?} class="container">
+                  <div :show={!connected?(@socket)} class="container">
                     {loading("Loading live #{@action}...")}
                   </div>
                 </div>
