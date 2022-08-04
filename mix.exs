@@ -35,7 +35,7 @@ defmodule Surface.Catalogue.MixProject do
   end
 
   defp elixirc_paths(:dev), do: ["lib"] ++ catalogues()
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "test/support"] ++ catalogues()
   defp elixirc_paths(_), do: ["lib"]
 
   defp aliases do
@@ -50,6 +50,7 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0"},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
+      {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:surface, github: "surface-ui/surface"},
       {:earmark, "~>1.4.21"},
