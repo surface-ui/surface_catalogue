@@ -7,7 +7,7 @@ defmodule Surface.Catalogue.MixProject do
     [
       app: :surface_catalogue,
       version: @version,
-      elixir: "~> 1.8",
+      elixir: "~> 1.12",
       description: "An initial prototype of the Surface Catalogue",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
