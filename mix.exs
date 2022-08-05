@@ -28,11 +28,31 @@ defmodule Surface.Catalogue.MixProject do
   end
 
   def catalogues do
-    [
-      "priv/catalogue",
-      "deps/surface/priv/catalogue"
-    ]
+    ["priv/catalogue"] ++ surface_catalogue_path()
   end
+
+  defp surface_catalogue_path() do
+    Enum.find(deps(), &(elem(&1, 0) == :surface))
+    |> surface_dep_opts()
+    |> surface_catalogue_path()
+  end
+
+  defp surface_catalogue_path(nil), do: []
+
+  defp surface_catalogue_path(opts) do
+    path =
+      case opts[:path] do
+        nil -> "deps/surface"
+        surface_dep_path -> Path.expand(surface_dep_path)
+      end
+
+    ["#{path}/priv/catalogue"]
+  end
+
+  defp surface_dep_opts({:surface, opts}) when is_list(opts), do: opts
+  defp surface_dep_opts({:surface, _req, opts}) when is_list(opts), do: opts
+  defp surface_dep_opts({:surface, _req}), do: []
+  defp surface_dep_opts(_), do: nil
 
   defp elixirc_paths(:dev), do: ["lib"] ++ catalogues()
   defp elixirc_paths(:test), do: ["lib", "test/support"] ++ catalogues()
