@@ -30,3 +30,7 @@ node_modules
 /priv/static/
 
 .DS_Store
+
+# Ignore Surface generated files
+assets/js/_hooks/
+assets/css/_components.css
