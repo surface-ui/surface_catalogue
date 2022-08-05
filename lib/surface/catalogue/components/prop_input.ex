@@ -26,7 +26,7 @@ defmodule Surface.Catalogue.Components.PropInput do
       <div class="field-body">
         <div class="field" style="display:flex; align-items:center;">
           <div class="control" style="width: 400px;">
-            <.input prop={@prop}, value={@value} form={@form} placeholder={@placeholder}/>
+            <.input prop={@prop} value={@value} form={@form} placeholder={@placeholder} />
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@ defmodule Surface.Catalogue.Components.PropInput do
     case {prop.type, get_choices(prop)} do
       {:boolean, _} ->
         ~F"""
-        <Checkbox field={prop.name} value={value} opts={style: "height: 26px;"} form={form}/>
+        <Checkbox field={prop.name} value={value} opts={style: "height: 26px;"} form={form} />
 
         {error_message(prop)}
         """
@@ -55,7 +55,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           value={value}
           class="input is-small"
           opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
-         form={form}/>
+          form={form}
+        />
 
         {error_message(prop)}
         """
@@ -63,7 +64,7 @@ defmodule Surface.Catalogue.Components.PropInput do
       {:string, choices} ->
         ~F"""
         <div class="select is-small">
-          <Select field={prop.name} options={choices} selected={value} form={form}/>
+          <Select field={prop.name} options={choices} selected={value} form={form} />
         </div>
 
         {error_message(prop)}
@@ -76,7 +77,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           value={value_to_string(value)}
           class="input is-small"
           opts={placeholder: @placeholder}
-         form={form}/>
+          form={form}
+        />
 
         {error_message(prop)}
         """
@@ -86,7 +88,7 @@ defmodule Surface.Catalogue.Components.PropInput do
 
         ~F"""
         <div class="select is-small">
-          <Select field={prop.name} options={choices} selected={value_to_string(value)} form={form}/>
+          <Select field={prop.name} options={choices} selected={value_to_string(value)} form={form} />
         </div>
 
         {error_message(prop)}
@@ -99,7 +101,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           value={css_value_to_string(value)}
           class="input is-small"
           opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
-         form={form}/>
+          form={form}
+        />
 
         {error_message(prop)}
         """
@@ -111,7 +114,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           value={value}
           class="input is-small"
           opts={placeholder: @placeholder}
-         form={form}/>
+          form={form}
+        />
 
         {error_message(prop)}
         """
@@ -123,7 +127,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           value={value}
           class="input is-small"
           opts={placeholder: @placeholder}
-         form={form}/>
+          form={form}
+        />
 
         {error_message(prop)}
         """
@@ -131,7 +136,7 @@ defmodule Surface.Catalogue.Components.PropInput do
       {:integer, choices} ->
         ~F"""
         <div class="select is-small">
-          <Select field={prop.name} options={choices} selected={value} form={form}/>
+          <Select field={prop.name} options={choices} selected={value} form={form} />
         </div>
 
         {error_message(prop)}
@@ -144,7 +149,8 @@ defmodule Surface.Catalogue.Components.PropInput do
           value={value_to_string(value)}
           class="input is-small"
           opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
-         form={form}/>
+          form={form}
+        />
 
         {error_message(prop)}
         """

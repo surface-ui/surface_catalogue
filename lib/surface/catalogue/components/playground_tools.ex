@@ -57,7 +57,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           <div style="margin-top: 0.7rem;">
             <Form for={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
               {#for prop <- @props}
-                <PropInput prop={prop} value={@props_values[prop.name]} form={form}/>
+                <PropInput prop={prop} value={@props_values[prop.name]} form={form} />
               {/for}
             </Form>
           </div>
@@ -66,7 +66,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           <div style="margin-top: 0.7rem;">
             <Form for={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
               {#for slot <- @slots}
-                <PropInput prop={slot} value={@props_values[slot.name]} form={form} nil_placeholder="no slot"/>
+                <PropInput prop={slot} value={@props_values[slot.name]} form={form} nil_placeholder="no slot" />
               {/for}
             </Form>
           </div>
@@ -138,7 +138,10 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           <hr style="margin: 0.7rem 0;">
 
           <div id="playground-tools-state-instances" style="margin-top: 0.7rem;">
-            <div :for={{mod, id, value} <- @playground_info.components_instances_memory} class="field is-horizontal">
+            <div
+              :for={{mod, id, value} <- @playground_info.components_instances_memory}
+              class="field is-horizontal"
+            >
               <div class="field-label is-small">
                 <label class="label has-text-grey-dark">
                   {mod}&lt;<a :on-click="show_component_state" phx-value-component={id}>#{id}</a>&gt;
@@ -154,14 +157,19 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
         </TabItem>
         <TabItem label="Event Log" visible={@events != []} changed={@has_new_events?}>
           <span style="margin-left: 1.0rem;">
-            <span class="has-text-weight-semibold">Events: </span>
+            <span class="has-text-weight-semibold">Events:
+            </span>
             <span>{available_events(@events)}</span>
             <span style="float: right; padding-right: 1.0rem;">
               <a :on-click="clear_event_log">Clear</a>
             </span>
           </span>
           <hr style="margin: 0.8rem 0;">
-          <div id="event-log" style="height: 250px; overflow: scroll; font-family: monospace" class="is-size-7">
+          <div
+            id="event-log"
+            style="height: 250px; overflow: scroll; font-family: monospace"
+            class="is-size-7"
+          >
             <div id={"event-log-content-#{@event_log_counter}"} phx-update="append" phx-hook="EventLog">
               <p :for={{id, message} <- @event_log_entries} id={"event-log-message-#{id}"}>
                 <span style="white-space: break-spaces;">{raw(message)}</span>
@@ -170,7 +178,11 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           </div>
         </TabItem>
         <TabItem label="Debug/Profile">
-          <div id="playground-tools-debug-profile-disabled" style="margin-top: 3.0rem; text-align: center;" phx-update="ignore">
+          <div
+            id="playground-tools-debug-profile-disabled"
+            style="margin-top: 3.0rem; text-align: center;"
+            phx-update="ignore"
+          >
             The <strong>window.liveSocket</strong> has not been set. Debug/Profiling is disabled.
           </div>
           <div id="playground-tools-debug-profile" style="margin-top: 0.7rem;" phx-update="ignore">
@@ -186,7 +198,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                       style="height: 26px;"
                       type="checkbox"
                       onclick="handleEnableDebugClick(this);"
-                    >
+                    />
                   </div>
                 </div>
               </div>
@@ -204,7 +216,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                       style="height: 26px;"
                       type="checkbox"
                       onclick="handleEnableLatencySimClick(this);"
-                    >
+                    />
                   </div>
                   <input
                     id="debug_profile_latency_sim_value"
@@ -213,7 +225,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                     class="input is-small"
                     style="width: 80px; margin-right: 5px; text-align: right;"
                     onblur="handleLatencySimValueBlur(this);"
-                  >
+                  />
                 </div>
               </div>
             </div>
@@ -231,7 +243,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
                       type="checkbox"
                       value="true"
                       onclick="handleEnableProfileClick(this);"
-                    >
+                    />
                   </div>
                 </div>
               </div>
@@ -239,7 +251,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
           </div>
         </TabItem>
       </Tabs>
-      <StateDialog id="component_state_dialog"/>
+      <StateDialog id="component_state_dialog" />
     </div>
     """
   end
@@ -338,7 +350,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       ) do
     prop_info =
       Enum.find(socket.assigns.props, &(to_string(&1.name) == prop_name)) ||
-      Enum.find(socket.assigns.slots, &(to_string(&1.name) == prop_name))
+        Enum.find(socket.assigns.slots, &(to_string(&1.name) == prop_name))
 
     {fun, prop_name, new_props_values} =
       convert_props_values(
@@ -367,7 +379,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       ) do
     prop_info =
       Enum.find(socket.assigns.props, &(to_string(&1.name) == prop)) ||
-      Enum.find(socket.assigns.slots, &(to_string(&1.name) == prop))
+        Enum.find(socket.assigns.slots, &(to_string(&1.name) == prop))
 
     if prop_info.opts[:required] do
       {:noreply, socket}

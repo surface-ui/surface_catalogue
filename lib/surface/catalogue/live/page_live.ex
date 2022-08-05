@@ -73,7 +73,7 @@ defmodule Surface.Catalogue.PageLive do
   def render(assigns) do
     ~F"""
     <div style="position: relative;">
-      <div class="sidebar-bg"/>
+      <div class="sidebar-bg" />
       <div class="container is-fullhd">
         <section class="main-content columns">
           <ComponentTree
@@ -86,7 +86,11 @@ defmodule Surface.Catalogue.PageLive do
             <div :if={!@component_module and @home_view}>
               {live_render(@socket, @home_view, id: "home_view")}
             </div>
-            <div :if={!@component_module and !@home_view} class="columns is-centered is-vcentered is-mobile" style="height: 300px">
+            <div
+              :if={!@component_module and !@home_view}
+              class="columns is-centered is-vcentered is-mobile"
+              style="height: 300px"
+            >
               <div class="column is-narrow has-text-centered subtitle has-text-grey">
                 No component selected
               </div>
@@ -96,19 +100,19 @@ defmodule Surface.Catalogue.PageLive do
                 <ul>
                   <li class={"is-active": @action == "docs"}>
                     <LivePatch to={path_to(@socket, __MODULE__, @component_name, :docs)}>
-                      <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true"></i></span>
+                      <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true" /></span>
                       <span>Docs &amp; API</span>
                     </LivePatch>
                   </li>
                   <li :if={@has_example?} class={"is-active": @action == "example"}>
                     <LivePatch to={path_to(@socket, __MODULE__, @component_name, :example)}>
-                      <span class="icon is-small"><i class="fas fa-image" aria-hidden="true"></i></span>
+                      <span class="icon is-small"><i class="fas fa-image" aria-hidden="true" /></span>
                       <span>Examples</span>
                     </LivePatch>
                   </li>
                   <li :if={@has_playground?} class={"is-active": @action == "playground"}>
                     <LivePatch to={path_to(@socket, __MODULE__, @component_name, :playground)}>
-                      <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true"></i></span>
+                      <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true" /></span>
                       <span id="playground-tab-label" phx-update="ignore">Playground</span>
                     </LivePatch>
                   </li>
@@ -135,7 +139,10 @@ defmodule Surface.Catalogue.PageLive do
                         <iframe
                           scrolling={if example.scrolling, do: "yes", else: "no"}
                           id={"example-iframe-#{index}-#{example.func}"}
-                          src={path_to(@socket, ExampleLive, example.module_name, __window_id__: @__window_id__, func: example.func)}
+                          src={path_to(@socket, ExampleLive, example.module_name,
+                            __window_id__: @__window_id__,
+                            func: example.func
+                          )}
                           style={"overflow-y: hidden; width: 100%; height: #{example.height};"}
                           frameborder="0"
                           phx-hook="IframeBody"
@@ -144,7 +151,11 @@ defmodule Surface.Catalogue.PageLive do
 
                       <div class="code" style={"width: #{example.code_perc}%"}>
                         <pre class="language-surface">
-                          <code class="content language-surface" phx-hook="Highlight" id={"example-code-#{index}-#{example.func}"}>
+                          <code
+      class="content language-surface"
+      phx-hook="Highlight"
+      id={"example-code-#{index}-#{example.func}"}
+    >
     {example.code}</code>
                         </pre>
                       </div>

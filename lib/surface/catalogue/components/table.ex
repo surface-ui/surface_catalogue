@@ -36,7 +36,7 @@ defmodule Surface.Catalogue.Components.Table do
         "is-fullwidth": @expanded,
         "is-bordered": @bordered,
         "is-striped": @striped
-     }>
+      }>
         <thead>
           <tr>
             <th :for={col <- @cols}>
@@ -45,11 +45,9 @@ defmodule Surface.Catalogue.Components.Table do
           </tr>
         </thead>
         <tbody>
-          <tr
-            :for={{item, index} <- Enum.with_index(@data)}
-            class={row_class_fun(@rowClass).(item, index)}>
+          <tr :for={{item, index} <- Enum.with_index(@data)} class={row_class_fun(@rowClass).(item, index)}>
             <td :for.index={index <- @cols}>
-              <span><#slot name="cols" index={index} :args={item: item}/></span>
+              <span><#slot name="cols" index={index} :args={item: item} /></span>
             </td>
           </tr>
         </tbody>

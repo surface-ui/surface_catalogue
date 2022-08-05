@@ -14,15 +14,18 @@ defmodule Surface.Catalogue.LayoutView do
     <html lang="en">
       <head>
         {Phoenix.HTML.Tag.csrf_meta_tag()}
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1">
         <title>Component Catalogue</title>
         <link rel="icon" href="data:,">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-        <link phx-track-static rel="stylesheet" href={assets_file("app.css")}/>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        />
+        <link phx-track-static rel="stylesheet" href={assets_file("app.css")}>
         {Phoenix.HTML.raw("<style>" <> render("makeup.css") <> "</style>")}
-        <script defer phx-track-static type="text/javascript" src={assets_file("app.js")}></script>
+        <script defer phx-track-static type="text/javascript" src={assets_file("app.js")} />
       </head>
       <body>
         <section class="hero is-info">
@@ -32,7 +35,7 @@ defmodule Surface.Catalogue.LayoutView do
                 <span>{title()}</span>
               </h1>
               <h2 class="subtitle" style="margin-right: 30px">
-              {subtitle()}
+                {subtitle()}
               </h2>
             </div>
           </div>

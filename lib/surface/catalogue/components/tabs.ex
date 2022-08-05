@@ -37,7 +37,7 @@ defmodule Surface.Catalogue.Components.Tabs do
   def render(assigns) do
     ~F"""
     <div class={"is-fullwidth": @expanded}>
-      <nav class={"tabs",  "is-boxed": @boxed, "is-fullwidth": @expanded}>
+      <nav class={"tabs", "is-boxed": @boxed, "is-fullwidth": @expanded}>
         <ul>
           <li
             :for={{tab, index} <- Enum.with_index(@tabs), tab.visible}
@@ -45,10 +45,10 @@ defmodule Surface.Catalogue.Components.Tabs do
           >
             <a :on-click="tab_click" phx-value-index={index}>
               <span :if={tab.icon} class="icon is-small">
-                <i class={tab.icon} aria-hidden="true"></i>
+                <i class={tab.icon} aria-hidden="true" />
               </span>
               <span>{tab.label}</span>
-              <span style="width: 15px; margin-left: 2px;">{raw(tab.changed && "*" || "&nbsp")}</span>
+              <span style="width: 15px; margin-left: 2px;">{raw((tab.changed && "*") || "&nbsp")}</span>
             </a>
           </li>
         </ul>
@@ -59,7 +59,7 @@ defmodule Surface.Catalogue.Components.Tabs do
           :show={tab.visible && @active_tab == index}
           class={"tab-item animated #{@animation} faster"}
         >
-          <#slot name="tabs" index={index}/>
+          <#slot name="tabs" index={index} />
         </div>
       </section>
     </div>

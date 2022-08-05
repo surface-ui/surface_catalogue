@@ -25,7 +25,7 @@ defmodule SurfaceCatalogue.SampleComponents.Card do
     <div class="card">
       <header class="card-header">
         <p class="card-header-title">
-          <#slot name="header"/>
+          <#slot name="header" />
         </p>
       </header>
       <div class="card-content">
@@ -35,7 +35,7 @@ defmodule SurfaceCatalogue.SampleComponents.Card do
       </div>
       <footer class="card-footer">
         <p class="card-footer-item">
-          <#slot name="footer"/>
+          <#slot name="footer" />
         </p>
       </footer>
     </div>

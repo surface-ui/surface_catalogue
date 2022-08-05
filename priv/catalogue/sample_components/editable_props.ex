@@ -11,7 +11,7 @@ defmodule SurfaceCatalogue.SampleComponents.EditableProps do
   prop atom_choices, :atom, values: [:a, :b, :c]
   prop css_class, :css_class
   prop integer, :integer
-  prop integer_choices, :integer, values: [1,2,3]
+  prop integer_choices, :integer, values: [1, 2, 3]
   prop list, :list
   prop keyword, :keyword
   prop any, :any

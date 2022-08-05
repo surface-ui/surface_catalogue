@@ -38,7 +38,7 @@ defmodule Surface.Catalogue.Components.StateDialog do
   def render(assigns) do
     ~F"""
     <div class={"modal", "is-active": @show} :on-window-keydown="hide" phx-key="Escape">
-      <div class="modal-background" style="background-color: rgba(10,10,10,.30)"></div>
+      <div class="modal-background" style="background-color: rgba(10,10,10,.30)" />
       <div class="modal-card" style="width: unset; min-width: 600px;">
         <header class="modal-card-head">
           <p class="modal-card-title has-text-grey has-text-weight-medium">
@@ -60,7 +60,7 @@ defmodule Surface.Catalogue.Components.StateDialog do
                 <div class="column is-narrow has-text-centered">
                   <div class="control">
                     <label class="checkbox">
-                      <Checkbox field={:show_builtin} value={@show_builtin}/>
+                      <Checkbox field={:show_builtin} value={@show_builtin} />
                       Built-in assigns
                     </label>
                   </div>
@@ -68,7 +68,7 @@ defmodule Surface.Catalogue.Components.StateDialog do
                 <div class="column is-narrow has-text-centered">
                   <div class="control">
                     <label class="checkbox">
-                      <Checkbox field={:show_private} value={@show_private}/>
+                      <Checkbox field={:show_private} value={@show_private} />
                       Private assigns
                     </label>
                   </div>

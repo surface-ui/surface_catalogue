@@ -30,13 +30,13 @@ defmodule Surface.Catalogue.ExampleLive do
     <html lang="en">
       <head>
         {Phoenix.HTML.Tag.csrf_meta_tag()}
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1"/>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1">
         {raw(@head_css)}
         {raw(@head_js)}
       </head>
-      <body :attrs={@body}>
+      <body {...@body}>
         {live_render(@socket, @example, id: "example", session: %{"func" => @func})}
       </body>
     </html>

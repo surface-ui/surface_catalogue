@@ -58,7 +58,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
       <h3 id={@api_anchor_id} class="title is-4 is-spaced">
         <a href={"##{@api_anchor_id}"}>#</a> Public API
       </h3>
-      <ComponentAPI module={@module}/>
+      <ComponentAPI module={@module} />
     </div>
     """
   end

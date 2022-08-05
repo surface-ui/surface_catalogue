@@ -78,8 +78,8 @@ defmodule SurfaceCatalogue.SampleComponents.Button do
       {=@disabled}
       {=@value}
       :on-click={@click}
-      class={
-        [button: @class == [],
+      class={[
+        button: @class == [],
         "is-#{@color}": @color,
         "is-#{@size}": @size,
         "is-fullwidth": @expand,
@@ -91,7 +91,8 @@ defmodule SurfaceCatalogue.SampleComponents.Button do
         "is-loading": @loading,
         "is-selected": @selected
       ] ++ @class}
-      {...@opts}>
+      {...@opts}
+    >
       <#slot>{@label}</#slot>
     </button>
     """
