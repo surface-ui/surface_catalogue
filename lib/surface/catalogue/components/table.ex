@@ -4,7 +4,7 @@ defmodule Surface.Catalogue.Components.Table do
   use Surface.Component
 
   @doc "The data that populates the table"
-  prop data, :list, required: true
+  prop data, :generator, required: true
 
   @doc "The table is expanded (full-width)"
   prop expanded, :boolean, default: true
@@ -26,7 +26,7 @@ defmodule Surface.Catalogue.Components.Table do
   prop rowClass, :fun
 
   @doc "The columns of the table"
-  slot cols, args: [item: ^data], required: true
+  slot cols, generator_prop: :data, required: true
 
   def render(assigns) do
     ~F"""
@@ -46,8 +46,8 @@ defmodule Surface.Catalogue.Components.Table do
         </thead>
         <tbody>
           <tr :for={{item, index} <- Enum.with_index(@data)} class={row_class_fun(@rowClass).(item, index)}>
-            <td :for.index={index <- @cols}>
-              <span><#slot name="cols" index={index} :args={item: item} /></span>
+            <td :for={col <- @cols}>
+              <span><#slot {col} generator_value={item} /></span>
             </td>
           </tr>
         </tbody>

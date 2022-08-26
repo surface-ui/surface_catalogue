@@ -59,7 +59,7 @@ defmodule Surface.Catalogue.Components.Tabs do
           :show={tab.visible && @active_tab == index}
           class={"tab-item animated #{@animation} faster"}
         >
-          <#slot name="tabs" index={index} />
+          <#slot {tab} />
         </div>
       </section>
     </div>
