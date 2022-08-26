@@ -27,6 +27,6 @@
   "plug_crypto": {:hex, :plug_crypto, "1.2.2", "05654514ac717ff3a1843204b424477d9e60c143406aa94daf2274fdd280794d", [:mix], [], "hexpm", "87631c7ad914a5a445f0a3809f99b079113ae4ed4b867348dd9eec288cecb6db"},
   "ranch": {:hex, :ranch, "1.8.0", "8c7a100a139fd57f17327b6413e4167ac559fbc04ca7448e9be9057311597a1d", [:make, :rebar3], [], "hexpm", "49fbcfd3682fab1f5d109351b61257676da1a2fdbe295904176d5e521a2ddfe5"},
   "sourceror": {:hex, :sourceror, "0.11.1", "1b80efe84330beefb6b3da95b75c1e1cdefe9dc785bf4c5064fae251a8af615c", [:mix], [], "hexpm", "22b6828ee5572f6cec75cc6357f3ca6c730a02954cef0302c428b3dba31e5e74"},
-  "surface": {:git, "https://github.com/surface-ui/surface.git", "64e59f889317261fa7b4e8dd34a05f416b4774d5", []},
+  "surface": {:git, "https://github.com/surface-ui/surface.git", "84559e852cc002a87ed06d60f9d94b61b72500c9", []},
   "telemetry": {:hex, :telemetry, "1.1.0", "a589817034a27eab11144ad24d5c0f9fab1f58173274b1e9bae7074af9cbee51", [:rebar3], [], "hexpm", "b727b2a1f75614774cff2d7565b64d0dfa5bd52ba517f16543e6fc7efcc0df48"},
 }
