@@ -142,14 +142,19 @@ defmodule Surface.Catalogue.Components.ComponentAPI do
   end
 
   defp format_args(opts) do
-    if Keyword.has_key?(opts, :args) do
-      opts[:args]
-      |> Enum.map(fn key ->
-        raw(["<code>", inspect(key), "</code>"])
-      end)
-      |> Enum.intersperse(", ")
-    else
-      "—"
+    cond do
+      Keyword.has_key?(opts, :args) ->
+        opts[:args]
+        |> Enum.map(fn key ->
+          raw(["<code>", inspect(key), "</code>"])
+        end)
+        |> Enum.intersperse(", ")
+
+      Keyword.has_key?(opts, :arg) ->
+        raw(["<code>", Macro.to_string(opts[:arg]), "</code>"])
+
+      true ->
+        "—"
     end
   end
 
