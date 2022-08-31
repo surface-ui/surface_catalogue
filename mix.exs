@@ -75,14 +75,15 @@ defmodule Surface.Catalogue.MixProject do
       {:surface, github: "surface-ui/surface"},
       {:earmark, "~>1.4.21"},
       {:ex_doc, ">= 0.19.0", only: :docs},
-      {:makeup_elixir, "~> 0.15.1"}
+      {:makeup_elixir, "~> 0.16.0"}
     ]
   end
 
   defp docs do
     [
       source_ref: "v#{@version}",
-      source_url: "https://github.com/surface-ui/surface_catalogue"
+      source_url: "https://github.com/surface-ui/surface_catalogue",
+      nest_modules_by_prefix: [Surface.Catalogue]
     ]
   end
 
