@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.0 (2022-09-01)
+  * Support Surface `v0.8.0`
+  * Support multiple examples on a single module (#43)
+  * Add slots tab to the playground tools (#42)
+  * Handle `:number` values in playground inputs
+  * Display values from the `values!` option
+  * Add arguments on public API slot section (#37)
+  * Show error message for invalid props (#39)
+
 ## v0.4.1 (2022-03-21)
   * Upgrade to earmark 1.4.23, earmark_parser 1.4.24
   * Stop passing `smartypants` to Earmark
