@@ -19,6 +19,9 @@ config :esbuild,
 # assets in "/assets/catalogue" as they are the same we already have in `/assets`.
 config :surface_catalogue, :assets_path, "/assets"
 
-unless Mix.env() == :docs do
-  import_config "#{Mix.env()}.exs"
+if Mix.env() == :dev do
+  # Required at compile time
+  config :surface_catalogue, Surface.Catalogue.Server.Endpoint,
+    code_reloader: true,
+    debug_errors: true
 end
