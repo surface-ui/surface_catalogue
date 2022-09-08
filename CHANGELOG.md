@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.1 (2022-09-08)
+  * Fix application depending on `Mix`
+
 ## v0.5.0 (2022-09-01)
   * Support Surface `v0.8.0`
   * Support multiple examples on a single module (#43)
