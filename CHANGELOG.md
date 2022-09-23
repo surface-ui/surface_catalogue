@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.2 (2022-09-23)
+  * Support Surface `v0.9` and Liveview `v0.18`
+
 ## v0.5.1 (2022-09-08)
   * Fix application depending on `Mix`
 
