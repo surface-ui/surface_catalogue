@@ -45,7 +45,7 @@ defmodule Surface.Catalogue.LayoutView do
           <div class="content has-text-centered">
             <p>
               <strong>Surface</strong> <i>v{surface_version()}</i> -
-              <a href="http://github.com/msaraiva/surface">github.com/msaraiva/surface</a>.
+              <a href="https://github.com/surface-ui/surface">github.com/surface-ui/surface</a>.
             </p>
           </div>
         </footer>
