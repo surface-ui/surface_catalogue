@@ -1,5 +1,5 @@
 defmodule Surface.Catalogue.LayoutView do
-  use Phoenix.View,
+  use Phoenix.Template,
     namespace: Surface.Catalogue,
     root: "lib/surface/catalogue/templates"
 
@@ -24,7 +24,7 @@ defmodule Surface.Catalogue.LayoutView do
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
         />
         <link phx-track-static rel="stylesheet" href={assets_file("app.css")}>
-        {Phoenix.HTML.raw("<style>" <> render("makeup.css") <> "</style>")}
+        {Phoenix.HTML.raw("<style>" <> render("makeup.css", %{}) <> "</style>")}
         <script defer phx-track-static type="text/javascript" src={assets_file("app.js")} />
       </head>
       <body>

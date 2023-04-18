@@ -25,7 +25,7 @@ defmodule Surface.Catalogue.Server do
   end
 
   defmodule ErrorView do
-    use Phoenix.View,
+    use Phoenix.Template,
       root: "lib/surface/catalogue/templates",
       namespace: Surface.Catalogue
 
