@@ -24,10 +24,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
     ~F"""
     <ul class={"menu-list", "is-hidden": !show_nodes?(parent_keys, selected_component, single_catalogue?)}>
       <li :if={parent_keys == []}>
-        <LivePatch
-          to={@socket.router.__helpers__().live_path(@socket, Surface.Catalogue.PageLive)}
-          class={"has-text-weight-bold": !selected_component}
-        >
+        <LivePatch to="/catalogue/components/" class={"has-text-weight-bold": !selected_component}>
           <span class="icon">
             <i class="fa fa-home" />
           </span>
@@ -41,7 +38,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
           {has_child_selected?} = {has_child_selected?(mod_path, selected_component)}}
         <li :if={component_type != :none}>
           <LivePatch
-            to={@socket.router.__helpers__().live_path(@socket, Surface.Catalogue.PageLive, inspect(module))}
+            to={"/catalogue/components/#{inspect(module)}"}
             class={"has-text-weight-bold": selected_component?(mod_path, selected_component)}
           >
             <span class="icon">

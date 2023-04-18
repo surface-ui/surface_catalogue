@@ -99,19 +99,19 @@ defmodule Surface.Catalogue.PageLive do
               <div class="component tabs is-medium">
                 <ul>
                   <li class={"is-active": @action == "docs"}>
-                    <LivePatch to={path_to(@socket, __MODULE__, @component_name, :docs)}>
+                    <LivePatch to={path_to(__MODULE__, @component_name, :docs)}>
                       <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true" /></span>
                       <span>Docs &amp; API</span>
                     </LivePatch>
                   </li>
                   <li :if={@has_example?} class={"is-active": @action == "example"}>
-                    <LivePatch to={path_to(@socket, __MODULE__, @component_name, :example)}>
+                    <LivePatch to={path_to(__MODULE__, @component_name, :example)}>
                       <span class="icon is-small"><i class="fas fa-image" aria-hidden="true" /></span>
                       <span>Examples</span>
                     </LivePatch>
                   </li>
                   <li :if={@has_playground?} class={"is-active": @action == "playground"}>
-                    <LivePatch to={path_to(@socket, __MODULE__, @component_name, :playground)}>
+                    <LivePatch to={path_to(__MODULE__, @component_name, :playground)}>
                       <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true" /></span>
                       <span id="playground-tab-label" phx-update="ignore">Playground</span>
                     </LivePatch>
@@ -139,7 +139,7 @@ defmodule Surface.Catalogue.PageLive do
                         <iframe
                           scrolling={if example.scrolling, do: "yes", else: "no"}
                           id={"example-iframe-#{index}-#{example.func}"}
-                          src={path_to(@socket, ExampleLive, example.module_name,
+                          src={path_to(ExampleLive, example.module_name,
                             __window_id__: @__window_id__,
                             func: example.func
                           )}
@@ -169,7 +169,7 @@ defmodule Surface.Catalogue.PageLive do
                   <iframe
                     id="playground-iframe"
                     :if={@has_playground?}
-                    src={path_to(@socket, PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__)}
+                    src={path_to(PlaygroundLive, Enum.at(@playgrounds, 0), __window_id__: @__window_id__)}
                     style={"height: #{@playground_height}; width: #{@playground_width};"}
                     frameborder="0"
                     phx-hook="IframeBody"
@@ -240,12 +240,16 @@ defmodule Surface.Catalogue.PageLive do
     name && Module.safe_concat([name])
   end
 
-  defp path_to(socket, live_view, component_name, action) when is_atom(action) do
-    socket.router.__helpers__().live_path(socket, live_view, component_name, action)
+  defp path_to(__MODULE__, component_name, action) when is_atom(action) do
+    "/catalogue/components/#{component_name}/#{action}"
   end
 
-  defp path_to(socket, live_view, component_name, params) when is_list(params) do
-    socket.router.__helpers__().live_path(socket, live_view, component_name, params)
+  defp path_to(ExampleLive, component_name, params) when is_list(params) do
+    "/catalogue/examples/#{component_name}?#{URI.encode_query(params)}"
+  end
+
+  defp path_to(PlaygroundLive, component_name, params) when is_list(params) do
+    "/catalogue/playgrounds/#{component_name}?#{URI.encode_query(params)}"
   end
 
   defp loading(message) do

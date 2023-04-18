@@ -55,7 +55,7 @@ defmodule Surface.Catalogue.Components.StateDialog do
         </section>
         <footer class="modal-card-foot" style="padding: 15px 20px;">
           <span style="width: 100%" class="has-text-grey">
-            <Form for={:options} change="options_change">
+            <Form for={%{}} as={:options} change="options_change">
               <div class="columns is-vcentered" style="margin-top: 0px;">
                 <div class="column is-narrow has-text-centered">
                   <div class="control">
