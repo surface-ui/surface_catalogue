@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.0 (2023-04-18)
+  * Support Surface `v0.10` and Liveview `v0.18.8`
+
 ## v0.5.2 (2022-09-23)
   * Support Surface `v0.9` and Liveview `v0.18`
 
