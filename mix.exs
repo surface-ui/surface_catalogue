@@ -68,7 +68,7 @@ defmodule Surface.Catalogue.MixProject do
     [
       {:jason, "~> 1.0"},
       {:html_entities, "~> 0.4"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.0", optional: true},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
