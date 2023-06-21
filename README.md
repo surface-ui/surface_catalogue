@@ -189,7 +189,7 @@ or using `iex`:
 iex -S mix dev
 ```
 
-You can now access the catalogue at [localhost:4000](http://localhost:4000/).
+You can now access the catalogue at [localhost:4000](http://localhost:4000/catalogue/).
 
 If you need, you can also start the server using a different port:
 

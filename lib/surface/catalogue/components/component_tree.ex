@@ -24,7 +24,7 @@ defmodule Surface.Catalogue.Components.ComponentTree do
     ~F"""
     <ul class={"menu-list", "is-hidden": !show_nodes?(parent_keys, selected_component, single_catalogue?)}>
       <li :if={parent_keys == []}>
-        <LivePatch to="/catalogue/components/" class={"has-text-weight-bold": !selected_component}>
+        <LivePatch to="/catalogue/" class={"has-text-weight-bold": !selected_component}>
           <span class="icon">
             <i class="fa fa-home" />
           </span>

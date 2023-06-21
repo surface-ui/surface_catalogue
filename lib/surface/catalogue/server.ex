@@ -20,7 +20,7 @@ defmodule Surface.Catalogue.Server do
 
     scope "/" do
       pipe_through :browser
-      surface_catalogue("/")
+      surface_catalogue("/catalogue")
     end
   end
 
