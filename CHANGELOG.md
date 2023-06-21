@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.1 (2023-06-21)
+  * Support Surface `v0.11`
+  * Make `plug_cowboy` optional (#50)
+
 ## v0.6.0 (2023-04-18)
   * Support Surface `v0.10` and Liveview `v0.18.8`
 
