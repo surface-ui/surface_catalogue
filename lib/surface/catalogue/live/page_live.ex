@@ -81,6 +81,7 @@ defmodule Surface.Catalogue.PageLive do
             components={@components}
             selected_component={@component_name}
             single_catalogue?={@single_catalogue?}
+            examples_and_playgrounds={@examples_and_playgrounds}
           />
           <div class="container column" style="background-color: #fff; min-height: 500px;">
             <div :if={!@component_module and @home_view}>

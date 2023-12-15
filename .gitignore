@@ -34,3 +34,4 @@ node_modules
 # Ignore Surface generated files
 assets/js/_hooks/
 assets/css/_components.css
+assets/css/_variants.js
