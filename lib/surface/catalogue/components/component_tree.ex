@@ -16,12 +16,25 @@ defmodule Surface.Catalogue.Components.ComponentTree do
       class="section column is-narrow is-narrow-mobile is-fullheight is-hidden-mobile"
       style="background-color: #f5f5f5; min-width: 270px;"
     >
-      {render_node(assigns, @components, @selected_component, @single_catalogue?, @examples_and_playgrounds)}
+      {render_node(
+        assigns,
+        @components,
+        @selected_component,
+        @single_catalogue?,
+        @examples_and_playgrounds
+      )}
     </aside>
     """
   end
 
-  def render_node(assigns, node, selected_component, single_catalogue?, parent_keys \\ [], examples_and_playgrounds) do
+  def render_node(
+        assigns,
+        node,
+        selected_component,
+        single_catalogue?,
+        parent_keys \\ [],
+        examples_and_playgrounds
+      ) do
     ~F"""
     <ul class={"menu-list", "is-hidden": !show_nodes?(parent_keys, selected_component, single_catalogue?)}>
       {maybe_render_home_entry(assigns, parent_keys, selected_component)}
@@ -31,11 +44,37 @@ defmodule Surface.Catalogue.Components.ComponentTree do
           module = Module.concat(mod_path),
           component_type = component_type(module),
           {has_child_selected?} = {has_child_selected?(mod_path, selected_component)}}
-        {maybe_render_component_entry(assigns, module, mod_path, selected_component, component_type, key, examples_and_playgrounds)}
+        {maybe_render_component_entry(
+          assigns,
+          module,
+          mod_path,
+          selected_component,
+          component_type,
+          key,
+          examples_and_playgrounds
+        )}
 
-        {maybe_render_single_catalog_components_entry(assigns, value, selected_component, single_catalogue?, parent_keys, mod_path, examples_and_playgrounds)}
+        {maybe_render_single_catalog_components_entry(
+          assigns,
+          value,
+          selected_component,
+          single_catalogue?,
+          parent_keys,
+          mod_path,
+          examples_and_playgrounds
+        )}
 
-        {maybe_render_folder_entry(assigns, has_child_selected?, key, value, selected_component, single_catalogue?, parent_keys, mod_path, examples_and_playgrounds)}
+        {maybe_render_folder_entry(
+          assigns,
+          has_child_selected?,
+          key,
+          value,
+          selected_component,
+          single_catalogue?,
+          parent_keys,
+          mod_path,
+          examples_and_playgrounds
+        )}
       {/for}
     </ul>
     """
@@ -54,7 +93,15 @@ defmodule Surface.Catalogue.Components.ComponentTree do
     """
   end
 
-  def maybe_render_component_entry(assigns, module, mod_path, selected_component, component_type, key, examples_and_playgrounds) do
+  def maybe_render_component_entry(
+        assigns,
+        module,
+        mod_path,
+        selected_component,
+        component_type,
+        key,
+        examples_and_playgrounds
+      ) do
     ~F"""
     <li :if={component_type != :none}>
       <LivePatch
@@ -70,7 +117,15 @@ defmodule Surface.Catalogue.Components.ComponentTree do
     """
   end
 
-  def maybe_render_single_catalog_components_entry(assigns, value, selected_component, single_catalogue?, parent_keys, mod_path, examples_and_playgrounds) do
+  def maybe_render_single_catalog_components_entry(
+        assigns,
+        value,
+        selected_component,
+        single_catalogue?,
+        parent_keys,
+        mod_path,
+        examples_and_playgrounds
+      ) do
     ~F"""
     <li :if={value != %{} && single_catalogue? && parent_keys == []}>
       <a style="cursor: default;">
@@ -79,12 +134,29 @@ defmodule Surface.Catalogue.Components.ComponentTree do
         </span>
         Components
       </a>
-      {render_node(assigns, value, selected_component, single_catalogue?, mod_path, examples_and_playgrounds)}
+      {render_node(
+        assigns,
+        value,
+        selected_component,
+        single_catalogue?,
+        mod_path,
+        examples_and_playgrounds
+      )}
     </li>
     """
   end
 
-  def maybe_render_folder_entry(assigns, has_child_selected?, key, value, selected_component, single_catalogue?, parent_keys, mod_path, examples_and_playgrounds) do
+  def maybe_render_folder_entry(
+        assigns,
+        has_child_selected?,
+        key,
+        value,
+        selected_component,
+        single_catalogue?,
+        parent_keys,
+        mod_path,
+        examples_and_playgrounds
+      ) do
     ~F"""
     <li :if={value != %{} && (!single_catalogue? || parent_keys != [])}>
       <a href="#" onclick="toggleNode(this)">
@@ -93,7 +165,14 @@ defmodule Surface.Catalogue.Components.ComponentTree do
         </span>
         {key}
       </a>
-      {render_node(assigns, value, selected_component, single_catalogue?, mod_path, examples_and_playgrounds)}
+      {render_node(
+        assigns,
+        value,
+        selected_component,
+        single_catalogue?,
+        mod_path,
+        examples_and_playgrounds
+      )}
     </li>
     """
   end
