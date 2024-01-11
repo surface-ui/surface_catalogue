@@ -23,6 +23,10 @@ jobs:
             otp: '25.0'
             check_formatted: true
             warnings_as_errors: true
+          - elixir: '1.15.2'
+            otp: '26.0'
+            check_formatted: true
+            warnings_as_errors: true
     env:
       MIX_ENV: test
     steps:
