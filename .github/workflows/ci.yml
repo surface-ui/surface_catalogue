@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - misc
 
 jobs:
   mix_test:
@@ -14,28 +15,42 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - elixir: 1.13.4
-            otp: 24.0
-          - elixir: 1.13.4
-            otp: 25.0
-          - elixir: 1.14.0
-            otp: 25.0
+          - elixir: '1.13.4'
+            otp: '24.0'
+          - elixir: '1.13.4'
+            otp: '25.0'
+          - elixir: '1.14.0'
+            otp: '25.0'
+            check_formatted: true
+            warnings_as_errors: true
+          - elixir: '1.15.2'
+            otp: '26.0'
             check_formatted: true
             warnings_as_errors: true
     env:
       MIX_ENV: test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
+      - name: Deps and _build cache
+        uses: actions/cache@v3
+        id: deps-cache
+        with:
+          path: |
+              deps
+              _build
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
       - name: Install Dependencies
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: |
           mix local.hex --force
           mix local.rebar --force
           mix deps.get --only test
       - run: mix deps.compile
+        if: steps.deps-cache.outputs.cache-hit != 'true'
       - run: mix format --check-formatted
         if: matrix.check_formatted
       - run: mix compile
