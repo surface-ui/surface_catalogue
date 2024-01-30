@@ -70,11 +70,11 @@ defmodule Surface.Catalogue.MixProject do
       {:html_entities, "~> 0.4"},
       {:plug_cowboy, "~> 2.0", optional: Mix.env() != :dev},
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
-      {:floki, ">= 0.30.0", only: :test},
+      {:floki, ">= 0.35.3", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:surface, "~> 0.10"},
       {:earmark, "~> 1.4.21"},
-      {:ex_doc, ">= 0.19.0", only: :docs},
+      {:ex_doc, ">= 0.31.1", only: :docs},
       {:makeup_elixir, "~> 0.16.0"}
     ]
   end
