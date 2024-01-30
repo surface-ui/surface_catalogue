@@ -72,8 +72,8 @@ defmodule Surface.Catalogue.MixProject do
       {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:surface, "~>0.10"},
-      {:earmark, "~>1.4.21"},
+      {:surface, "~> 0.10"},
+      {:earmark, "~> 1.4.21"},
       {:ex_doc, ">= 0.19.0", only: :docs},
       {:makeup_elixir, "~> 0.16.0"}
     ]
