@@ -87,10 +87,12 @@ defmodule Surface.Catalogue.Server do
     Task.start(fn ->
       children = [
         {Phoenix.PubSub, [name: __MODULE__.PubSub, adapter: Phoenix.PubSub.PG2]},
-        __MODULE__.Endpoint
+        {__MODULE__.Endpoint, [log_access_url: false]}
       ]
 
       {:ok, _} = Supervisor.start_link(children, strategy: :one_for_one)
+      require Logger
+      Logger.info("Access Surface Catalogue at #{__MODULE__.Endpoint.url()}/catalogue")
       Process.sleep(:infinity)
     end)
   end

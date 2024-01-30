@@ -1,7 +1,7 @@
 # Surface Catalogue
 
 This is mostly a prototype, meant to validate a few ideas to have something similar to
-https://storybook.js.org/ for [Surface](https://github.com/msaraiva/surface).
+<https://storybook.js.org/> for [Surface](https://github.com/msaraiva/surface).
 
 ## Installation
 
@@ -179,13 +179,13 @@ end
 
 Run the server with:
 
-```
+```bash
 mix dev
 ```
 
 or using `iex`:
 
-```
+```bash
 iex -S mix dev
 ```
 
@@ -193,7 +193,7 @@ You can now access the catalogue at [localhost:4000](http://localhost:4000/catal
 
 If you need, you can also start the server using a different port:
 
-```
+```bash
 PORT=4444 iex -S mix dev
 ```
 
