@@ -16,6 +16,7 @@ jobs:
         include:
           - elixir: '1.13.4'
             otp: '24.0'
+            old_deps: true
           - elixir: '1.13.4'
             otp: '25.0'
           - elixir: '1.14.0'
@@ -30,11 +31,13 @@ jobs:
       MIX_ENV: test
     steps:
       - uses: actions/checkout@v4
-      # Change to version after https://github.com/erlef/setup-beam/pull/249 is merged
-      - uses: erlef/setup-beam@afd4927d4af60a676d1a691cf3c51dd420cdeb00
+      - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
+      - name: Use old lock file
+        if: matrix.old_deps
+        run: mv mix.lock.old mix.lock
       - name: Deps and _build cache
         uses: actions/cache@v4
         id: deps-cache
