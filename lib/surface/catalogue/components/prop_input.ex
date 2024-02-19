@@ -39,126 +39,131 @@ defmodule Surface.Catalogue.Components.PropInput do
     "#{prop.name}#{required_str}"
   end
 
-  defp input(%{prop: prop, value: value, form: form} = assigns) do
-    case {prop.type, get_choices(prop)} do
+  defp input(assigns) do
+    case {assigns.prop.type, get_choices(assigns.prop)} do
       {:boolean, _} ->
         ~F"""
-        <Checkbox field={prop.name} value={value} opts={style: "height: 26px;"} form={form} />
+        <Checkbox field={@prop.name} value={@value} opts={style: "height: 26px;"} form={@form} />
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:string, []} ->
         ~F"""
         <TextInput
-          field={prop.name}
-          value={value}
+          field={@prop.name}
+          value={@value}
           class="input is-small"
-          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
-          form={form}
+          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: @prop.name}
+          form={@form}
         />
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:string, choices} ->
+        assigns = assign(assigns, choices: choices)
+
         ~F"""
         <div class="select is-small">
-          <Select field={prop.name} options={choices} selected={value} form={form} />
+          <Select field={@prop.name} options={@choices} selected={@value} form={@form} />
         </div>
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:atom, []} ->
         ~F"""
         <TextInput
-          field={prop.name}
-          value={value_to_string(value)}
+          field={@prop.name}
+          value={value_to_string(@value)}
           class="input is-small"
           opts={placeholder: @placeholder}
-          form={form}
+          form={@form}
         />
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:atom, choices} ->
         choices = Enum.map(choices, fn {k, v} -> {inspect(k), inspect(v)} end)
+        assigns = assign(assigns, choices: choices)
 
         ~F"""
         <div class="select is-small">
-          <Select field={prop.name} options={choices} selected={value_to_string(value)} form={form} />
+          <Select field={@prop.name} options={@choices} selected={value_to_string(@value)} form={@form} />
         </div>
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:css_class, _} ->
         ~F"""
         <TextInput
-          field={prop.name}
-          value={css_value_to_string(value)}
+          field={@prop.name}
+          value={css_value_to_string(@value)}
           class="input is-small"
-          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
-          form={form}
+          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: @prop.name}
+          form={@form}
         />
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:number, []} ->
         ~F"""
         <NumberInput
-          field={prop.name}
-          value={value}
+          field={@prop.name}
+          value={@value}
           class="input is-small"
           opts={placeholder: @placeholder}
-          form={form}
+          form={@form}
         />
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:integer, []} ->
         ~F"""
         <NumberInput
-          field={prop.name}
-          value={value}
+          field={@prop.name}
+          value={@value}
           class="input is-small"
           opts={placeholder: @placeholder}
-          form={form}
+          form={@form}
         />
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {:integer, choices} ->
+        assigns = assign(assigns, choices: choices)
+
         ~F"""
         <div class="select is-small">
-          <Select field={prop.name} options={choices} selected={value} form={form} />
+          <Select field={@prop.name} options={@choices} selected={@value} form={@form} />
         </div>
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
       {type, []} when type in [:list, :keyword] ->
         ~F"""
         <TextInput
-          field={prop.name}
-          value={value_to_string(value)}
+          field={@prop.name}
+          value={value_to_string(@value)}
           class="input is-small"
-          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: prop.name}
-          form={form}
+          opts={placeholder: @placeholder, phx_keydown: "text_prop_keydown", phx_value_prop: @prop.name}
+          form={@form}
         />
 
-        {error_message(prop)}
+        {error_message(@prop)}
         """
 
-      {type, _} ->
+      {_type, _} ->
         ~F"""
         <span class="is-size-7">
-          [editor not available for type <b>{inspect(type)}</b>]
+          [editor not available for type <b>{inspect(@prop.type)}</b>]
         </span>
         """
     end

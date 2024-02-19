@@ -15,31 +15,36 @@ defmodule Surface.Catalogue.Components.ComponentTree do
       class="section column is-narrow is-narrow-mobile is-fullheight is-hidden-mobile"
       style="background-color: #f5f5f5; min-width: 270px;"
     >
-      {render_node(assigns, @components, @selected_component, @single_catalogue?)}
+      <.render_node
+        node={@components}
+        selected_component={@selected_component}
+        single_catalogue?={@single_catalogue?}
+        parent_keys={[]}
+      />
     </aside>
     """
   end
 
-  def render_node(assigns, node, selected_component, single_catalogue?, parent_keys \\ []) do
+  def render_node(assigns) do
     ~F"""
-    <ul class={"menu-list", "is-hidden": !show_nodes?(parent_keys, selected_component, single_catalogue?)}>
-      <li :if={parent_keys == []}>
-        <LivePatch to="/catalogue/" class={"has-text-weight-bold": !selected_component}>
+    <ul class={"menu-list", "is-hidden": !show_nodes?(@parent_keys, @selected_component, @single_catalogue?)}>
+      <li :if={@parent_keys == []}>
+        <LivePatch to="/catalogue/" class={"has-text-weight-bold": !@selected_component}>
           <span class="icon">
             <i class="fa fa-home" />
           </span>
           Home
         </LivePatch>
       </li>
-      {#for {key, value} <- Enum.sort(node),
-          mod_path = parent_keys ++ [key],
+      {#for {key, value} <- Enum.sort(@node),
+          mod_path = @parent_keys ++ [key],
           module = Module.concat(mod_path),
           component_type = component_type(module),
-          {has_child_selected?} = {has_child_selected?(mod_path, selected_component)}}
+          {has_child_selected?} = {has_child_selected?(mod_path, @selected_component)}}
         <li :if={component_type != :none}>
           <LivePatch
             to={"/catalogue/components/#{inspect(module)}"}
-            class={"has-text-weight-bold": selected_component?(mod_path, selected_component)}
+            class={"has-text-weight-bold": selected_component?(mod_path, @selected_component)}
           >
             <span class="icon">
               <i class={component_icon(component_type)} />
@@ -47,23 +52,33 @@ defmodule Surface.Catalogue.Components.ComponentTree do
             {key}
           </LivePatch>
         </li>
-        <li :if={value != %{} && @single_catalogue? && parent_keys == []}>
+        <li :if={value != %{} && @single_catalogue? && @parent_keys == []}>
           <a style="cursor: default;">
             <span class="icon">
               <i class="fa fa-puzzle-piece" />
             </span>
             Components
           </a>
-          {render_node(assigns, value, selected_component, single_catalogue?, mod_path)}
+          <.render_node
+            node={value}
+            selected_component={@selected_component}
+            single_catalogue?={@single_catalogue?}
+            parent_keys={mod_path}
+          />
         </li>
-        <li :if={value != %{} && (!@single_catalogue? || parent_keys != [])}>
+        <li :if={value != %{} && (!@single_catalogue? || @parent_keys != [])}>
           <a href="#" onclick="toggleNode(this)">
             <span class="icon">
               <i class={:far, "fa-folder-open": has_child_selected?, "fa-folder": !has_child_selected?} />
             </span>
             {key}
           </a>
-          {render_node(assigns, value, selected_component, single_catalogue?, mod_path)}
+          <.render_node
+            node={value}
+            selected_component={@selected_component}
+            single_catalogue?={@single_catalogue?}
+            parent_keys={mod_path}
+          />
         </li>
       {/for}
     </ul>
