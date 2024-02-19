@@ -162,7 +162,7 @@ defmodule Surface.Catalogue.PageLive do
                     </div>
                   {/for}
                   <div :show={!connected?(@socket)} class="container">
-                    {loading("Loading live #{@action}s...")}
+                    <.loading message={"Loading live #{@action}s..."} />
                   </div>
                 </div>
                 <div :show={@action == "playground"}>
@@ -178,7 +178,7 @@ defmodule Surface.Catalogue.PageLive do
                     <PlaygroundTools id="playground_tools" session={%{"__window_id__" => @__window_id__}} />
                   </div>
                   <div :show={!connected?(@socket)} class="container">
-                    {loading("Loading live #{@action}...")}
+                    <.loading message={"Loading live #{@action}..."} />
                   </div>
                 </div>
               </div>
@@ -252,13 +252,11 @@ defmodule Surface.Catalogue.PageLive do
     "/catalogue/playgrounds/#{component_name}?#{URI.encode_query(params)}"
   end
 
-  defp loading(message) do
-    assigns = %{}
-
+  defp loading(assigns) do
     ~F"""
     <div class="columns is-centered is-vcentered is-mobile" style="height: 300px">
       <div class="column is-narrow has-text-centered subtitle has-text-grey">
-        {message}
+        {@message}
       </div>
     </div>
     """

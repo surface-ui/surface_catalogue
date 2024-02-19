@@ -13,6 +13,7 @@ defmodule SurfaceCatalogue.SampleComponents.EditableProps.Playground do
     css_class: ["css", "class"],
     integer: 4,
     integer_choices: [1, 2, 3],
+    number: 3.14,
     any: nil
   ]
 end

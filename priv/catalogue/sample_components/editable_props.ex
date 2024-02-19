@@ -12,6 +12,7 @@ defmodule SurfaceCatalogue.SampleComponents.EditableProps do
   prop css_class, :css_class
   prop integer, :integer
   prop integer_choices, :integer, values: [1, 2, 3]
+  prop number, :number
   prop list, :list
   prop keyword, :keyword
   prop any, :any
@@ -28,6 +29,7 @@ defmodule SurfaceCatalogue.SampleComponents.EditableProps do
     <p><strong>css_class</strong>: {@css_class}</p>
     <p><strong>integer</strong>: {@integer}</p>
     <p><strong>integer_choices</strong>: {@integer_choices}</p>
+    <p><strong>number</strong>: {@number}</p>
     <p><strong>list</strong>: {inspect(@list)}</p>
     <p><strong>keyword</strong>: {inspect(@keyword)}</p>
     <p><strong>any</strong>: {@any}</p>
