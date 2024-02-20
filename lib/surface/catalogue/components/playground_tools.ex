@@ -5,7 +5,6 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
   alias Surface.Catalogue.Components.Tabs.TabItem
   alias Surface.Catalogue.Components.PropInput
   alias Surface.Catalogue.Components.StateDialog
-  alias Surface.Components.Form
   alias Surface.Catalogue.Playground
 
   @event_log_tab 2
@@ -55,20 +54,20 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
       <Tabs id="playground-tools-tabs" animated={false} tab_click_callback={&tab_click_callback/1}>
         <TabItem label="Properties" visible={@props != []}>
           <div style="margin-top: 0.7rem;">
-            <Form for={%{}} as={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
+            <.form for={%{}} as={:props_values} phx-change="change" autocomplete="off">
               {#for prop <- @props}
-                <PropInput prop={prop} value={@props_values[prop.name]} form={form} />
+                <PropInput prop={prop} value={@props_values[prop.name]} />
               {/for}
-            </Form>
+            </.form>
           </div>
         </TabItem>
         <TabItem label="Slots" visible={@slots != []}>
           <div style="margin-top: 0.7rem;">
-            <Form for={%{}} as={:props_values} change="change" opts={autocomplete: "off"} :let={form: form}>
+            <.form for={%{}} as={:props_values} phx-change="change" autocomplete="off">
               {#for slot <- @slots}
-                <PropInput prop={slot} value={@props_values[slot.name]} form={form} nil_placeholder="no slot" />
+                <PropInput prop={slot} value={@props_values[slot.name]} nil_placeholder="no slot" />
               {/for}
-            </Form>
+            </.form>
           </div>
         </TabItem>
         <TabItem label="State">

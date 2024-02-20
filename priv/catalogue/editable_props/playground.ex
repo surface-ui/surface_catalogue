@@ -7,13 +7,15 @@ defmodule SurfaceCatalogue.SampleComponents.EditableProps.Playground do
   @props [
     boolean: true,
     string: "some string",
-    string_choices: ["1", "2", "3"],
+    string_choices: "2",
     atom: :an_atom,
     atom_choices: :a,
     css_class: ["css", "class"],
     integer: 4,
-    integer_choices: [1, 2, 3],
+    integer_choices: 2,
     number: 3.14,
-    any: nil
+    list: [1, "string", :atom],
+    keyword: [key1: 1, key2: "2", key3: :three],
+    any: %{a: :map}
   ]
 end
