@@ -304,6 +304,7 @@ defmodule Surface.Catalogue.Components.PlaygroundTools do
 
   def handle_info({:playground_event_received, event, value, props_values}, socket) do
     event_from_subject? = Enum.any?(socket.assigns.events, &("#{&1.name}" == event))
+    props_values = Map.merge(socket.assigns.props_values, props_values)
 
     if event_from_subject? do
       id = :erlang.unique_integer([:positive]) |> to_string()
