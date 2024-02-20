@@ -58,7 +58,13 @@ defmodule Surface.Catalogue.Components.StateDialog do
                   <div class="control">
                     <label class="checkbox">
                       <input name="options[show_builtin]" type="hidden" value="false">
-                      <input id="options_show_builtin" name="options[show_builtin]" type="checkbox" value="true" checked={@show_builtin}>
+                      <input
+                        id="options_show_builtin"
+                        name="options[show_builtin]"
+                        type="checkbox"
+                        value="true"
+                        checked={@show_builtin}
+                      />
                       Built-in assigns
                     </label>
                   </div>
@@ -67,7 +73,13 @@ defmodule Surface.Catalogue.Components.StateDialog do
                   <div class="control">
                     <label class="checkbox">
                       <input name="options[show_private]" type="hidden" value="false">
-                      <input id="options_show_private" name="options[show_private]" type="checkbox" value="true" checked={@show_private}>
+                      <input
+                        id="options_show_private"
+                        name="options[show_private]"
+                        type="checkbox"
+                        value="true"
+                        checked={@show_private}
+                      />
                       Private assigns
                     </label>
                   </div>

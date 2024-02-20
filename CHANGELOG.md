@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.3 (yyyy-mm-dd)
+
+* Remove dependency on Surface Forms (#56)
+
 ## v0.6.2 (2024-02-20)
 
 * Fix bug when dispatching events creared the slot value
