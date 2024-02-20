@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.2 (2024-02-20)
+  * Fix bug when dispatching events creared the slot value
+  * Fix warnings related to using variables inside Liveview templates
+
 ## v0.6.1 (2023-06-21)
   * Support Surface `v0.11`
   * Make `plug_cowboy` optional (#50)
