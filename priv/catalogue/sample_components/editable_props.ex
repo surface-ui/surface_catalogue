@@ -24,15 +24,15 @@ defmodule SurfaceCatalogue.SampleComponents.EditableProps do
     <p><strong>boolean</strong>: {@boolean}</p>
     <p><strong>string</strong>: {@string}</p>
     <p><strong>string_choices</strong>: {@string_choices}</p>
-    <p><strong>atom</strong>: {@atom}</p>
-    <p><strong>atom_choices</strong>: {@atom_choices}</p>
-    <p><strong>css_class</strong>: {@css_class}</p>
+    <p><strong>atom</strong>: {inspect(@atom)}</p>
+    <p><strong>atom_choices</strong>: {inspect(@atom_choices)}</p>
+    <p><strong>css_class</strong>: {inspect(@css_class)}</p>
     <p><strong>integer</strong>: {@integer}</p>
     <p><strong>integer_choices</strong>: {@integer_choices}</p>
     <p><strong>number</strong>: {@number}</p>
     <p><strong>list</strong>: {inspect(@list)}</p>
     <p><strong>keyword</strong>: {inspect(@keyword)}</p>
-    <p><strong>any</strong>: {@any}</p>
+    <p><strong>any</strong>: {inspect(@any)}</p>
     """
   end
 end

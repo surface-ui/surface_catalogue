@@ -11,9 +11,6 @@ defmodule Surface.Catalogue.Components.StateDialog do
   data show_private, :boolean, default: false
   data playground_pid, :pid, default: nil
 
-  alias Surface.Components.Form
-  alias Surface.Components.Form.Checkbox
-
   def update(assigns, socket) do
     socket =
       if assigns[:component_id] do
@@ -55,12 +52,19 @@ defmodule Surface.Catalogue.Components.StateDialog do
         </section>
         <footer class="modal-card-foot" style="padding: 15px 20px;">
           <span style="width: 100%" class="has-text-grey">
-            <Form for={%{}} as={:options} change="options_change">
+            <.form for={%{}} as={:options} phx-change="options_change" phx-target={@myself}>
               <div class="columns is-vcentered" style="margin-top: 0px;">
                 <div class="column is-narrow has-text-centered">
                   <div class="control">
                     <label class="checkbox">
-                      <Checkbox field={:show_builtin} value={@show_builtin} />
+                      <input name="options[show_builtin]" type="hidden" value="false">
+                      <input
+                        id="options_show_builtin"
+                        name="options[show_builtin]"
+                        type="checkbox"
+                        value="true"
+                        checked={@show_builtin}
+                      />
                       Built-in assigns
                     </label>
                   </div>
@@ -68,13 +72,20 @@ defmodule Surface.Catalogue.Components.StateDialog do
                 <div class="column is-narrow has-text-centered">
                   <div class="control">
                     <label class="checkbox">
-                      <Checkbox field={:show_private} value={@show_private} />
+                      <input name="options[show_private]" type="hidden" value="false">
+                      <input
+                        id="options_show_private"
+                        name="options[show_private]"
+                        type="checkbox"
+                        value="true"
+                        checked={@show_private}
+                      />
                       Private assigns
                     </label>
                   </div>
                 </div>
               </div>
-            </Form>
+            </.form>
           </span>
           <button class="button is-info" :on-click="hide">
             Close
