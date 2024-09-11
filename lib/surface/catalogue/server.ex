@@ -62,7 +62,7 @@ defmodule Surface.Catalogue.Server do
     plug Plug.Parsers,
       parsers: [:urlencoded, :multipart, :json],
       pass: ["*/*"],
-      json_decoder: Jason
+      json_decoder: Phoenix.json_library()
 
     plug Router
   end
