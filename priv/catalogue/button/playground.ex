@@ -1,6 +1,6 @@
 defmodule SurfaceCatalogue.SampleComponents.Button.Playground do
   use Surface.Catalogue.Playground,
-    catalogue: Surface.Components.Catalogue,
+    catalogue: SurfaceCatalogue.SampleCatalogue,
     subject: SurfaceCatalogue.SampleComponents.Button,
     height: "170px"
 

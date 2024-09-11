@@ -1,6 +1,6 @@
 defmodule SurfaceCatalogue.SampleComponents.Card.Playground do
   use Surface.Catalogue.Playground,
-    catalogue: Surface.Components.Catalogue,
+    catalogue: SurfaceCatalogue.SampleCatalogue,
     subject: SurfaceCatalogue.SampleComponents.Card,
     height: "300px"
 

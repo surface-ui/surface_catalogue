@@ -1,6 +1,6 @@
 defmodule SurfaceCatalogue.SampleComponents.EditableProps.Playground do
   use Surface.Catalogue.Playground,
-    catalogue: Surface.Components.Catalogue,
+    catalogue: SurfaceCatalogue.SampleCatalogue,
     subject: SurfaceCatalogue.SampleComponents.EditableProps,
     height: "355px"
 
