@@ -81,9 +81,15 @@ defmodule Surface.Catalogue.MixProject do
 
   defp docs do
     [
+      main: "readme",
       source_ref: "v#{@version}",
       source_url: "https://github.com/surface-ui/surface_catalogue",
-      nest_modules_by_prefix: [Surface.Catalogue]
+      nest_modules_by_prefix: [Surface.Catalogue],
+      extras: [
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE.md"
+      ]
     ]
   end
 
