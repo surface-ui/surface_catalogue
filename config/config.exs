@@ -1,5 +1,6 @@
 import Config
 
+config :phoenix, :json_library, Jason
 config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation

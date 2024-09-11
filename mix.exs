@@ -70,7 +70,7 @@ defmodule Surface.Catalogue.MixProject do
       {:earmark, "~> 1.4.21"},
       {:makeup_elixir, "~> 0.16.0"},
       {:html_entities, "~> 0.4"},
-      {:jason, "~> 1.0", only: :dev},
+      {:jason, "~> 1.0", optional: true, override: true},
       {:plug_cowboy, "~> 2.0", only: :dev},
       {:esbuild, "~> 0.2", only: :dev},
       {:floki, ">= 0.35.3", only: :test},
