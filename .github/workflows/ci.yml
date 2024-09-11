@@ -51,8 +51,8 @@ jobs:
         id: blend-deps-cache
         with:
           path: |
-              /blend/_build/${{matrix.blend}}
-              /blend/deps/${{matrix.blend}}
+              blend/_build/${{matrix.blend}}
+              blend/deps/${{matrix.blend}}
           key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('blend/lowest.mix.lock') }}
       - name: Install Dependencies
         if: steps.deps-cache.outputs.cache-hit != 'true' || steps.blend-deps-cache.outputs.cache-hit != 'true'
