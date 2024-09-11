@@ -46,9 +46,14 @@ defmodule Surface.Catalogue.Server do
       plug Phoenix.CodeReloader
     end
 
+    def static_from() do
+      app = Mix.Project.config()[:app]
+      Application.app_dir(app, "priv/static")
+    end
+
     plug Plug.Static,
       at: "/",
-      from: :surface_catalogue,
+      from: {__MODULE__, :static_from, []},
       gzip: false,
       only: ~w(assets)
 
