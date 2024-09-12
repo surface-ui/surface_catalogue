@@ -1,6 +1,9 @@
 import Config
 
-config :phoenix, :json_library, Jason
+if System.get_env("BLEND") == "lowest" do
+  config :phoenix, :json_library, Jason
+end
+
 config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation

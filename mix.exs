@@ -1,3 +1,5 @@
+Code.compile_file("blend/premix.exs")
+
 defmodule Surface.Catalogue.MixProject do
   use Mix.Project
 
@@ -18,6 +20,7 @@ defmodule Surface.Catalogue.MixProject do
       xref: [exclude: Surface.Catalogue.Playground],
       package: package()
     ]
+    |> Blend.Premix.patch_project()
   end
 
   def application do
@@ -70,13 +73,15 @@ defmodule Surface.Catalogue.MixProject do
       {:earmark, "~> 1.4.21"},
       {:makeup_elixir, "~> 0.16.0"},
       {:html_entities, "~> 0.4"},
-      {:jason, "~> 1.0", optional: true, override: true},
-      {:plug_cowboy, "~> 2.0", only: :dev},
+      {:jason, "~> 1.0", only: :dev},
+      {:plug_cowboy, "~> 2.3", only: :dev},
       {:esbuild, "~> 0.2", only: :dev},
+      {:blend, "~> 0.4.0", only: :dev},
       {:floki, ">= 0.35.3", only: :test},
       {:phoenix_live_reload, "~> 1.2", optional: true, only: [:prod, :dev]},
       {:ex_doc, ">= 0.31.1", only: :docs}
     ]
+    |> Blend.Premix.patch_deps()
   end
 
   defp docs do
