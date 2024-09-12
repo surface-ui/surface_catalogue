@@ -33,6 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
+        env:
+          BLEND: ''
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
