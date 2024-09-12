@@ -8,7 +8,7 @@ on:
 
 jobs:
   mix_test:
-    name: mix test (Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}})
+    name: mix test (matrix.blend && 'Blend ${{matrix.blend}} | Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}}' || 'Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}}')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -16,7 +16,7 @@ jobs:
         include:
           - elixir: '1.13.4'
             otp: '24.0'
-            blend: lowest
+            blend: 'lowest'
           - elixir: '1.13.4'
             otp: '25.0'
           - elixir: '1.14.0'
@@ -53,7 +53,7 @@ jobs:
           path: |
               blend/_build/${{matrix.blend}}
               blend/deps/${{matrix.blend}}
-          key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('blend/lowest.mix.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles(format('blend/{0}.mix.lock', matrix.blend)) }}
       - name: Install Dependencies
         if: steps.deps-cache.outputs.cache-hit != 'true' || steps.blend-deps-cache.outputs.cache-hit != 'true'
         run: |
