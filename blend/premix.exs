@@ -60,10 +60,11 @@ defmodule Blend.Premix do
     mix_dep = List.keyfind!(mix_deps, blend_app, 0)
     mix_requirement = elem(mix_dep, 1)
 
-    if not Hex.Solver.Constraint.allows_all?(
-         Hex.Solver.parse_constraint!(mix_requirement),
-         Hex.Solver.parse_constraint!(blend_requirement)
-       ) do
+    if is_binary(blend_requirement) and
+         not Hex.Solver.Constraint.allows_all?(
+           Hex.Solver.parse_constraint!(mix_requirement),
+           Hex.Solver.parse_constraint!(blend_requirement)
+         ) do
       Mix.shell().error(
         "Blend `#{blend}` requirement `#{blend_requirement}` outside project requirement range `#{mix_requirement} for `#{blend_app}` check mix.exs or blend.exs."
       )

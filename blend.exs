@@ -1,4 +1,10 @@
 %{
+  local: [
+    {:surface, path: "../surface"}
+  ],
+  github: [
+    {:surface, github: "surface-ui/surface"}
+  ],
   lowest: [
     {:surface, "0.10.0"},
     {:earmark, "1.4.21"},
