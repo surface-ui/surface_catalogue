@@ -65,10 +65,6 @@ defmodule Blend.Premix do
            Hex.Solver.parse_constraint!(mix_requirement),
            Hex.Solver.parse_constraint!(blend_requirement)
          ) do
-      Mix.shell().error(
-        "Blend `#{blend}` requirement `#{blend_requirement}` outside project requirement range `#{mix_requirement} for `#{blend_app}` check mix.exs or blend.exs."
-      )
-
       Mix.shell().error("""
       Blend requirement for `#{blend}` incompatible with project requirement:
         in mix.exs   #{inspect(mix_dep)}
