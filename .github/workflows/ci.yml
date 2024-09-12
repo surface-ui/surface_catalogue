@@ -8,7 +8,7 @@ on:
 
 jobs:
   mix_test:
-    name: mix test (${{matrix.blend != '' && 'Blend ${{matrix.blend}} | Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}}' || 'Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}}'}})
+    name: mix test (${{format(matrix.blend != '' && 'Blend {0} | Elixir {1} | Erlang/OTP {1}' || 'Elixir {1} | Erlang/OTP {2}', matrix.blend, matrix.elixir, matrix.otp)}})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
