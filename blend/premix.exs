@@ -27,18 +27,17 @@ defmodule Blend.Premix do
   end
 
   def patch_deps(mix_deps) do
-    blend = System.get_env("BLEND")
-
-    case blend do
-      nil -> mix_deps
-      "" -> mix_deps
-      blend -> merge_deps(mix_deps, blend_deps(blend))
-    end
+    patch_deps(System.get_env("BLEND"), mix_deps)
   end
 
-  defp merge_deps(deps1, deps2) do
-    Enum.reduce(deps2, deps1, fn dep, acc ->
-      List.keystore(acc, elem(dep, 0), 0, dep)
+  defp patch_deps(nil, mix_deps), do: mix_deps
+  defp patch_deps("", mix_deps), do: mix_deps
+
+  defp patch_deps(blend, mix_deps) do
+    blend_deps(blend)
+    |> Enum.reduce(mix_deps, fn blend_dep, acc ->
+      verify_requirements!(blend, blend_dep, mix_deps)
+      List.keystore(acc, elem(blend_dep, 0), 0, blend_dep)
     end)
   end
 
@@ -52,6 +51,30 @@ defmodule Blend.Premix do
       nil -> []
       "" -> []
       lockfile -> [lockfile: lockfile]
+    end
+  end
+
+  defp verify_requirements!(blend, blend_dep, mix_deps) do
+    blend_app = elem(blend_dep, 0)
+    blend_requirement = elem(blend_dep, 1)
+    mix_dep = List.keyfind!(mix_deps, blend_app, 0)
+    mix_requirement = elem(mix_dep, 1)
+
+    if not Hex.Solver.Constraint.allows_all?(
+         Hex.Solver.parse_constraint!(mix_requirement),
+         Hex.Solver.parse_constraint!(blend_requirement)
+       ) do
+      Mix.shell().error(
+        "Blend `#{blend}` requirement `#{blend_requirement}` outside project requirement range `#{mix_requirement} for `#{blend_app}` check mix.exs or blend.exs."
+      )
+
+      Mix.shell().error("""
+      Blend requirement for `#{blend}` incompatible with project requirement:
+        in mix.exs   #{inspect(mix_dep)}
+        in blend.exs #{inspect(blend_dep)}.
+      """)
+
+      exit({:shutdown, 1})
     end
   end
 end
