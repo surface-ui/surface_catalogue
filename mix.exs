@@ -103,7 +103,7 @@ defmodule Surface.Catalogue.MixProject do
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/surface-ui/surface_catalogue"},
       files:
-        ~w(assets lib priv) ++
+        ~w(assets lib priv/catalogue) ++
           ~w(CHANGELOG.md LICENSE.md mix.exs README.md)
     }
   end
