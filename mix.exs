@@ -1,4 +1,11 @@
-Code.compile_file("blend/premix.exs")
+if File.exists?("blend/premix.exs") do
+  Code.compile_file("blend/premix.exs")
+else
+  defmodule Blend.Premix do
+    def patch_project(project), do: project
+    def patch_deps(deps), do: deps
+  end
+end
 
 defmodule Surface.Catalogue.MixProject do
   use Mix.Project
