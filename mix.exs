@@ -66,7 +66,7 @@ defmodule Surface.Catalogue.MixProject do
     path =
       case opts[:path] do
         nil -> Mix.Project.deps_path() |> Path.relative() |> Path.join("/surface")
-        surface_dep_path -> Path.expand(surface_dep_path) |> IO.inspect(label: :expand)
+        surface_dep_path -> Path.expand(surface_dep_path)
       end
 
     ["#{path}/priv/catalogue"]
