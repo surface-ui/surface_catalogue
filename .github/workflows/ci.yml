@@ -29,6 +29,10 @@ jobs:
             otp: '27.0.1'
             check_formatted: true
             warnings_as_errors: true
+          - elixir: '1.17.0'
+            otp: '27.0.1'
+            blend: 'github'
+            warnings_as_errors: true
     env:
       MIX_ENV: test
       BLEND: ${{ matrix.blend }}
