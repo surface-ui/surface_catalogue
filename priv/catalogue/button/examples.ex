@@ -11,6 +11,17 @@ defmodule SurfaceCatalogue.SampleComponents.Button.Examples do
 
   @example true
   @doc """
+  An example with the default direction `horizontal`.
+  """
+  def horizontal(assigns) do
+    ~F"""
+    <Button label="Label" />
+    <Button>Slot</Button>
+    """
+  end
+
+  @example true
+  @doc """
   An example with direction `horizontal` with the content larger than the
   code area.
   """
