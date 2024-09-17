@@ -3,7 +3,6 @@ defmodule Surface.Catalogue.PageLive do
 
   alias Surface.Catalogue.{Playground, Util, ExampleLive, PlaygroundLive, Markdown}
   alias Surface.Catalogue.Components.{ComponentInfo, ComponentTree, PlaygroundTools}
-  alias Surface.Components.LivePatch
 
   @playground_default_height "160px"
   @playground_default_width "100%"
@@ -99,22 +98,22 @@ defmodule Surface.Catalogue.PageLive do
               <div class="component tabs is-medium">
                 <ul>
                   <li class={"is-active": @action == "docs"}>
-                    <LivePatch to={path_to(__MODULE__, @component_name, :docs)}>
+                    <.link patch={path_to(__MODULE__, @component_name, :docs)}>
                       <span class="icon is-small"><i class="far fa-file-alt" aria-hidden="true" /></span>
                       <span>Docs &amp; API</span>
-                    </LivePatch>
+                    </.link>
                   </li>
                   <li :if={@has_example?} class={"is-active": @action == "example"}>
-                    <LivePatch to={path_to(__MODULE__, @component_name, :example)}>
+                    <.link patch={path_to(__MODULE__, @component_name, :example)}>
                       <span class="icon is-small"><i class="fas fa-image" aria-hidden="true" /></span>
                       <span>Examples</span>
-                    </LivePatch>
+                    </.link>
                   </li>
                   <li :if={@has_playground?} class={"is-active": @action == "playground"}>
-                    <LivePatch to={path_to(__MODULE__, @component_name, :playground)}>
+                    <.link patch={path_to(__MODULE__, @component_name, :playground)}>
                       <span class="icon is-small"><i class="far fa-play-circle" aria-hidden="true" /></span>
                       <span id="playground-tab-label" phx-update="ignore">Playground</span>
-                    </LivePatch>
+                    </.link>
                   </li>
                 </ul>
               </div>

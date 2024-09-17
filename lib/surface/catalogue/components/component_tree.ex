@@ -3,8 +3,6 @@ defmodule Surface.Catalogue.Components.ComponentTree do
 
   use Surface.LiveComponent
 
-  alias Surface.Components.LivePatch
-
   prop selected_component, :string
   prop single_catalogue?, :boolean
   prop components, :map
@@ -29,12 +27,12 @@ defmodule Surface.Catalogue.Components.ComponentTree do
     ~F"""
     <ul class={"menu-list", "is-hidden": !show_nodes?(@parent_keys, @selected_component, @single_catalogue?)}>
       <li :if={@parent_keys == []}>
-        <LivePatch to="/catalogue/" class={"has-text-weight-bold": !@selected_component}>
+        <.link patch="/catalogue/" class={"has-text-weight-bold": !@selected_component}>
           <span class="icon">
             <i class="fa fa-home" />
           </span>
           Home
-        </LivePatch>
+        </.link>
       </li>
       {#for {key, value} <- Enum.sort(@node),
           mod_path = @parent_keys ++ [key],
@@ -42,15 +40,15 @@ defmodule Surface.Catalogue.Components.ComponentTree do
           component_type = component_type(module),
           {has_child_selected?} = {has_child_selected?(mod_path, @selected_component)}}
         <li :if={component_type != :none}>
-          <LivePatch
-            to={"/catalogue/components/#{inspect(module)}"}
+          <.link
+            patch={"/catalogue/components/#{inspect(module)}"}
             class={"has-text-weight-bold": selected_component?(mod_path, @selected_component)}
           >
             <span class="icon">
               <i class={component_icon(component_type)} />
             </span>
             {key}
-          </LivePatch>
+          </.link>
         </li>
         <li :if={value != %{} && @single_catalogue? && @parent_keys == []}>
           <a style="cursor: default;">
