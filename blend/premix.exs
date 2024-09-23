@@ -16,9 +16,10 @@ end
 blend = System.get_env("BLEND")
 
 if blend && String.length(blend) > 0 && existing_blend.(blend) do
-  maybe_put_env.("MIX_LOCKFILE", "blend/#{blend}.mix.lock")
-  maybe_put_env.("MIX_DEPS_PATH", "blend/deps/#{blend}")
-  maybe_put_env.("MIX_BUILD_ROOT", "blend/_build/#{blend}")
+  blend_path = Path.expand("blend")
+  maybe_put_env.("MIX_LOCKFILE", Path.join([blend_path, "#{blend}.mix.lock"]))
+  maybe_put_env.("MIX_DEPS_PATH", Path.join([blend_path, "deps", "#{blend}"]))
+  maybe_put_env.("MIX_BUILD_ROOT", Path.join([blend_path, "_build", "#{blend}"]))
 end
 
 defmodule Blend.Premix do
