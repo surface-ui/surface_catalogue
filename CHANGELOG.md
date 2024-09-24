@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.6.3 (yyyy-mm-dd)
+## v0.6.3 (2024-09-24)
 
 * Remove dependency on Surface Forms (#56)
 
