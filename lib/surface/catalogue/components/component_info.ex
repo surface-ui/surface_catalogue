@@ -18,7 +18,7 @@ defmodule Surface.Catalogue.Components.ComponentInfo do
   data api_anchor_id, :string
 
   def update(assigns) do
-    prefix = if assigns.module.component_type == Surface.MacroComponent, do: "#", else: ""
+    prefix = if assigns.module.component_type() == Surface.MacroComponent, do: "#", else: ""
 
     module_name =
       assigns.module
