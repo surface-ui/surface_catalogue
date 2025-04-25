@@ -88,7 +88,7 @@ defmodule Surface.Catalogue.MixProject do
     [
       {:surface, "~> 0.10"},
       {:earmark, "~> 1.4.21"},
-      {:makeup_elixir, "~> 0.16.0"},
+      {:makeup_elixir, "~> 0.16.0 or ~> 1.0"},
       {:html_entities, "~> 0.4"},
       {:jason, "~> 1.0", only: :dev},
       {:plug_cowboy, "~> 2.3", only: :dev},
