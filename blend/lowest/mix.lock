@@ -1,5 +1,4 @@
 %{
-  "blend": {:hex, :blend, "0.4.0", "0a7e09eee28a9a92bd495aa559c0e99ea9bd7b42fd7fd4a9dc61e6f1bda294c9", [:mix], [], "hexpm", "e284dbdd4fe8db278347ff12dee3e5410b94f38e22825ce1b281d6e5b1920b31"},
   "castore": {:hex, :castore, "1.0.5", "9eeebb394cc9a0f3ae56b813459f990abb0a3dedee1be6b27fdb50301930502f", [:mix], [], "hexpm", "8d7c597c3e4a64c395980882d4bca3cebb8d74197c590dc272cfd3b6a6310578"},
   "cowboy": {:hex, :cowboy, "2.11.0", "356bf784599cf6f2cdc6ad12fdcfb8413c2d35dab58404cf000e1feaed3f5645", [:make, :rebar3], [{:cowlib, "2.12.1", [hex: :cowlib, repo: "hexpm", optional: false]}, {:ranch, "1.8.0", [hex: :ranch, repo: "hexpm", optional: false]}], "hexpm", "0fa395437f1b0e104e0e00999f39d2ac5f4082ac5049b67a5b6d56ecc31b1403"},
   "cowlib": {:hex, :cowlib, "2.12.1", "a9fa9a625f1d2025fe6b462cb865881329b5caff8f1854d1cbc9f9533f00e1e1", [:make, :rebar3], [], "hexpm", "163b73f6367a7341b33c794c4e88e7dbfe6498ac42dcd69ef44c5bc5507c8db0"},

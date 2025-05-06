@@ -3,7 +3,6 @@ if File.exists?("blend/premix.exs") do
 else
   defmodule Blend.Premix do
     def patch_project(project), do: project
-    def patch_deps(deps), do: deps
   end
 end
 
@@ -93,12 +92,11 @@ defmodule Surface.Catalogue.MixProject do
       {:jason, "~> 1.0", only: :dev},
       {:plug_cowboy, "~> 2.3", only: :dev},
       {:esbuild, "~> 0.2", only: :dev},
-      {:blend, "~> 0.4.0", only: :dev},
+      {:blend, "~> 0.5.0", only: :dev},
       {:floki, ">= 0.35.3", only: :test},
       {:phoenix_live_reload, "~> 1.2", optional: true, only: [:prod, :dev]},
       {:ex_doc, ">= 0.31.1", only: :docs}
     ]
-    |> Blend.Premix.patch_deps()
   end
 
   defp docs do
