@@ -7,7 +7,7 @@ defmodule Surface.Catalogue.CatalogueTest do
       live_view: [signing_salt: "hMegieSe"]
     )
 
-    start_supervised(Surface.Catalogue.Server.Endpoint)
+    start_supervised!(Surface.Catalogue.Server.Endpoint)
 
     :ok
   end
