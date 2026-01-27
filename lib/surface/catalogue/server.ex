@@ -89,16 +89,27 @@ defmodule Surface.Catalogue.Server do
     Application.put_env(:surface_catalogue, __MODULE__.Endpoint, merge_opts(default_opts, opts))
     Application.put_env(:phoenix, :serve_endpoints, true)
 
-    Task.start(fn ->
+    Task.start_link(fn ->
+      require Logger
+      Process.flag(:trap_exit, true)
+
       children = [
         {Phoenix.PubSub, [name: __MODULE__.PubSub, adapter: Phoenix.PubSub.PG2]},
         {__MODULE__.Endpoint, [log_access_url: false]}
       ]
 
-      {:ok, _} = Supervisor.start_link(children, strategy: :one_for_one)
-      require Logger
-      Logger.info("Access Surface Catalogue at #{__MODULE__.Endpoint.url()}/catalogue")
-      Process.sleep(:infinity)
+      case Supervisor.start_link(children, strategy: :one_for_one) do
+        {:ok, _} ->
+          Logger.info("Access Surface Catalogue at #{__MODULE__.Endpoint.url()}/catalogue")
+          Process.sleep(:infinity)
+
+        {:error, payload} ->
+          payload
+          |> Exception.format_exit()
+          |> Logger.error()
+
+          System.stop(1)
+      end
     end)
   end
 

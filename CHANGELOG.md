@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.4 (yyyy-mm-dd)
+
+* Fix warning on calling component_type
+* Support makeup_elixir `~> 1.0`
+
 ## v0.6.3 (2024-09-24)
 
 * Remove dependency on Surface Forms (#56)

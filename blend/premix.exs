@@ -17,14 +17,16 @@ blend = System.get_env("BLEND")
 
 if blend && String.length(blend) > 0 && existing_blend.(blend) do
   blend_path = Path.expand("blend")
-  maybe_put_env.("MIX_LOCKFILE", Path.join([blend_path, "#{blend}.mix.lock"]))
-  maybe_put_env.("MIX_DEPS_PATH", Path.join([blend_path, "deps", "#{blend}"]))
-  maybe_put_env.("MIX_BUILD_ROOT", Path.join([blend_path, "_build", "#{blend}"]))
+  maybe_put_env.("MIX_LOCKFILE", Path.join([blend_path, blend, "mix.lock"]))
+  maybe_put_env.("MIX_DEPS_PATH", Path.join([blend_path, blend, "deps"]))
+  maybe_put_env.("MIX_BUILD_ROOT", Path.join([blend_path, blend, "_build"]))
 end
 
 defmodule Blend.Premix do
   def patch_project(project) do
-    Keyword.merge(project, maybe_lockfile_option())
+    project
+    |> Keyword.merge(maybe_lockfile_option())
+    |> Keyword.update!(:deps, &patch_deps/1)
   end
 
   def patch_deps(mix_deps) do
@@ -36,10 +38,18 @@ defmodule Blend.Premix do
 
   defp patch_deps(blend, mix_deps) do
     blend_deps(blend)
-    |> Enum.reduce(mix_deps, fn blend_dep, acc ->
+    |> Enum.reduce(remove_dep(mix_deps, :blend), fn blend_dep, acc ->
       verify_requirements!(blend, blend_dep, mix_deps)
-      List.keystore(acc, elem(blend_dep, 0), 0, blend_dep)
+      replace_dep(acc, blend_dep)
     end)
+  end
+
+  defp remove_dep(deps, dep_name) do
+    List.keydelete(deps, dep_name, 0)
+  end
+
+  defp replace_dep(deps, dep) do
+    List.keystore(deps, elem(dep, 0), 0, dep)
   end
 
   defp blend_deps(name) do

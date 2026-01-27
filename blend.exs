@@ -1,3 +1,5 @@
+# To run a mix task in all blends configure the following alias and run `blend <mix_task>`
+# `alias blend='mix blend.list | xargs -t -I % env BLEND=% mix'
 %{
   local: [
     {:surface, path: "../surface"}
