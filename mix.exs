@@ -99,7 +99,8 @@ defmodule Surface.Catalogue.MixProject do
       {:blend, "~> 0.5.0", only: :dev},
       {:floki, ">= 0.35.3", only: :test},
       {:phoenix_live_reload, "~> 1.2", optional: true, only: [:prod, :dev]},
-      {:ex_doc, ">= 0.31.1", only: :docs}
+      {:ex_doc, ">= 0.31.1", only: :docs},
+      {:lazy_html, ">= 0.1.0", only: :test}
     ]
   end
 
