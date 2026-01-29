@@ -30,7 +30,8 @@ defmodule Surface.Catalogue.MixProject do
       source_url: @source_url,
       homepage_url: @homepage_url,
       docs: docs(),
-      package: package()
+      package: package(),
+      listeners: [Phoenix.CodeReloader]
     ]
     |> Blend.Premix.patch_project()
   end
