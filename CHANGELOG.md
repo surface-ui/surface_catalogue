@@ -1,9 +1,11 @@
 # Changelog
 
-## v0.6.4 (yyyy-mm-dd)
+## v0.6.4 (2026-01-29)
 
 * Fix warning on calling component_type
+* Update Elxir to v1.9.5
 * Support makeup_elixir `~> 1.0`
+* Remove support for Elixir < `v1.14`
 
 ## v0.6.3 (2024-09-24)
 

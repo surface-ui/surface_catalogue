@@ -9,7 +9,7 @@ end
 defmodule Surface.Catalogue.MixProject do
   use Mix.Project
 
-  @version "0.6.3"
+  @version "0.6.4"
   @source_url "https://github.com/surface-ui/surface_catalogue"
   @homepage_url "https://surface-ui.org"
 
