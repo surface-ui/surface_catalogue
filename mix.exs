@@ -17,7 +17,7 @@ defmodule Surface.Catalogue.MixProject do
     [
       app: :surface_catalogue,
       version: @version,
-      elixir: "~> 1.13",
+      elixir: "~> 1.14",
       description: "An initial prototype of the Surface Catalogue",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -25,7 +25,6 @@ defmodule Surface.Catalogue.MixProject do
       aliases: aliases(),
       xref: [exclude: Surface.Catalogue.Playground],
       deps: deps(),
-      preferred_cli_env: [docs: :docs],
       # Docs
       name: "Surface Catalogue",
       source_url: @source_url,
@@ -34,6 +33,10 @@ defmodule Surface.Catalogue.MixProject do
       package: package()
     ]
     |> Blend.Premix.patch_project()
+  end
+
+  def cli do
+    [preferred_envs: [docs: :docs]]
   end
 
   # Run "mix help compile.app" to learn about applications.
